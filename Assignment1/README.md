@@ -1,5 +1,7 @@
 # Assignment 1
 
+The main classes which deal with the State itself.
+
 ```c++
 class State
 {

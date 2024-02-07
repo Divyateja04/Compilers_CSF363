@@ -414,11 +414,20 @@ int main()
     {
         cout << "--------------------- TEST CASE " << m + 1 << " -----------------------" << endl;
 
-        string re;
-        string input;
-        cin >> re >> input;
+        // Input parameters
+        string regex, input;
+        cin >> regex >> input;
 
-        if (runTheModel(re, input))
+        // We have to add a . everytime we see a )(
+        for (int i = 1; i < regex.size(); i++)
+        {
+            if (regex[i] == '(' && regex[i - 1] == ')')
+            {
+                regex = regex.substr(0, i) + "." + regex.substr(i, regex.size() - i);
+            }
+        }
+
+        if (runTheModel(regex, input))
         {
             cout << "Output: YES" << endl;
         }
