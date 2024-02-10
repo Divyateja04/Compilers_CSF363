@@ -1,9 +1,3 @@
-4
-((a)((a)|(b)))
-ab
-(((a)(((a)|(b))*))((b)(a)))
-abbaba
-(((a)((a)(b))*)((b)(a)))
-abbaba
-(((a)(((a).(b)))*)(b))
-aababb
+abbaababaaabbaa
+(((a)*)(b))
+((b)(a))

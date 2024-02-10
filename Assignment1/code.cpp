@@ -450,39 +450,50 @@ int main()
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
 
-    int counter;
-    cin >> counter;
+    // Input parameters
+    string input;
+    cin >> input;
+    cout << "Input: " << input << endl;
 
-    for (int m = 0; m < counter; m++)
+    vector<string> regex;
+    string temp;
+
+    while (cin >> temp)
     {
-        cout << "--------------------- TEST CASE " << m + 1 << " -----------------------" << endl;
+        regex.push_back(temp);
+    }
 
-        // Input parameters
-        string regex, input;
-        cin >> regex >> input;
+    for (int i = 0; i < regex.size(); i++)
+    {
+        string temp = regex[i];
 
-        // We have to add a . everytime we see a )(
-        for (int i = 1; i < regex.size(); i++)
+        for (int j = 1; j < temp.size(); j++)
         {
-            if (regex[i] == '(' && regex[i - 1] == ')')
+            if (temp[j] == '(' && temp[j - 1] == ')')
             {
-                regex = regex.substr(0, i) + "." + regex.substr(i, regex.size() - i);
+                temp = temp.substr(0, j) + "." + temp.substr(j, temp.size() - j);
             }
         }
-
-        if (runTheModel(regex, input))
-        {
-            cout << "Output: YES" << endl;
-        }
-        else
-        {
-            cout << "Output: NO" << endl;
-        }
-
-        cout << "::> Resetting State numbers" << endl;
-        stateCounter = 0;
-        cout << "--------------------- END TEST CASE "
-             << " ---------------------" << endl
-             << endl;
+        regex[i] = temp;
     }
+
+    for (auto c : regex)
+    {
+        cout << c << " ";
+    }
+
+    // if (runTheModel(regex, input))
+    // {
+    //     cout << "Output: YES" << endl;
+    // }
+    // else
+    // {
+    //     cout << "Output: NO" << endl;
+    // }
+
+    // cout << "::> Resetting State numbers" << endl;
+    // stateCounter = 0;
+    // cout << "--------------------- END TEST CASE "
+    //      << " ---------------------" << endl
+    //      << endl;
 }
