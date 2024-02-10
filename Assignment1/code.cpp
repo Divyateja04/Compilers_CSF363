@@ -451,6 +451,9 @@ bool runTheModel(string regexp, string testcase)
     // Step 6: Run string on DFA
     bool res = runStringOnDFA(testcase, finalStates, theResultantDFA);
 
+    cout << "::> Resetting State numbers" << endl;
+    stateCounter = 0;
+
     return res;
 }
 
@@ -500,8 +503,6 @@ int main()
         cout << "Output: NO" << endl;
     }
 
-    cout << "::> Resetting State numbers" << endl;
-    stateCounter = 0;
     cout << "--------------------- END TEST CASE "
          << " ---------------------" << endl
          << endl;
