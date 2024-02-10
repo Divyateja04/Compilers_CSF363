@@ -295,9 +295,6 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
 
     map<char, vector<char>> theResultantDFA;
 
-    cout << endl
-         << "::> Found the following DFA:" << endl;
-
     while (!q.empty())
     {
         set<int> currentSet = q.front();
@@ -371,7 +368,10 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
 
 bool runStringOnDFA(string input, map<char, int> finalStates, map<char, vector<char>> theResultantDFA)
 {
+
     // Print the DFA
+    cout << endl
+         << "::> Found the following DFA:" << endl;
     for (auto x : theResultantDFA)
     {
         cout << x.first << ' ';
@@ -381,6 +381,15 @@ bool runStringOnDFA(string input, map<char, int> finalStates, map<char, vector<c
         }
         cout << endl;
     }
+
+    // Print final States
+    cout << "Final States: ";
+    for (auto x : finalStates)
+    {
+        cout << x.first << ' ';
+    }
+    cout << endl;
+
     char currentState = 'A';
     cout << "::> Flow: ";
     for (int i = 0; i < input.length(); i++)
@@ -479,21 +488,21 @@ int main()
 
     for (auto c : regex)
     {
-        cout << c << " ";
+        cout << c << endl;
     }
 
-    // if (runTheModel(regex, input))
-    // {
-    //     cout << "Output: YES" << endl;
-    // }
-    // else
-    // {
-    //     cout << "Output: NO" << endl;
-    // }
+    if (runTheModel(regex[0], input))
+    {
+        cout << "Output: YES" << endl;
+    }
+    else
+    {
+        cout << "Output: NO" << endl;
+    }
 
-    // cout << "::> Resetting State numbers" << endl;
-    // stateCounter = 0;
-    // cout << "--------------------- END TEST CASE "
-    //      << " ---------------------" << endl
-    //      << endl;
+    cout << "::> Resetting State numbers" << endl;
+    stateCounter = 0;
+    cout << "--------------------- END TEST CASE "
+         << " ---------------------" << endl
+         << endl;
 }

@@ -1,2 +1,39 @@
 Input: abbaababaaabbaa
-(((a)*).(b)) ((b).(a)) 
+(((a)*).(b))
+((b).(a))
+Reg Exp. (((a)*).(b))
+Testcase: abbaababaaabbaa
+Postfix: a*b.
+::> Found a KLEENE STAR
+::> Found a CONCAT
+::> Found the following NFA with e Transitions: 
+::> State: 0 { 1 } { } { } 
+::> State: 1 { } { } { 2 } 
+::> State: 2 { } { } { 0 3 } 
+::> State: 3 { } { } { 4 } 
+::> State: 4 { } { 5 } { } 
+::> State: 5 { } { } { 7 } 
+::> State: 6 { } { } { 2 } 
+::> State: 7 { } { } { } 
+
+::> Epsilon Closures: 
+::> State: 0 { } 
+::> State: 1 { 0 2 3 4 } 
+::> State: 2 { 0 3 4 } 
+::> State: 3 { 4 } 
+::> State: 4 { } 
+::> State: 5 { 7 } 
+::> State: 6 { 0 2 3 4 } 
+::> State: 7 { } 
+
+::> Found the following DFA:
+A B C 
+B B D 
+C C C 
+D C C 
+Final States: D 
+::> Flow: ->A->B->D->C->C->C->C->C->C->C->C->C->C->C->C->C
+Output: NO
+::> Resetting State numbers
+--------------------- END TEST CASE  ---------------------
+
