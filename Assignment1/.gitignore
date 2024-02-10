@@ -1,2 +1,4 @@
-code.exe
-code.out
+*.exe
+*.out
+Makefile
+.vscode/
