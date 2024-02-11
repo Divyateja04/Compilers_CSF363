@@ -613,8 +613,8 @@ bool runTheModel(string regexp, string testcase)
 
 int main()
 {
-    freopen("input2.txt", "r", stdin);
-    freopen("output2.txt", "w", stdout);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
 
     // Input parameters
     string input;
