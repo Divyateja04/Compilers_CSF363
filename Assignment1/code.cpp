@@ -86,6 +86,16 @@ public:
         this->start->e.push_back(this->end);
     }
 
+    void POSITIVECLOSURE(StateSet *top)
+    {
+        // Start -> top.start
+        this->start->e.push_back(top->start);
+        // top.end -> end
+        top->end->e.push_back(this->end);
+        // start -> end
+        this->end->e.push_back(this->start);
+    }
+
     map<int, vector<vector<int>>> performBFS()
     {
         // Map to keep track of all transitions
@@ -153,7 +163,7 @@ public:
 // Function to return precedence of operators
 int prec(char c)
 {
-    if (c == '*' || c == '?')
+    if (c == '*' || c == '?' || c == '+')
         return 3;
     else if (c == '.')
         return 2;
@@ -255,6 +265,15 @@ StateSet *createNFA(string postfix)
             s.pop();
             StateSet *final = new StateSet();
             final->ZEROORONE(top);
+            s.push(final);
+        }
+        else if (x == '+')
+        {
+            cout << "::> Found a POSITIVE CLOSURE" << endl;
+            StateSet *top = s.top();
+            s.pop();
+            StateSet *final = new StateSet();
+            final->POSITIVECLOSURE(top);
             s.push(final);
         }
     }
