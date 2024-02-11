@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#define endl "\n"
 using namespace std;
 
 // GLOBAL VARIABLES
@@ -77,6 +76,16 @@ public:
         this->start->e.push_back(this->end);
     }
 
+    void ZEROORONE(StateSet *top)
+    {
+        // Start -> top.start
+        this->start->e.push_back(top->start);
+        // top.end -> end
+        top->end->e.push_back(this->end);
+        // start -> end
+        this->start->e.push_back(this->end);
+    }
+
     map<int, vector<vector<int>>> performBFS()
     {
         // Map to keep track of all transitions
@@ -143,7 +152,7 @@ public:
 // Function to return precedence of operators
 int prec(char c)
 {
-    if (c == '*')
+    if (c == '*' || c == '?')
         return 3;
     else if (c == '.')
         return 2;
@@ -156,13 +165,14 @@ int prec(char c)
 // Function to convert infix to Post fix
 string infixToPostfix(string input)
 {
+    cout << "::> Converting infix to postfix" << endl;
     string postfix;
 
     stack<char> s;
     for (auto x : input)
     {
         // If character is operator print
-        if (('a' <= x && x <= 'z') || (x >= 'A' && x <= 'Z') || (x >= '0' && x <= '9'))
+        if (x == 'a' || x == 'b')
         {
             postfix += x;
         }
@@ -194,7 +204,7 @@ string infixToPostfix(string input)
         postfix += s.top();
         s.pop();
     }
-
+    cout << "::> Converted infix to prefix" << endl;
     // Return the postfix expression
     return postfix;
 }
@@ -235,6 +245,15 @@ StateSet *createNFA(string postfix)
             s.pop();
             StateSet *final = new StateSet();
             final->KLEENESTAR(top);
+            s.push(final);
+        }
+        else if (x == '?')
+        {
+            cout << "::> Found a ZERO OR ONE" << endl;
+            StateSet *top = s.top();
+            s.pop();
+            StateSet *final = new StateSet();
+            final->ZEROORONE(top);
             s.push(final);
         }
     }
@@ -477,6 +496,7 @@ bool runTheModel(string regexp, string testcase)
 
     // Step 2: Generate the State Set Structure
     StateSet *output = createNFA(postfix);
+    cout << "::> Generated NFA successfully" << endl;
 
     // Step 3: Perform BFS on this structure
     map<int, vector<vector<int>>> stateTransitions = output->performBFS();
@@ -544,19 +564,59 @@ int main()
         regex[i] = temp;
     }
 
+    cout << "Printing Regex:  " << endl;
     for (auto c : regex)
     {
         cout << c << endl;
     }
+    cout << endl;
 
-    if (runTheModel(regex[0], input))
+    size_t len = input.size();
+
+    map<string, int> lastaccpeted;
+    vector<pair<string, int>> finaloutput;
+
+    int start = 0;
+    int end = len - 1;
+
+    while (start <= end)
     {
-        cout << "Output: YES" << endl;
+        string temp = input.substr(start, end - start + 1);
+        bool flag = false;
+
+        for (size_t k = 0; k < regex.size(); k++)
+        {
+            if (runTheModel(regex[k], temp))
+            {
+                // lastaccpeted[temp] = k;
+                pair<string, int> p = {temp, k + 1};
+                finaloutput.push_back(p);
+                start = end + 1;
+                end = len - 1;
+                flag = true;
+                break;
+            }
+        }
+
+        if (start == end && flag == false)
+        {
+            pair<string, int> p = {temp, 0};
+            finaloutput.push_back(p);
+            start++;
+            end = len - 1;
+        }
+        else if (!flag)
+        {
+            end--;
+        }
     }
-    else
+
+    cout << "::> Final Output:" << endl;
+    for (auto p : finaloutput)
     {
-        cout << "Output: NO" << endl;
+        cout << "<" << p.first << "," << p.second << ">";
     }
+    cout << endl;
 
     cout << "--------------------- END TEST CASE "
          << " ---------------------" << endl
