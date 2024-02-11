@@ -4,7 +4,7 @@ using namespace std;
 // GLOBAL VARIABLES
 int stateCounter = 0;
 int startStateInNFA;
-vector<int> finalStateInNFA;
+set<int> finalStateInNFA;
 
 class State
 {
@@ -101,7 +101,8 @@ public:
         startStateInNFA = this->start->number;
         // We add the final state to ends
         cout << "::> End State: " << this->end->number << endl;
-        finalStateInNFA.push_back(this->end->number);
+        finalStateInNFA.clear();
+        finalStateInNFA.insert(this->end->number);
         // We also have to check if start state has an epsilon transition to the final state, which
         // basically means empty string is accepted
         bool startStateIsFinal = false;
@@ -113,7 +114,7 @@ public:
             }
         }
         if (startStateIsFinal)
-            finalStateInNFA.push_back(startStateInNFA);
+            finalStateInNFA.insert(startStateInNFA);
 
         while (!q.empty())
         {
@@ -415,6 +416,14 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
             (char)mapOfStatesVisited[nextSet1]};
     }
 
+    // Print all final states
+    cout << "::> Final States in the NFA: " << endl;
+    for (auto x : finalStateInNFA)
+    {
+        cout << x << " ";
+    }
+    cout << endl;
+
     for (auto x : mapOfStatesVisited)
     {
         int isFinalState = 0;
@@ -438,7 +447,7 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
     return theResultantDFA;
 }
 
-bool runStringOnDFA(string input, map<char, int> finalStates, map<char, vector<char>> theResultantDFA)
+bool runStringOnDFA(string input, map<char, int> &finalStates, map<char, vector<char>> theResultantDFA)
 {
 
     // Print the DFA
@@ -611,7 +620,7 @@ int main()
         }
     }
 
-    cout << "::> Final Output:" << endl;
+    cout << "::> Final Output: ";
     for (auto p : finaloutput)
     {
         cout << "<" << p.first << "," << p.second << ">";
