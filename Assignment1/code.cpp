@@ -6,6 +6,8 @@ int stateCounter = 0;
 int startStateInNFA;
 set<int> finalStateInNFA;
 
+bool shouldPrintLogs = false;
+
 class State
 {
 public:
@@ -107,10 +109,12 @@ public:
         q.push(this->start);
         mp[this->start->number] = 1;
 
-        cout << "::> Start State: " << this->start->number << endl;
+        if (shouldPrintLogs)
+            cout << "::> Start State: " << this->start->number << endl;
         startStateInNFA = this->start->number;
         // We add the final state to ends
-        cout << "::> End State: " << this->end->number << endl;
+        if (shouldPrintLogs)
+            cout << "::> End State: " << this->end->number << endl;
         finalStateInNFA.clear();
         finalStateInNFA.insert(this->end->number);
         // We also have to check if start state has an epsilon transition to the final state, which
@@ -176,7 +180,8 @@ int prec(char c)
 // Function to convert infix to Post fix
 string infixToPostfix(string input)
 {
-    cout << "::> Converting infix to postfix" << endl;
+    if (shouldPrintLogs)
+        cout << "::> Converting infix to postfix" << endl;
     string postfix;
 
     stack<char> s;
@@ -215,7 +220,8 @@ string infixToPostfix(string input)
         postfix += s.top();
         s.pop();
     }
-    cout << "::> Converted infix to prefix" << endl;
+    if (shouldPrintLogs)
+        cout << "::> Converted infix to prefix" << endl;
     // Return the postfix expression
     return postfix;
 }
@@ -229,7 +235,8 @@ StateSet *createNFA(string postfix)
             s.push(new StateSet(x));
         else if (x == '|')
         {
-            cout << "::> Found an OR" << endl;
+            if (shouldPrintLogs)
+                cout << "::> Found an OR" << endl;
             StateSet *first = s.top();
             s.pop();
             StateSet *second = s.top();
@@ -240,7 +247,8 @@ StateSet *createNFA(string postfix)
         }
         else if (x == '.')
         {
-            cout << "::> Found a CONCAT" << endl;
+            if (shouldPrintLogs)
+                cout << "::> Found a CONCAT" << endl;
             StateSet *first = s.top();
             s.pop();
             StateSet *second = s.top();
@@ -251,7 +259,8 @@ StateSet *createNFA(string postfix)
         }
         else if (x == '*')
         {
-            cout << "::> Found a KLEENE STAR" << endl;
+            if (shouldPrintLogs)
+                cout << "::> Found a KLEENE STAR" << endl;
             StateSet *top = s.top();
             s.pop();
             StateSet *final = new StateSet();
@@ -260,7 +269,8 @@ StateSet *createNFA(string postfix)
         }
         else if (x == '?')
         {
-            cout << "::> Found a ZERO OR ONE" << endl;
+            if (shouldPrintLogs)
+                cout << "::> Found a ZERO OR ONE" << endl;
             StateSet *top = s.top();
             s.pop();
             StateSet *final = new StateSet();
@@ -269,7 +279,8 @@ StateSet *createNFA(string postfix)
         }
         else if (x == '+')
         {
-            cout << "::> Found a POSITIVE CLOSURE" << endl;
+            if (shouldPrintLogs)
+                cout << "::> Found a POSITIVE CLOSURE" << endl;
             StateSet *top = s.top();
             s.pop();
             StateSet *final = new StateSet();
@@ -280,7 +291,8 @@ StateSet *createNFA(string postfix)
 
     if (s.empty() || s.size() > 1)
     {
-        cout << "ERROR OCCURRED: Found " << s.size() << " elements." << endl;
+        if (shouldPrintLogs)
+            cout << "ERROR OCCURRED: Found " << s.size() << " elements." << endl;
         return nullptr;
     }
     else
@@ -291,25 +303,30 @@ StateSet *createNFA(string postfix)
 
 void printSet(set<int> currentSet)
 {
-    cout << "[ ";
+    if (shouldPrintLogs)
+        cout << "[ ";
     for (auto x : currentSet)
     {
-        cout << x << ' ';
+        if (shouldPrintLogs)
+            cout << x << ' ';
     }
-    cout << "]";
+    if (shouldPrintLogs)
+        cout << "]";
 }
 
 map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, vector<vector<int>>> stateTransitions)
 {
     // We need to somehow get all epsilon closures
-    cout << endl
-         << "::> Epsilon Closures: " << endl;
+    if (shouldPrintLogs)
+        cout << endl
+             << "::> Epsilon Closures: " << endl;
 
     vector<vector<int>> epsilonClosures;
     for (int i = 0; i < stateTransitions.size(); i++)
     {
         vector<int> perState;
-        cout << "::> State: " << i << " ";
+        if (shouldPrintLogs)
+            cout << "::> State: " << i << " ";
         // Map to keep track of visited states
         map<int, int> mp;
         // Queue for all possible states
@@ -333,14 +350,18 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
             }
         }
 
-        cout << "{ ";
+        if (shouldPrintLogs)
+            cout << "{ ";
         for (auto x : mp)
         {
-            cout << x.first << ' ';
+            if (shouldPrintLogs)
+                cout << x.first << ' ';
             perState.push_back(x.first);
         }
-        cout << "} ";
-        cout << endl;
+        if (shouldPrintLogs)
+            cout << "} ";
+        if (shouldPrintLogs)
+            cout << endl;
         epsilonClosures.push_back(perState);
     }
 
@@ -352,8 +373,9 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
     mapOfStatesVisited[{startStateInNFA}] = stateLetter++;
 
     map<char, vector<char>> theResultantDFA;
-    cout << endl
-         << "::> Printing the RAW DFA: " << endl;
+    if (shouldPrintLogs)
+        cout << endl
+             << "::> Printing the RAW DFA: " << endl;
 
     while (!q.empty())
     {
@@ -424,11 +446,14 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
 
         // Printing the DFA
         printSet(currentSet);
-        cout << " ";
+        if (shouldPrintLogs)
+            cout << " ";
         printSet(nextSet0);
-        cout << " ";
+        if (shouldPrintLogs)
+            cout << " ";
         printSet(nextSet1);
-        cout << endl;
+        if (shouldPrintLogs)
+            cout << endl;
 
         theResultantDFA[(char)mapOfStatesVisited[currentSet]] = {
             (char)mapOfStatesVisited[nextSet0],
@@ -436,12 +461,15 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
     }
 
     // Print all final states
-    cout << "::> Final States in the NFA: " << endl;
+    if (shouldPrintLogs)
+        cout << "::> Final States in the NFA: " << endl;
     for (auto x : finalStateInNFA)
     {
-        cout << x << " ";
+        if (shouldPrintLogs)
+            cout << x << " ";
     }
-    cout << endl;
+    if (shouldPrintLogs)
+        cout << endl;
 
     for (auto x : mapOfStatesVisited)
     {
@@ -470,38 +498,50 @@ bool runStringOnDFA(string input, map<char, int> &finalStates, map<char, vector<
 {
 
     // Print the DFA
-    cout << endl
-         << "::> Found the following DFA:" << endl;
+    if (shouldPrintLogs)
+        cout << endl
+             << "::> Found the following DFA:" << endl;
     for (auto x : theResultantDFA)
     {
-        cout << x.first << ' ';
+        if (shouldPrintLogs)
+            cout << x.first << ' ';
         for (auto y : theResultantDFA[x.first])
         {
-            cout << y << ' ';
+            if (shouldPrintLogs)
+                cout << y << ' ';
         }
-        cout << endl;
+        if (shouldPrintLogs)
+            cout << endl;
     }
-    cout << endl;
+    if (shouldPrintLogs)
+        cout << endl;
 
     // Print final States
-    cout << "Final States: ";
+    if (shouldPrintLogs)
+        cout << "Final States: ";
     for (auto x : finalStates)
     {
-        cout << x.first << ' ';
+        if (shouldPrintLogs)
+            cout << x.first << ' ';
     }
-    cout << endl
-         << endl;
+    if (shouldPrintLogs)
+        cout << endl
+             << endl;
 
     char currentState = 'A';
-    cout << "::> Flow: ";
+    if (shouldPrintLogs)
+        cout << "::> Flow: ";
     for (int i = 0; i < input.length(); i++)
     {
-        cout << "->" << currentState;
+        if (shouldPrintLogs)
+            cout << "->" << currentState;
         int currentChar = input[i] - 'a';
         currentState = theResultantDFA[currentState][currentChar];
     }
-    cout << "->" << currentState;
-    cout << endl;
+    if (shouldPrintLogs)
+        cout << "->" << currentState;
+    if (shouldPrintLogs)
+        cout << endl;
 
     if (finalStates[currentState])
     {
@@ -515,35 +555,45 @@ bool runStringOnDFA(string input, map<char, int> &finalStates, map<char, vector<
 
 bool runTheModel(string regexp, string testcase)
 {
-    cout << "Reg Exp. " << regexp << endl;
-    cout << "Testcase: " << testcase << endl;
+    if (shouldPrintLogs)
+        cout << "Reg Exp. " << regexp << endl;
+    if (shouldPrintLogs)
+        cout << "Testcase: " << testcase << endl;
 
     // Step 1: Convert infix to Postfix
     string postfix = infixToPostfix(regexp);
-    cout << "Postfix: " << postfix << endl;
+    if (shouldPrintLogs)
+        cout << "Postfix: " << postfix << endl;
 
     // Step 2: Generate the State Set Structure
     StateSet *output = createNFA(postfix);
-    cout << "::> Generated NFA successfully" << endl;
+    if (shouldPrintLogs)
+        cout << "::> Generated NFA successfully" << endl;
 
     // Step 3: Perform BFS on this structure
     map<int, vector<vector<int>>> stateTransitions = output->performBFS();
 
     // Step 4: Print the NFA with e transitions
-    cout << "::> Found the following NFA with e Transitions: " << endl;
+    if (shouldPrintLogs)
+        cout << "::> Found the following NFA with e Transitions: " << endl;
     for (int i = 0; i < stateTransitions.size(); i++)
     {
-        cout << "::> State: " << i << " ";
+        if (shouldPrintLogs)
+            cout << "::> State: " << i << " ";
         for (auto x : stateTransitions[i])
         {
-            cout << "{ ";
+            if (shouldPrintLogs)
+                cout << "{ ";
             for (auto y : x)
             {
-                cout << y << ' ';
+                if (shouldPrintLogs)
+                    cout << y << ' ';
             }
-            cout << "} ";
+            if (shouldPrintLogs)
+                cout << "} ";
         }
-        cout << endl;
+        if (shouldPrintLogs)
+            cout << endl;
     }
 
     // Step 5: Convert NFA to DFA
@@ -554,7 +604,8 @@ bool runTheModel(string regexp, string testcase)
     // Step 6: Run string on DFA
     bool res = runStringOnDFA(testcase, finalStates, theResultantDFA);
 
-    cout << "::> Resetting State numbers" << endl;
+    if (shouldPrintLogs)
+        cout << "::> Resetting State numbers" << endl;
     stateCounter = 0;
 
     return res;
@@ -562,13 +613,14 @@ bool runTheModel(string regexp, string testcase)
 
 int main()
 {
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("input2.txt", "r", stdin);
+    freopen("output2.txt", "w", stdout);
 
     // Input parameters
     string input;
     cin >> input;
-    cout << "Input: " << input << endl;
+    if (shouldPrintLogs)
+        cout << "Input: " << input << endl;
 
     vector<string> regex;
     string temp;
@@ -592,12 +644,15 @@ int main()
         regex[i] = temp;
     }
 
-    cout << "Printing Regex:  " << endl;
+    if (shouldPrintLogs)
+        cout << "Printing Regex:  " << endl;
     for (auto c : regex)
     {
-        cout << c << endl;
+        if (shouldPrintLogs)
+            cout << c << endl;
     }
-    cout << endl;
+    if (shouldPrintLogs)
+        cout << endl;
 
     size_t len = input.size();
 
@@ -639,14 +694,14 @@ int main()
         }
     }
 
-    cout << "::> Final Output: ";
     for (auto p : finaloutput)
     {
         cout << "<" << p.first << "," << p.second << ">";
     }
     cout << endl;
 
-    cout << "--------------------- END TEST CASE "
-         << " ---------------------" << endl
-         << endl;
+    if (shouldPrintLogs)
+        cout << "--------------------- END TEST CASE "
+             << " ---------------------" << endl
+             << endl;
 }
