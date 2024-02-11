@@ -4,6 +4,8 @@ using namespace std;
 
 // GLOBAL VARIABLES
 int stateCounter = 0;
+int startStateInNFA;
+vector<int> finalStateInNFA;
 
 class State
 {
@@ -86,6 +88,24 @@ public:
         q.push(this->start);
         mp[this->start->number] = 1;
 
+        cout << "::> Start State: " << this->start->number << endl;
+        startStateInNFA = this->start->number;
+        // We add the final state to ends
+        cout << "::> End State: " << this->end->number << endl;
+        finalStateInNFA.push_back(this->end->number);
+        // We also have to check if start state has an epsilon transition to the final state, which
+        // basically means empty string is accepted
+        bool startStateIsFinal = false;
+        for (auto x : this->start->e)
+        {
+            if (x->number == this->end->number)
+            {
+                startStateIsFinal = true;
+            }
+        }
+        if (startStateIsFinal)
+            finalStateInNFA.push_back(startStateInNFA);
+
         while (!q.empty())
         {
             State *curr = q.front();
@@ -93,7 +113,6 @@ public:
 
             mp[curr->number] = 1;
 
-            // cout << "::> State Number: " << curr->number << endl;
             // Initialize, corresponding to a | b | e
             stateTransitions[curr->number] = {{}, {}, {}};
 
@@ -290,10 +309,12 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
     map<set<int>, int> mapOfStatesVisited;
 
     char stateLetter = 'A';
-    q.push({0});
-    mapOfStatesVisited[{0}] = stateLetter++;
+    q.push({startStateInNFA});
+    mapOfStatesVisited[{startStateInNFA}] = stateLetter++;
 
     map<char, vector<char>> theResultantDFA;
+    cout << endl
+         << "::> Printing the RAW DFA: " << endl;
 
     while (!q.empty())
     {
@@ -304,6 +325,7 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
             nextSet0, nextSet1;
         for (auto x : currentSet)
         {
+            // Here we add all transitions of a and then their epsilon transitions
             for (auto y : stateTransitions[x][0])
             {
                 nextSet0.insert(y);
@@ -312,6 +334,7 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
                     nextSet0.insert(z);
                 }
             }
+            // Here we add all transitions of b and then their epsilon transitions
             for (auto y : stateTransitions[x][1])
             {
                 nextSet1.insert(y);
@@ -319,6 +342,33 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
                 {
                     nextSet1.insert(z);
                 }
+            }
+            // We should also add all epsilon first then letter wala transitions
+            for (auto y : epsilonClosures[x])
+            {
+                for (auto z : stateTransitions[y][0])
+                {
+                    nextSet0.insert(z);
+                }
+                for (auto z : stateTransitions[y][1])
+                {
+                    nextSet1.insert(z);
+                }
+            }
+        }
+
+        for (auto x : nextSet0)
+        {
+            for (auto y : epsilonClosures[x])
+            {
+                nextSet0.insert(y);
+            }
+        }
+        for (auto x : nextSet1)
+        {
+            for (auto y : epsilonClosures[x])
+            {
+                nextSet1.insert(y);
             }
         }
 
@@ -334,12 +384,12 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
         }
 
         // Printing the DFA
-        // printSet(currentSet);
-        // cout << " ";
-        // printSet(nextSet0);
-        // cout << " ";
-        // printSet(nextSet1);
-        // cout << endl;
+        printSet(currentSet);
+        cout << " ";
+        printSet(nextSet0);
+        cout << " ";
+        printSet(nextSet1);
+        cout << endl;
 
         theResultantDFA[(char)mapOfStatesVisited[currentSet]] = {
             (char)mapOfStatesVisited[nextSet0],
@@ -351,9 +401,12 @@ map<char, vector<char>> convertNFAtoDFA(map<char, int> &finalStates, map<int, ve
         int isFinalState = 0;
         for (auto v : x.first)
         {
-            if (v == stateCounter - 1)
+            for (auto finalState : finalStateInNFA)
             {
-                isFinalState = 1;
+                if (v == finalState)
+                {
+                    isFinalState = 1;
+                }
             }
         }
 
@@ -381,6 +434,7 @@ bool runStringOnDFA(string input, map<char, int> finalStates, map<char, vector<c
         }
         cout << endl;
     }
+    cout << endl;
 
     // Print final States
     cout << "Final States: ";
@@ -388,7 +442,8 @@ bool runStringOnDFA(string input, map<char, int> finalStates, map<char, vector<c
     {
         cout << x.first << ' ';
     }
-    cout << endl;
+    cout << endl
+         << endl;
 
     char currentState = 'A';
     cout << "::> Flow: ";
