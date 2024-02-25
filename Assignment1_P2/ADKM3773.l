@@ -5,7 +5,6 @@
 
 int toPrint = 1;
 
-char student_id[100];
 char id[100];
 int k1 = 0; // Total no:of valid records
 int k2 = 0; // Total no:of comments
@@ -25,6 +24,8 @@ typedef struct course {
     char grade[100];
 } course;
 
+student* neededStudent = (student*) malloc(sizeof(student));
+
 %}
 
 %x READ_STUDENT_ID
@@ -40,7 +41,7 @@ typedef struct course {
 
 %%
 <READ_STUDENT_ID>[A-Z]+[0-9]+ { 
-    sprintf(student_id, "%s", yytext); 
+    sprintf(neededStudent->student_id, "%s", yytext); 
     BEGIN(INITIAL);
     return 0;
 }
@@ -58,12 +59,12 @@ typedef struct course {
 
 <RECORDS>[A-Z]+[0-9]+ {
     sprintf(id, "%s", yytext);
-    if(id == student_id){
+    if(id == neededStudent->student_id){
         BEGIN(STUDENT_RECORD);
-
     }
     else{
-        // BEGIN(READ_RECORD);
+        // Not the student we want
+        // we can ignore
     }
 }
 
@@ -107,7 +108,7 @@ int main() {
     }
     BEGIN(READ_STUDENT_ID);
     yylex();
-    if(toPrint) printf("Student ID: %s\n", student_id);
+    if(toPrint) printf("Student ID: %s\n", neededStudent->student_id);
 
     // Then we open data.txt and read the data but this time 
     // we write the output to output.txt
