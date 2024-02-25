@@ -68,7 +68,7 @@ student* neededStudent = (student*) malloc(sizeof(student));
     }
 }
 
-"<" BEGIN(STUDENT_RECORD_COURSEID);
+<STUDENT_RECORD>"<" BEGIN(STUDENT_RECORD_COURSEID);
 <STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+ { 
     if(toPrint) printf("\nCourse ID: %s ", yytext); 
 } 
