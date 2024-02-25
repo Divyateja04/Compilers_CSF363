@@ -32,7 +32,10 @@ double k4 = 0.0; // CGPA * 100
     BEGIN(COMMENT);
 }
 <COMMENT>[^\n]* { } /* eat up comments */
-<COMMENT>[\n] { numComments++; }
+<COMMENT>[\n] { 
+    k2++;
+    BEGIN(INITIAL);
+}
 
 "$" { BEGIN(RECORDS); }
 <RECORDS>[A-Z]+[0-9]+ {
@@ -56,7 +59,7 @@ double k4 = 0.0; // CGPA * 100
 }
 
 " "+ BEGIN(STUDENT_RECORD_GRADE);
-<STUDENT_RECORD_GRADE>{A, A−, B, B−, C} { 
+<STUDENT_RECORD_GRADE>{A, A-, B, B-, C} { 
     ... ;
     k1++
 }
