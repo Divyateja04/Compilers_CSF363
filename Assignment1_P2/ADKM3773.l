@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int toPrint = 1;
+
 char student_id[100];
 char id[100];
 int k1 = 0; // Total no:of valid records
@@ -10,18 +12,33 @@ int k2 = 0; // Total no:of comments
 int k3 = 0; // No:of distinct courses
 double cgpa = 0.0; // CGPA
 double k4 = 0.0; // CGPA * 100
+
+typedef struct student {
+    char student_id[100];
+    int no_of_courses;
+    course* courses[100];
+} student;
+
+typedef struct course {
+    char course_id[100];
+    int units;
+    char grade[100];
+} course;
+
 %}
 
 %x READ_STUDENT_ID
 %x COMMENT
+
 %s RECORDS
+
 %s STUDENT_RECORD
-%s STUDENT_RECORD_COURSEID
-%s STUDENT_RECORD_UNITS
-%s STUDENT_RECORD_GRADE
+%s STUDENT_RECORD_END
+%x STUDENT_RECORD_COURSEID
+%x STUDENT_RECORD_UNITS
+%x STUDENT_RECORD_GRADE
 
 %%
-
 <READ_STUDENT_ID>[A-Z]+[0-9]+ { 
     sprintf(student_id, "%s", yytext); 
     BEGIN(INITIAL);
@@ -38,33 +55,44 @@ double k4 = 0.0; // CGPA * 100
 }
 
 "$" { BEGIN(RECORDS); }
+
 <RECORDS>[A-Z]+[0-9]+ {
     sprintf(id, "%s", yytext);
     if(id == student_id){
         BEGIN(STUDENT_RECORD);
+
     }
     else{
-        BEGIN(READ_RECORD);
+        // BEGIN(READ_RECORD);
     }
 }
 
 "<" BEGIN(STUDENT_RECORD_COURSEID);
 <STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+ { 
-    ... 
+    if(toPrint) printf("\nCourse ID: %s ", yytext); 
 } 
+<STUDENT_RECORD_COURSEID>[" "]+ BEGIN(STUDENT_RECORD_UNITS);
 
-" "+ BEGIN(STUDENT_RECORD_UNITS);
+
 <STUDENT_RECORD_UNITS>[234] { 
-    ... 
+    if(toPrint) printf("\nUnits: %s ", yytext); 
+}
+<STUDENT_RECORD_UNITS>[" "]+ BEGIN(STUDENT_RECORD_GRADE);
+
+
+<STUDENT_RECORD_GRADE>["A/\-"|"B/\-"] { 
+    if(toPrint) printf("\nGrade: %s- ", yytext); 
+    k1++;
+    BEGIN(STUDENT_RECORD_END);
+}
+<STUDENT_RECORD_GRADE>["A"|"B"|"C"] { 
+    if(toPrint) printf("\nGrade: %s ", yytext); 
+    k1++;
+    BEGIN(STUDENT_RECORD_END);
 }
 
-" "+ BEGIN(STUDENT_RECORD_GRADE);
-<STUDENT_RECORD_GRADE>{A, A-, B, B-, C} { 
-    ... ;
-    k1++
-}
 
-">"" "* BEGIN(INITIAL);
+<STUDENT_RECORD_END>">"" "* BEGIN(INITIAL);
 
 . { ECHO; }
 
@@ -74,27 +102,33 @@ int main() {
     // First we open input.txt and read the student id
     yyin = fopen("input.txt", "r");
     if (!yyin) {
-        printf("Error opening input.txt\n");
+        if(toPrint) printf("Error opening input.txt\n");
         return 1;
     }
     BEGIN(READ_STUDENT_ID);
     yylex();
-    printf("Student ID: %s\n", student_id);
+    if(toPrint) printf("Student ID: %s\n", student_id);
 
     // Then we open data.txt and read the data but this time 
     // we write the output to output.txt
     yyin = fopen("data.txt", "r");
     if(!yyin) {
-        printf("Error opening data.txt\n");
+        if(toPrint) printf("Error opening data.txt\n");
         return 1;
     } 
     yyout = fopen("output.txt", "w");
     if(!yyout) {
-        printf("Error opening output.txt\n");
+        if(toPrint) printf("Error opening output.txt\n");
         return 1;
     }
     yyrestart(yyin);
     yylex();
+
+    // Print the results
+    if(toPrint) printf("\n\nTotal no:of valid records: %d\n", k1);
+    if(toPrint) printf("Total no:of comments: %d\n", k2);
+    if(toPrint) printf("No:of distinct courses: %d\n", k3);
+    if(toPrint) printf("CGPA: %.2f\n", cgpa);
 
     // Close the files
     fclose(yyin);
