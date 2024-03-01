@@ -13,7 +13,7 @@ int k3 = 0; // No:of distinct courses
 
 typedef struct course {
     char course_id[100];
-    char units[1];
+    int units;
     char grade[100];
     bool course_flag;  // If Course overall is valid or not (unit and grade both are not missing)
 } course;
@@ -96,8 +96,9 @@ char our_student_id[100];
 <STUDENT_RECORD_COURSEID>[" "]+ BEGIN(STUDENT_RECORD_UNITS);
 
 <STUDENT_RECORD_UNITS>[234] { 
-    sprintf(records[stu_itr]->courses[course_itr-1]->units,"%s",yytext);
-    if(toPrint) printf("\nUnits: %s ", records[stu_itr]->courses[course_itr-1]->units); 
+    records[stu_itr]->courses[course_itr-1]->units = yytext[0]-'0';
+    // sprintf(records[stu_itr]->courses[course_itr-1]->units,"%s",yytext);
+    if(toPrint) printf("\nUnits: %d ", records[stu_itr]->courses[course_itr-1]->units); 
 }
 
 <STUDENT_RECORD_UNITS>[" "]+ BEGIN(STUDENT_RECORD_GRADE);
@@ -133,7 +134,8 @@ int check(struct course* c, struct our_student_data* our_student)
         if(strcmp(c->course_id,our_student->courses[i]->course_id)==0)
         {
             sprintf(our_student->courses[i]->grade,"%s", c->grade);
-            sprintf(our_student->courses[i]->units,"%s", c->units);
+            our_student->courses[i]->units = c->units;
+            // sprintf(our_student->courses[i]->units,"%s", c->units);
             if(c->course_flag==false)
             our_student->courses[i]->course_flag=false;
             else
@@ -145,9 +147,10 @@ int check(struct course* c, struct our_student_data* our_student)
 
     sprintf(our_student->courses[our_student_itr]->course_id,"%s", c->course_id);
     sprintf(our_student->courses[our_student_itr]->grade,"%s", c->grade);
-    sprintf(our_student->courses[our_student_itr]->units,"%s", c->units);
-    printf("\n%s %s %s", c->course_id, c->grade, c->units);
-    printf("\n%s %s %s", our_student->courses[our_student_itr]->course_id, our_student->courses[our_student_itr]->grade, our_student->courses[our_student_itr]->units);
+    our_student->courses[our_student_itr]->units = c->units;
+    // sprintf(our_student->courses[our_student_itr]->units,"%s", c->units);
+    // printf("\n%s %s %d", c->course_id, c->grade, c->units);
+    // printf("\n%s %s %d", our_student->courses[our_student_itr]->course_id, our_student->courses[our_student_itr]->grade, our_student->courses[our_student_itr]->units);
     our_student->courses[our_student_itr]->course_flag=c->course_flag;
     our_student_itr--;
     return 0;
@@ -236,17 +239,17 @@ int main() {
             if(strcmp(our_student->courses[i]->grade,"A")==0)
             {
                 // printf("\nA grade");
-                if(strcmp(our_student->courses[i]->units,"2"))
+                if(our_student->courses[i]->units==2)
                 {
                     points+= 20;
                     total_unit+=2;
                 }
-                else if(strcmp(our_student->courses[i]->units,"3"))
+                else if(our_student->courses[i]->units==3)
                 {
                     points+= 30;
                     total_unit+=3;
                 }
-                else if(strcmp(our_student->courses[i]->units,"4"))
+                else if(our_student->courses[i]->units==4)
                 {
                     points+= 40;
                     total_unit+=4;
@@ -254,17 +257,17 @@ int main() {
             }
             else if(strcmp(our_student->courses[i]->grade,"A-")==0)
             {
-                if(strcmp(our_student->courses[i]->units,"2"))
+                if(our_student->courses[i]->units==2)
                 {
                     points+= 16;
                     total_unit+=2;
                 }
-                else if(strcmp(our_student->courses[i]->units,"3"))
+                else if(our_student->courses[i]->units==3)
                 {
                     points+= 24;
                     total_unit+=3;
                 }
-                else if(strcmp(our_student->courses[i]->units,"4"))
+                else if(our_student->courses[i]->units==4)
                 {
                     points+= 32;
                     total_unit+=4;
@@ -272,36 +275,35 @@ int main() {
             }
             else if(strcmp(our_student->courses[i]->grade,"B")==0)
             {
-                if(strcmp(our_student->courses[i]->units,"2"))
+                if(our_student->courses[i]->units==2)
                 {
                     points+= 12;
                     total_unit+=2;
                 }
-                else if(strcmp(our_student->courses[i]->units,"3"))
+                else if(our_student->courses[i]->units==3)
                 {
                     points+= 18;
                     total_unit+=3;
                 }
-                else if(strcmp(our_student->courses[i]->units,"4"))
+                else if(our_student->courses[i]->units==4)
                 {
-                    printf("\nB grade 4");
                     points+= 24;
                     total_unit+=4;
                 }
             }
             else if(strcmp(our_student->courses[i]->grade,"B-")==0)
             {
-                if(strcmp(our_student->courses[i]->units,"2"))
+                if(our_student->courses[i]->units==2)
                 {
                     points+= 8;
                     total_unit+=2;
                 }
-                else if(strcmp(our_student->courses[i]->units,"3"))
+                else if(our_student->courses[i]->units==3)
                 {
                     points+= 12;
                     total_unit+=3;
                 }
-                else if(strcmp(our_student->courses[i]->units,"4"))
+                else if(our_student->courses[i]->units==4)
                 {
                     points+= 16;
                     total_unit+=4;
@@ -309,17 +311,17 @@ int main() {
             }
             else if(strcmp(our_student->courses[i]->grade,"C")==0)
             {
-                if(strcmp(our_student->courses[i]->units,"2"))
+                if(our_student->courses[i]->units==2)
                 {
                     points+= 4;
                     total_unit+=2;
                 }
-                else if(strcmp(our_student->courses[i]->units,"3"))
+                else if(our_student->courses[i]->units==3)
                 {
                     points+= 6;
                     total_unit+=3;
                 }
-                else if(strcmp(our_student->courses[i]->units,"4"))
+                else if(our_student->courses[i]->units==4)
                 {
                     points+= 8;
                     total_unit+=4;
@@ -331,13 +333,13 @@ int main() {
     // printf("%d\n", total_unit);
     cgpa = (double)points/total_unit;
 
-    for(int i=0;i<100;i++)
-    {
-        if(our_student->courses[i]->course_flag)
-        {
-            // printf("\n%s %s %s", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
-        }
-    }
+    // for(int i=0;i<100;i++)
+    // {
+    //     if(our_student->courses[i]->course_flag)
+    //     {
+    //         // printf("\n%s %s %s", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
+    //     }
+    // }
     
     if(toPrint) printf("\n\nTotal no:of valid records: %d\n", k1);
     if(toPrint) printf("Total no:of comments: %d\n", k2);
