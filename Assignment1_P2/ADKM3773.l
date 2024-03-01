@@ -103,6 +103,7 @@ char our_student_id[100];
 
 <STUDENT_RECORD_UNITS>[" "]+ BEGIN(STUDENT_RECORD_GRADE);
 
+
 <STUDENT_RECORD_GRADE>["A"|"B"|"C"] { 
     sprintf(records[stu_itr]->courses[course_itr-1]->grade,"%s",yytext);
     records[stu_itr]->courses[course_itr-1]->course_flag=true;
@@ -110,15 +111,6 @@ char our_student_id[100];
     if(toPrint) printf("\nGrade: %s", records[stu_itr]->courses[course_itr-1]->grade); 
     BEGIN(STUDENT_RECORD_END);
 }
-<STUDENT_RECORD_GRADE>["A""-"|"B""-"] { 
-    printf("-:%s", yytext);
-    sprintf(records[stu_itr]->courses[course_itr-1]->grade,"%s-",yytext);
-    records[stu_itr]->courses[course_itr-1]->course_flag=true;
-    records[stu_itr]->stud_flag=true;
-    if(toPrint) printf("\nGrade-: %s", records[stu_itr]->courses[course_itr-1]->grade); 
-    BEGIN(STUDENT_RECORD_END);
-}
-
 <STUDENT_RECORD_END>[" "]*">"[" "]* BEGIN(RECORD_TUPLE);
 
 %%
@@ -142,6 +134,7 @@ int check(struct course* c, struct our_student_data* our_student)
     sprintf(our_student->courses[our_student_itr]->course_id,"%s", c->course_id);
     sprintf(our_student->courses[our_student_itr]->grade,"%s", c->grade);
     sprintf(our_student->courses[our_student_itr]->units,"%s", c->units);
+    printf("\n%s %s %s", c->course_id,c->grade, c->units);
     printf("\n%s %s %s", our_student->courses[our_student_itr]->course_id, our_student->courses[our_student_itr]->grade, our_student->courses[our_student_itr]->units);
     our_student->courses[our_student_itr]->course_flag=c->course_flag;
     our_student_itr--;
@@ -213,6 +206,7 @@ int main() {
             {
                 if(records[i]->courses[j]->course_flag)
                 {
+                    printf("\n%s", records[i]->courses[j]->units);
                     if(check(records[i]->courses[j],our_student)==0)
                     k3++;
                 }
@@ -227,7 +221,6 @@ int main() {
     {   
         if(our_student->courses[i]->course_flag)
         {
-            printf("\n %s",our_student->courses[i]->units);
             if(strcmp(our_student->courses[i]->grade,"A")==0)
             {
                 printf("\nA grade");
@@ -267,7 +260,6 @@ int main() {
             }
             else if(strcmp(our_student->courses[i]->grade,"B")==0)
             {
-                printf("\nB grade");
                 if(strcmp(our_student->courses[i]->units,"2"))
                 {
                     points+= 12;
