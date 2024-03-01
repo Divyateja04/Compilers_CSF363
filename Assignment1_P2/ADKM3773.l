@@ -2,15 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include<stdbool.h>
+#include <stdbool.h>
+
 int toPrint = 1;
 
 char id[100];
 int k1 = 0; // Total no:of valid records
 int k2 = 0; // Total no:of comments
 int k3 = 0; // No:of distinct courses
-// double cgpa = 0.0; // CGPA
-// double k4 = 0.0; // CGPA * 100
 
 typedef struct course {
     char course_id[100];
@@ -18,7 +17,6 @@ typedef struct course {
     char grade[100];
     bool course_flag;  // If Course overall is valid or not (unit and grade both are not missing)
 } course;
-
 
 typedef struct student {
     char student_id[100];
@@ -35,6 +33,7 @@ struct student* records[30];
 
 int stu_itr = -1;
 int course_itr=0;
+
 int our_student_itr=99;
 char our_student_id[100];
 %}
@@ -82,7 +81,7 @@ char our_student_id[100];
 
 <RECORDS>[A-Z]+[0-9]+ {
     sprintf(records[stu_itr]->student_id,"%s",yytext);
-    if(toPrint) printf("\n\nnew Student: %s", records[stu_itr]->student_id);
+    if(toPrint) printf("\n\nNew Student: %s", records[stu_itr]->student_id);
     BEGIN(STUDENT_RECORD);
 }
 
@@ -103,7 +102,20 @@ char our_student_id[100];
 
 <STUDENT_RECORD_UNITS>[" "]+ BEGIN(STUDENT_RECORD_GRADE);
 
-
+<STUDENT_RECORD_GRADE>"A-" { 
+    sprintf(records[stu_itr]->courses[course_itr-1]->grade,"%s",yytext);
+    records[stu_itr]->courses[course_itr-1]->course_flag=true;
+    records[stu_itr]->stud_flag=true;
+    if(toPrint) printf("\nGrade: %s", records[stu_itr]->courses[course_itr-1]->grade); 
+    BEGIN(STUDENT_RECORD_END);
+}
+<STUDENT_RECORD_GRADE>"B-" { 
+    sprintf(records[stu_itr]->courses[course_itr-1]->grade,"%s",yytext);
+    records[stu_itr]->courses[course_itr-1]->course_flag=true;
+    records[stu_itr]->stud_flag=true;
+    if(toPrint) printf("\nGrade: %s", records[stu_itr]->courses[course_itr-1]->grade); 
+    BEGIN(STUDENT_RECORD_END);
+}
 <STUDENT_RECORD_GRADE>["A"|"B"|"C"] { 
     sprintf(records[stu_itr]->courses[course_itr-1]->grade,"%s",yytext);
     records[stu_itr]->courses[course_itr-1]->course_flag=true;
@@ -134,7 +146,7 @@ int check(struct course* c, struct our_student_data* our_student)
     sprintf(our_student->courses[our_student_itr]->course_id,"%s", c->course_id);
     sprintf(our_student->courses[our_student_itr]->grade,"%s", c->grade);
     sprintf(our_student->courses[our_student_itr]->units,"%s", c->units);
-    printf("\n%s %s %s", c->course_id,c->grade, c->units);
+    printf("\n%s %s %s", c->course_id, c->grade, c->units);
     printf("\n%s %s %s", our_student->courses[our_student_itr]->course_id, our_student->courses[our_student_itr]->grade, our_student->courses[our_student_itr]->units);
     our_student->courses[our_student_itr]->course_flag=c->course_flag;
     our_student_itr--;
@@ -206,7 +218,7 @@ int main() {
             {
                 if(records[i]->courses[j]->course_flag)
                 {
-                    printf("\n%s", records[i]->courses[j]->units);
+                    // printf("\n%s", records[i]->courses[j]->units);
                     if(check(records[i]->courses[j],our_student)==0)
                     k3++;
                 }
@@ -223,7 +235,7 @@ int main() {
         {
             if(strcmp(our_student->courses[i]->grade,"A")==0)
             {
-                printf("\nA grade");
+                // printf("\nA grade");
                 if(strcmp(our_student->courses[i]->units,"2"))
                 {
                     points+= 20;
@@ -315,15 +327,15 @@ int main() {
             }
         }
     }
-    printf("\n%d\n", points);
-    printf("%d\n", total_unit);
+    // printf("\n%d\n", points);
+    // printf("%d\n", total_unit);
     cgpa = (double)points/total_unit;
 
     for(int i=0;i<100;i++)
     {
         if(our_student->courses[i]->course_flag)
         {
-            printf("\n%s %s %s", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
+            // printf("\n%s %s %s", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
         }
     }
     
