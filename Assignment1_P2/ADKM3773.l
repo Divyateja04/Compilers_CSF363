@@ -33,9 +33,10 @@ struct student* records[30];
 
 int stu_itr = -1;
 int course_itr=0;
-
+int all_student_itr=0;
 int our_student_itr=99;
 char our_student_id[100];
+char all_student_id[30][100];
 %}
 
 %x READ_STUDENT_ID
@@ -156,6 +157,19 @@ int check(struct course* c, struct our_student_data* our_student)
     return 0;
 }
 
+int check_student(struct student* s)
+{
+    for(int i=0;i<30;i++)
+    {
+        if(strcmp(s->student_id,all_student_id[i])==0)
+        return 0;
+    }
+
+    sprintf(all_student_id[all_student_itr],"%s", s->student_id);
+    all_student_itr++;
+    return 1;
+}
+
 int main() {
     // First we open input.txt and read the student id
     for (int i = 0; i < 30; i++) 
@@ -201,7 +215,10 @@ int main() {
     for(int i=0;i<30;i++)
     {
         if(records[i]->stud_flag)
-        k1++;
+        {
+            if(check_student(records[i])==1)
+            k1++;
+        }    
     }
 
     struct our_student_data* our_student  = (struct our_student_data*)malloc(sizeof(struct our_student_data));
