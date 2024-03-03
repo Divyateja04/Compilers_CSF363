@@ -1,1 +1,20 @@
-<CSF363 4 A> 
+
+
+
+
+
+// all the above records are valid
+
+>
+$QWE1 <IJ4 2 
+// in the below some invalid records are given
+
+// ignore the first tuple before 
+$//two records in the same line, consider the both records
+// 
+> <PO45654 2 // ignore > since grade is missing  
+$  V234 <PO45654  B-//B->is missing units, ignore the tuple. 
+$ <S56 3 //invalid record since studID is missing
+lm24 < 3 A->//invalid record since studID is not matching the rules. 
+
+// 
