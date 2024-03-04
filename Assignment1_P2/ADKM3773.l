@@ -35,7 +35,7 @@ struct student* records[30];
 int stu_itr = -1;
 int course_itr=0;
 int all_student_itr=0;
-int our_student_itr=99;
+int our_student_itr=0;
 char our_student_id[100];
 char all_student_id[30][100];
 %}
@@ -51,17 +51,21 @@ char all_student_id[30][100];
 %x STUDENT_RECORD_UNITS
 %x STUDENT_RECORD_GRADE
 %x RECORD_TUPLE
+%x INVALID_TUPLE
+%x INVALID_RECORD
 
 %%
 
 "//" { 
     BEGIN(COMMENT);
 }
-<COMMENT>[^\n]* { } /* eat up comments */
-<COMMENT>[\n] { 
+<COMMENT>[^\n]* {
     k2++;
+ } /* eat up comments */
+<COMMENT>[\n] { 
     BEGIN(INITIAL);
 }
+
 
 <READ_STUDENT_ID>[A-Z]+[0-9]+ {
     sprintf(our_student_id, "%s", yytext); 
@@ -84,7 +88,8 @@ char all_student_id[30][100];
     stu_itr++;
     course_itr = 0; 
     BEGIN(RECORDS); 
-    }
+    printf("\n\nBeginning Records");
+}
 <RECORD_TUPLE>"<"[" "]* { 
     BEGIN(STUDENT_RECORD_COURSEID);
 }
@@ -94,6 +99,7 @@ char all_student_id[30][100];
     stu_itr++;
     course_itr = 0; 
     BEGIN(RECORDS); 
+    printf("\n\nBeginning Records");
 }
 
 
@@ -102,6 +108,9 @@ char all_student_id[30][100];
 }
 <RECORDS>[A-Z0-9]*"//" {
     BEGIN(COMMENT);
+}
+<RECORDS>"<" {
+    BEGIN(INVALID_RECORD);
 }
 <RECORDS>[A-Z]+[0-9]+ {
     sprintf(records[stu_itr]->student_id,"%s",yytext);
@@ -128,11 +137,17 @@ char all_student_id[30][100];
 <STUDENT_RECORD_COURSEID>[A-Z0-9]*"//" {
     BEGIN(COMMENT);
 }
+<STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+[A-Z]+ { 
+    BEGIN(INVALID_TUPLE);
+} 
 <STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+ { 
     sprintf(records[stu_itr]->courses[course_itr]->course_id,"%s",yytext);    
     if(toPrint) printf("\nCourse ID: %s ", records[stu_itr]->courses[course_itr]->course_id); 
     course_itr++;
 } 
+<STUDENT_RECORD_COURSEID>[" "]*">" {
+     BEGIN(RECORD_TUPLE);
+}
 <STUDENT_RECORD_COURSEID>[" "]+ {
     BEGIN(STUDENT_RECORD_UNITS);
 }
@@ -149,7 +164,9 @@ char all_student_id[30][100];
     // sprintf(records[stu_itr]->courses[course_itr-1]->units,"%s",yytext);
     if(toPrint) printf("\nUnits: %d ", records[stu_itr]->courses[course_itr-1]->units); 
 }
-
+<STUDENT_RECORD_UNITS>[" "]*">" {
+     BEGIN(RECORD_TUPLE);
+}
 <STUDENT_RECORD_UNITS>[" "]+ {
     BEGIN(STUDENT_RECORD_GRADE);
 }
@@ -193,11 +210,28 @@ char all_student_id[30][100];
 <STUDENT_RECORD_END>[" "]*"//" {
     BEGIN(COMMENT);
 } 
-<STUDENT_RECORD_END>[" "]*">//"[" "]* {
+<STUDENT_RECORD_END>[" "]*">"[" "]*"//"[" "]* {
     BEGIN(COMMENT);
 } 
 <STUDENT_RECORD_END>[" "]*">"[" "]* {
     BEGIN(RECORD_TUPLE);
+}
+
+<INVALID_TUPLE>[" "]*"//" {
+    BEGIN(COMMENT);
+}
+<INVALID_TUPLE>[" "]*">" {
+    BEGIN(RECORD_TUPLE);
+}
+<INVALID_TUPLE>[A-Z0-9]*">" {
+    BEGIN(RECORD_TUPLE);
+}
+
+<INVALID_RECORD>[" "]*"//" {
+    BEGIN(COMMENT);
+}
+<INVALID_RECORD>SEX {
+    BEGIN(RECORDS);
 }
 
 
@@ -227,22 +261,22 @@ int check(struct course* c, struct our_student_data* our_student)
     // printf("\n%s %s %d", c->course_id, c->grade, c->units);
     // printf("\n%s %s %d", our_student->courses[our_student_itr]->course_id, our_student->courses[our_student_itr]->grade, our_student->courses[our_student_itr]->units);
     our_student->courses[our_student_itr]->course_flag=c->course_flag;
-    our_student_itr--;
+    our_student_itr++;
     return 0;
 }
 
-int check_student(struct student* s)
-{
-    for(int i=0;i<30;i++)
-    {
-        if(strcmp(s->student_id,all_student_id[i])==0)
-        return 0;
-    }
+// int check_student(struct student* s)
+// {
+//     for(int i=0;i<30;i++)
+//     {
+//         if(strcmp(s->student_id,all_student_id[i])==0)
+//         return 0;
+//     }
 
-    sprintf(all_student_id[all_student_itr],"%s", s->student_id);
-    all_student_itr++;
-    return 1;
-}
+//     sprintf(all_student_id[all_student_itr],"%s", s->student_id);
+//     all_student_itr++;
+//     return 1;
+// }
 
 int main() {
     // First we open input.txt and read the student id
@@ -290,7 +324,7 @@ int main() {
     {
         if(records[i]->stud_flag)
         {
-            if(check_student(records[i])==1)
+            // if(check_student(records[i])==1)
             k1++;
         }    
     }
@@ -424,13 +458,13 @@ int main() {
     // printf("%d\n", total_unit);
     cgpa = (double)points/total_unit;
 
-    // for(int i=0;i<100;i++)
-    // {
-    //     if(our_student->courses[i]->course_flag)
-    //     {
-    //         // printf("\n%s %s %s", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
-    //     }
-    // }
+    for(int i=0;i<100;i++)
+    {
+        if(our_student->courses[i]->course_flag)
+        {
+            printf("\n%s %s %d", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
+        }
+    }
     
     if(toPrint) printf("\n\nTotal no:of valid records: %d\n", k1);
     if(toPrint) printf("Total no:of comments: %d\n", k2);
