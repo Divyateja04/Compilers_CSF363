@@ -276,9 +276,9 @@ int main() {
         if(toPrint) printf("Error opening data.txt\n");
         return 1;
     } 
-    yyout = fopen("output.txt", "w");
+    yyout = fopen("temp.txt", "w");
     if(!yyout) {
-        if(toPrint) printf("Error opening output.txt\n");
+        if(toPrint) printf("Error opening temp.txt\n");
         return 1;
     }
     yyrestart(yyin);
@@ -438,6 +438,13 @@ int main() {
 
     int rounded_cgpa = round(cgpa*100);
     if(toPrint) printf("CGPA: %d\n", rounded_cgpa);
+
+    yyout = fopen("output.txt", "w");
+    if(!yyout) {
+        if(toPrint) printf("Error opening output.txt\n");
+        return 1;
+    }
+    fprintf(yyout, "@%d@%d@%d@%d#", k1, k2, k3, rounded_cgpa);
 
     // Close the files
     fclose(yyin);
