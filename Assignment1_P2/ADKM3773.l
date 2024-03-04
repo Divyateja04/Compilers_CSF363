@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 int toPrint = 1;
 
@@ -434,7 +435,9 @@ int main() {
     if(toPrint) printf("\n\nTotal no:of valid records: %d\n", k1);
     if(toPrint) printf("Total no:of comments: %d\n", k2);
     if(toPrint) printf("No:of distinct courses: %d\n", k3);
-    if(toPrint) printf("CGPA: %.2f\n", cgpa);
+
+    int rounded_cgpa = round(cgpa*100);
+    if(toPrint) printf("CGPA: %d\n", rounded_cgpa);
 
     // Close the files
     fclose(yyin);
