@@ -52,18 +52,6 @@ char all_student_id[30][100];
 %x RECORD_TUPLE
 
 %%
-<READ_STUDENT_ID>[A-Z]+[0-9]+ {
-    sprintf(our_student_id, "%s", yytext); 
-    // printf("%s", our_student);
-    BEGIN(INITIAL);
-    return 0;
-}
-<RECORD_TUPLE>"$"[" "]* { 
-    stu_itr++;
-    course_itr = 0; 
-    BEGIN(RECORDS); 
-    }
-<RECORD_TUPLE>"<"[" "]* {BEGIN(STUDENT_RECORD_COURSEID);}
 
 "//" { 
     BEGIN(COMMENT);
@@ -74,36 +62,110 @@ char all_student_id[30][100];
     BEGIN(INITIAL);
 }
 
+<READ_STUDENT_ID>[A-Z]+[0-9]+ {
+    sprintf(our_student_id, "%s", yytext); 
+    // printf("%s", our_student);
+    BEGIN(INITIAL);
+    return 0;
+}
+
+
+<RECORD_TUPLE>[" "]*"//" {
+    BEGIN(COMMENT);      
+} 
+<RECORD_TUPLE>"$//" {
+    BEGIN(COMMENT);
+} 
+<RECORD_TUPLE>"<//" {
+    BEGIN(COMMENT);
+}
+<RECORD_TUPLE>"$"[" "]* { 
+    stu_itr++;
+    course_itr = 0; 
+    BEGIN(RECORDS); 
+    }
+<RECORD_TUPLE>"<"[" "]* { 
+    BEGIN(STUDENT_RECORD_COURSEID);
+}
+
+
 "$"[" "]* { 
     stu_itr++;
     course_itr = 0; 
     BEGIN(RECORDS); 
 }
 
+
+<RECORDS>[" "]*"//" {
+    BEGIN(COMMENT);
+}
+<RECORDS>[A-Z0-9]*"//" {
+    BEGIN(COMMENT);
+}
 <RECORDS>[A-Z]+[0-9]+ {
     sprintf(records[stu_itr]->student_id,"%s",yytext);
     if(toPrint) printf("\n\nNew Student: %s", records[stu_itr]->student_id);
     BEGIN(STUDENT_RECORD);
 }
 
-<STUDENT_RECORD>[" "]*"<"[" "]* BEGIN(STUDENT_RECORD_COURSEID);
 
+<STUDENT_RECORD>[" "]*"//" {
+    BEGIN(COMMENT);
+}
+<STUDENT_RECORD>[" "]*"<//"[" "]* {
+    BEGIN(COMMENT);
+}
+
+<STUDENT_RECORD>[" "]*"<"[" "]* {
+    BEGIN(STUDENT_RECORD_COURSEID);
+}
+
+
+<STUDENT_RECORD_COURSEID>[" "]*"//" {
+    BEGIN(COMMENT);
+}
+<STUDENT_RECORD_COURSEID>[A-Z0-9]*"//" {
+    BEGIN(COMMENT);
+}
 <STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+ { 
     sprintf(records[stu_itr]->courses[course_itr]->course_id,"%s",yytext);    
     if(toPrint) printf("\nCourse ID: %s ", records[stu_itr]->courses[course_itr]->course_id); 
     course_itr++;
 } 
+<STUDENT_RECORD_COURSEID>[" "]+ {
+    BEGIN(STUDENT_RECORD_UNITS);
+}
 
-<STUDENT_RECORD_COURSEID>[" "]+ BEGIN(STUDENT_RECORD_UNITS);
 
+<STUDENT_RECORD_UNITS>[" "]*"//" {
+    BEGIN(COMMENT);
+}
+<STUDENT_RECORD_UNITS>[234]"//" {
+    BEGIN(COMMENT);
+} 
 <STUDENT_RECORD_UNITS>[234] { 
     records[stu_itr]->courses[course_itr-1]->units = yytext[0]-'0';
     // sprintf(records[stu_itr]->courses[course_itr-1]->units,"%s",yytext);
     if(toPrint) printf("\nUnits: %d ", records[stu_itr]->courses[course_itr-1]->units); 
 }
 
-<STUDENT_RECORD_UNITS>[" "]+ BEGIN(STUDENT_RECORD_GRADE);
+<STUDENT_RECORD_UNITS>[" "]+ {
+    BEGIN(STUDENT_RECORD_GRADE);
+}
 
+
+<STUDENT_RECORD_GRADE>[" "]*"//" {
+    BEGIN(COMMENT);
+}
+<STUDENT_RECORD_GRADE>"A-//" {
+    BEGIN(COMMENT);
+} 
+<STUDENT_RECORD_GRADE>"B-//" {
+    BEGIN(COMMENT);
+}  
+<STUDENT_RECORD_GRADE>["A"|"B"|"C"]"//" {
+    BEGIN(COMMENT);
+}   
 <STUDENT_RECORD_GRADE>"A-" { 
     sprintf(records[stu_itr]->courses[course_itr-1]->grade,"%s",yytext);
     records[stu_itr]->courses[course_itr-1]->course_flag=true;
@@ -125,7 +187,18 @@ char all_student_id[30][100];
     if(toPrint) printf("\nGrade: %s", records[stu_itr]->courses[course_itr-1]->grade); 
     BEGIN(STUDENT_RECORD_END);
 }
-<STUDENT_RECORD_END>[" "]*">"[" "]* BEGIN(RECORD_TUPLE);
+
+
+<STUDENT_RECORD_END>[" "]*"//" {
+    BEGIN(COMMENT);
+} 
+<STUDENT_RECORD_END>[" "]*">//"[" "]* {
+    BEGIN(COMMENT);
+} 
+<STUDENT_RECORD_END>[" "]*">"[" "]* {
+    BEGIN(RECORD_TUPLE);
+}
+
 
 %%
 int check(struct course* c, struct our_student_data* our_student)
