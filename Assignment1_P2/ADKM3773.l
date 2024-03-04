@@ -43,7 +43,7 @@ char all_student_id[30][100];
 %x READ_STUDENT_ID
 %x COMMENT
 
-%x RECORDS
+%x START_READING_STUDENT_ID
 
 %x STUDENT_RECORD
 %x STUDENT_RECORD_END
@@ -87,7 +87,7 @@ char all_student_id[30][100];
 <RECORD_TUPLE>"$"[" "]* { 
     stu_itr++;
     course_itr = 0; 
-    BEGIN(RECORDS); 
+    BEGIN(START_READING_STUDENT_ID); 
     printf("\n\nBeginning Records");
 }
 <RECORD_TUPLE>"<"[" "]* { 
@@ -98,25 +98,28 @@ char all_student_id[30][100];
 "$"[" "]* { 
     stu_itr++;
     course_itr = 0; 
-    BEGIN(RECORDS); 
+    BEGIN(START_READING_STUDENT_ID); 
     printf("\n\nBeginning Records");
 }
 
 
-<RECORDS>[" "]*"//" {
+<START_READING_STUDENT_ID>[" "]*"//" {
     BEGIN(COMMENT);
 }
-<RECORDS>[A-Z0-9]*"//" {
+<START_READING_STUDENT_ID>[A-Z0-9]*"//" {
     BEGIN(COMMENT);
 }
-<RECORDS>"<" {
+<START_READING_STUDENT_ID>"<" {
     BEGIN(INVALID_RECORD);
 }
-<RECORDS>[A-Z]+[0-9]+ {
+<START_READING_STUDENT_ID>[A-Z]+[0-9]+ {
     sprintf(records[stu_itr]->student_id,"%s",yytext);
     if(toPrint) printf("\n\nNew Student: %s", records[stu_itr]->student_id);
     BEGIN(STUDENT_RECORD);
 }
+<START_READING_STUDENT_ID>[A-Z]+[0-9]+[A-Za-z]+ { 
+    BEGIN(INVALID_TUPLE);
+} 
 
 
 <STUDENT_RECORD>[" "]*"//" {
@@ -125,7 +128,6 @@ char all_student_id[30][100];
 <STUDENT_RECORD>[" "]*"<//"[" "]* {
     BEGIN(COMMENT);
 }
-
 <STUDENT_RECORD>[" "]*"<"[" "]* {
     BEGIN(STUDENT_RECORD_COURSEID);
 }
@@ -137,7 +139,7 @@ char all_student_id[30][100];
 <STUDENT_RECORD_COURSEID>[A-Z0-9]*"//" {
     BEGIN(COMMENT);
 }
-<STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+[A-Z]+ { 
+<STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+[A-Za-z]+ { 
     BEGIN(INVALID_TUPLE);
 } 
 <STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+ { 
@@ -230,8 +232,8 @@ char all_student_id[30][100];
 <INVALID_RECORD>[" "]*"//" {
     BEGIN(COMMENT);
 }
-<INVALID_RECORD>SEX {
-    BEGIN(RECORDS);
+<INVALID_RECORD>"$" {
+    BEGIN(START_READING_STUDENT_ID);
 }
 
 
