@@ -186,6 +186,15 @@ char all_student_id[30][100];
 <STUDENT_RECORD_GRADE>["A"|"B"|"C"]"//" {
     BEGIN(COMMENT);
 }   
+<STUDENT_RECORD_GRADE>"A-"[A-Z0-9]+ {
+    BEGIN(INVALID_TUPLE);
+}
+<STUDENT_RECORD_GRADE>"B-"[A-Z0-9]+ {
+    BEGIN(INVALID_TUPLE);
+}
+<STUDENT_RECORD_GRADE>["A"|"B"|"C"][A-Z0-9]+ {
+    BEGIN(INVALID_TUPLE);
+}
 <STUDENT_RECORD_GRADE>"A-" { 
     sprintf(records[stu_itr]->courses[course_itr-1]->grade,"%s",yytext);
     records[stu_itr]->courses[course_itr-1]->course_flag=true;
