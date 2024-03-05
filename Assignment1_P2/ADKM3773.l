@@ -473,6 +473,8 @@ int main() {
     if(toPrint) printf("No:of distinct courses: %d\n", k3);
 
     int rounded_cgpa = round(cgpa*100);
+    if(rounded_cgpa==-2147483648)
+    rounded_cgpa=0;
     if(toPrint) printf("CGPA: %d\n", rounded_cgpa);
 
     yyout = fopen("output.txt", "w");
