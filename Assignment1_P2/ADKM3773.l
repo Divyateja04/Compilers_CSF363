@@ -118,7 +118,7 @@ char all_student_id[30][100];
     BEGIN(STUDENT_RECORD);
 }
 <START_READING_STUDENT_ID>[A-Z]+[0-9]+[A-Za-z]+ { 
-    BEGIN(INVALID_TUPLE);
+    BEGIN(INVALID_RECORD);
 } 
 
 
@@ -231,6 +231,12 @@ char all_student_id[30][100];
 
 <INVALID_RECORD>[" "]*"//" {
     BEGIN(COMMENT);
+}
+<INVALID_RECORD>[^$]*"//" {
+    BEGIN(COMMENT);
+}
+<INVALID_RECORD>[^$"//"]* {
+    BEGIN(START_READING_STUDENT_ID);
 }
 <INVALID_RECORD>"$" {
     BEGIN(START_READING_STUDENT_ID);
