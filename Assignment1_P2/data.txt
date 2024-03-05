@@ -1,20 +1,45 @@
-$RGS1 <Y7 2 A><X123 4 B><IJ4 2 B><HFG6 3 C><TYU91 4 C>
-$BV234 <BV345 3 C><J688 3 B-><S56 3 A><RY8 4 A->
-$LMN2497 <S56 3 A-><K64742 4 B>
-$HKCM746 <X123 4 A-><Y7 2 A-><E4893 4 A><IU4563 3 B-><TRP356 2 C><QWE1678 2 C>
-$INJ563 <RY8 4 A><HFG6 3 A-><X123 4 B-><JH676 3 C>
-// all the above records are valid
-$Q2341 <J688 3 A-><S56 3 A><PO45654 2 A->
-$ABK853 <S56 3 B><Y7 2 B>   < PQR1 2 A-> <ABC12 4> 
-$QWE1 <IJ4 2 B-><PQR1 2 B><E4893 4 A->
-// in the below some invalid records are given
-$IWH40 <JH676 3 A-><X123 4 B><BV345 3 B>
-<X123 4 A-> $MCH8748 <IU4563 3 B><Y7 2 A-> // ignore the first tuple before $
-$YIBS087 <K64742 4 A> $ERWTYUI2343213 <PO45654 2 B->  //two records in the same line, consider the both records
-// $MCH8748 <IU4563 3 A><PO45654 2 B->
-$ABK853 <S56 3 A->  <K64742 4 > <PO45654 2 A-> // ignore <K64742 4 > since grade is missing  
-$  BV234 <PO45654  B-><BV345 3   B-><RY8 4 B-> //<PO45654  B-> is missing units, ignore the tuple. 
-$ <S56 3 A-><K64742 4 B> //invalid record since studID is missing
-$lm24 <S56 3 A-><K64742 4 B> //invalid record since studID is not matching the rules. 
-$Q2341 <J688 3 A> <S56 3 B-> < IU4563 3 B>
-$BV234 <J688 3 A> <S56 3 B-> // < IU4563 3 B>
+$RAM123 <CSF111 3 A><CSF211 4 B-> <CSF222 3 C>
+$SAM456 <CSF111 3 A-><CSF211 4 B> <CSF351 3 B> <CSF222 3 CB>
+$RAM123 <MATHF111 4 A->  <CSF363 3 >  <CSF351 3 B> <BIOF123 3 A-> //ignore <CSF363 3 > since grade is missing (comment 1)
+$cat777 <MATHF111 4 >  <CSF363 3 >  <BIOF123 3 A-> //Invalid record "cat777" is not a valid student ID (comment 2)
+$JAM679   <CSF363 3 B><CSF351 3 A-> <BIOF123 3 A->
+$CAT434 <CSF222 3 B> <CSF211 4 C> <CSF302 2 A> <PHYF111 3 A->
+$MAT666 <CSF222 3 B> <CSF211 4 C> <CSF302 2 A> <PHYF111 3>
+$SAM456 <MATHF111 4 A->  <CSF363 3 A->   <BIOF123 3 A-> 
+Hello $BAT111 <CSF222 3 B-> <CSF302 2 A-> <PHYF111 3 B> //ignore Hello before $ (comment 3)
+$JAM679 <CSF222 3 B> <CSF211 4 C> <CSF302 2 A-> <PHYF111 3 B>
+// a comment started at a new line (comment 4)
+$MAT666 <CSF222 3 B-> <CSF211 4 A-> <PHYF111 3 B>
+MAT666 <CSF222 3 B> <CSF211 4 C> <CSF302 2 A> <PHYF111 3> //Inalid record since it is not started with $ (comment 5)
+$VKH22 <CSF351 3 B> <CSF211 4 C> <CSF302 2 A-> <PHYF111 3 B> <CSF222 3 C>
+$BAT111 <MATHF111 4 A-> <CSF111 3 C>
+$CAT434 <MATHF111 4 >  <CSF363 3 >  <BIOF123 3 A-> //ignore <MATHF111 4 > and <CSF363 3 > since grades are missing (comment 6)
+$BAT111   <CSF363 3 A><CSF351 3 B-> <BIOF123 3 A-> <CSF211 4 B-> <CSF222 3 C>
+$JAM679 <MATHF111 4 A> <CSF111 3 B><CSF211 4 B> <CSF222 3 C> //ignore <CSF111 3 B> since course ID is not valid (comment 7)
+$MAT666 <MATHF111 4 A->  <CSF363 3 >  <BIOF123 3 A->
+$RAM123 <CSF222 3 B> <CSF211 4 C> <CSF302 2 A> <PHYF111 3> $BAT111 <CSF302 2 B> <CSF211 4 C> <CSF302 2 A>  //multiple records in a single line (comment 8) 
+$JAM679 //Invalid record since it does not contain any course information (comment 9)
+$MSDH99 <MATHF111 4 A-> <CSF111  A> <CSF211 4 C> <CSF302 2 A> <PHYF111 3 A-> <BIOF123 3 A>
+$BAT111 <MATHF111 4 A->  <CSF363 3 > <PHYF111 3 A-> <BIOF123 3 A-> 
+//valid records are at lines 1, 2, 3, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 20, 22, 23 (comment 10)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
