@@ -458,7 +458,8 @@ int main() {
     }
     // printf("\n%d\n", points);
     // printf("%d\n", total_unit);
-    cgpa = (double)points/total_unit;
+    if(total_unit != 0) cgpa = (double)points/total_unit;
+    else cgpa = 0;
 
     for(int i=0;i<100;i++)
     {
