@@ -88,7 +88,7 @@ char all_student_id[30][100];
     stu_itr++;
     course_itr = 0; 
     BEGIN(START_READING_STUDENT_ID); 
-    printf("\n\nBeginning Records");
+    printf("\n\nBeginning Records @ %s", yytext);
 }
 <RECORD_TUPLE>"<"[" "]* { 
     BEGIN(STUDENT_RECORD_COURSEID);
@@ -99,7 +99,7 @@ char all_student_id[30][100];
     stu_itr++;
     course_itr = 0; 
     BEGIN(START_READING_STUDENT_ID); 
-    printf("\n\nBeginning Records");
+    printf("\n\nBeginning Records @ %s", yytext);
 }
 
 
@@ -471,20 +471,19 @@ int main() {
             }
         }
     }
-    // printf("\n%d\n", points);
-    // printf("%d\n", total_unit);
+
     if(total_unit != 0) cgpa = (double)points/total_unit;
     else cgpa = 0;
 
+    printf("\n======================================\n");
     for(int i=0;i<100;i++)
     {
         if(our_student->courses[i]->course_flag)
         {
-            printf("\n%s %s %d", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
+            printf("%s %s %d\n", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
         }
     }
-    
-    if(toPrint) printf("\n\nTotal no:of valid records: %d\n", k1);
+    if(toPrint) printf("\nTotal no:of valid records: %d\n", k1);
     if(toPrint) printf("Total no:of comments: %d\n", k2);
     if(toPrint) printf("No:of distinct courses: %d\n", k3);
 
