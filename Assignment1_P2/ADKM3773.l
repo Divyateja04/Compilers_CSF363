@@ -472,6 +472,7 @@ int main() {
     else cgpa = 0;
 
     printf("\n======================================\n");
+    
     for(int i=0;i<100;i++)
     {
         if(our_student->courses[i]->course_flag)
@@ -479,6 +480,7 @@ int main() {
             printf("%s %s %d\n", our_student->courses[i]->course_id, our_student->courses[i]->grade, our_student->courses[i]->units);
         }
     }
+
     if(toPrint) printf("\nTotal no:of valid records: %d\n", k1);
     if(toPrint) printf("Total no:of comments: %d\n", k2);
     if(toPrint) printf("No:of distinct courses: %d\n", k3);
