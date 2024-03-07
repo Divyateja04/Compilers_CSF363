@@ -154,7 +154,7 @@ char all_student_id[30][100];
     BEGIN(STUDENT_RECORD_UNITS);
 }
 
-
+ 
 <STUDENT_RECORD_UNITS>[" "]*"//" {
     BEGIN(COMMENT);
 }
@@ -241,12 +241,7 @@ char all_student_id[30][100];
 <INVALID_RECORD>[" "]*"//" {
     BEGIN(COMMENT);
 }
-<INVALID_RECORD>[^$]*"//" {
-    BEGIN(COMMENT);
-}
-<INVALID_RECORD>[^$"//"]* {
-    BEGIN(START_READING_STUDENT_ID);
-}
+
 <INVALID_RECORD>"$" {
     BEGIN(START_READING_STUDENT_ID);
 }
@@ -359,7 +354,7 @@ int main() {
         // printf("\n%s\n", records[i]->student_id);
         if(strcmp(records[i]->student_id,our_student_id)==0)
         {
-            for(int j=0;j<100;j++)
+            for(int j=99;j>=0;j--)
             {
                 if(records[i]->courses[j]->course_flag)
                 {
@@ -469,6 +464,7 @@ int main() {
                     total_unit+=4;
                 }
             }
+            printf("\nCourse ID:%s, Units: %d,  Grade: %s",our_student->courses[i]->course_id, our_student->courses[i]->units, our_student->courses[i]->grade);
         }
     }
 
