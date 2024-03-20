@@ -136,7 +136,7 @@ char all_student_id[30][100];
 <STUDENT_RECORD_COURSEID>[" "]*"//" {
     BEGIN(COMMENT);
 }
-<STUDENT_RECORD_COURSEID>[A-Z0-9]*"//" {
+<STUDENT_RECORD_COURSEID>[A-Z0-9]*[" "]*"//" {
     BEGIN(COMMENT);
 }
 <STUDENT_RECORD_COURSEID>[A-Z]+[0-9]+[A-Za-z]+ { 
@@ -158,7 +158,7 @@ char all_student_id[30][100];
 <STUDENT_RECORD_UNITS>[" "]*"//" {
     BEGIN(COMMENT);
 }
-<STUDENT_RECORD_UNITS>[234]"//" {
+<STUDENT_RECORD_UNITS>[234][" "]*"//" {
     BEGIN(COMMENT);
 } 
 <STUDENT_RECORD_UNITS>[234] { 
@@ -177,13 +177,13 @@ char all_student_id[30][100];
 <STUDENT_RECORD_GRADE>[" "]*"//" {
     BEGIN(COMMENT);
 }
-<STUDENT_RECORD_GRADE>"A-//" {
+<STUDENT_RECORD_GRADE>"A-"[" "]*"//" {
     BEGIN(COMMENT);
 } 
-<STUDENT_RECORD_GRADE>"B-//" {
+<STUDENT_RECORD_GRADE>"B-"[" "]*"//" {
     BEGIN(COMMENT);
 }  
-<STUDENT_RECORD_GRADE>["A"|"B"|"C"]"//" {
+<STUDENT_RECORD_GRADE>["A"|"B"|"C"][" "]*"//" {
     BEGIN(COMMENT);
 }   
 <STUDENT_RECORD_GRADE>"A-"[A-Z0-9]+ {
