@@ -1,0 +1,67 @@
+Test case 1: 
+
+input.txt: 
+RAM123
+
+output.txt: 
+@20@10@7@682#
+
+// RAM123 distnict courses and the grade information 
+Course		units	grade
+CSF111		3	A
+CSF211		4	C
+CSF222		3	B
+MATHF111	4	A-
+CSF351		3	B
+BIOF123		3	A-
+CSF302		2	A
+
+
+
+Test case 2: 
+input.txt: 
+MAT666
+
+output.txt: 
+@20@10@6@726#
+
+// MAT666 distnict courses and the grade information 
+Course		units	grade
+CSF222		3	B-
+CSF211		4	A-
+CSF302		2	A
+PHYF111		3	B
+MATHF111	4	A-
+BIOF123		3	A-
+
+
+Test case 3: 
+input.txt: 
+MSDH99
+
+output.txt: 
+@20@10@5@713#
+
+//MSDH99 distnict courses and the grade information 
+
+Course		units	grade
+MATHF111	4	A-
+CSF211		4	C
+CSF302		2	A
+PHYF111		3	A-
+BIOF123		3	A
+
+
+
+
+
+Test case 4: 
+input.txt: 
+ANT243
+
+output.txt: 
+@20@10@0@0#
+
+
+//no record is there with studID ANT243
+

@@ -56,6 +56,10 @@ char all_student_id[30][100];
 
 %%
 
+<*>\n {
+    BEGIN(INITIAL);
+}
+
 "//" { 
     BEGIN(COMMENT);
 }
@@ -354,7 +358,7 @@ int main() {
         // printf("\n%s\n", records[i]->student_id);
         if(strcmp(records[i]->student_id,our_student_id)==0)
         {
-            for(int j=99;j>=0;j--)
+            for(int j=0; j < 100; j++)
             {
                 if(records[i]->courses[j]->course_flag)
                 {
