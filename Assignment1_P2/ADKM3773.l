@@ -30,14 +30,14 @@ typedef struct our_student_data{
     course* courses[100];
 } our_student_data;
 
-struct student* records[30];
+struct student* records[100];
 
 int stu_itr = -1;
 int course_itr=0;
 int all_student_itr=0;
 int our_student_itr=0;
 char our_student_id[100];
-char all_student_id[30][100];
+char all_student_id[100][100];
 %}
 
 %x READ_STUDENT_ID
@@ -117,6 +117,7 @@ char all_student_id[30][100];
     BEGIN(INVALID_RECORD);
 }
 <START_READING_STUDENT_ID>[A-Z]+[0-9]+ {
+    printf("\nStudent Iterator: %d", stu_itr);
     sprintf(records[stu_itr]->student_id,"%s",yytext);
     if(toPrint) printf("\n\nNew Student: %s", records[stu_itr]->student_id);
     BEGIN(STUDENT_RECORD);
@@ -296,7 +297,7 @@ int check(struct course* c, struct our_student_data* our_student)
 
 int main() {
     // First we open input.txt and read the student id
-    for (int i = 0; i < 30; i++) 
+    for (int i = 0; i < 100; i++) 
     {
         records[i] = (struct student*)malloc(sizeof(student));
         records[i]->stud_flag = false;
@@ -321,7 +322,7 @@ int main() {
 
     // Then we open data.txt and read the data but this time 
     // we write the output to output.txt
-    yyin = fopen("data.txt", "r");
+    yyin = fopen("final_data.txt", "r");
     if(!yyin) {
         if(toPrint) printf("Error opening data.txt\n");
         return 1;
@@ -336,7 +337,7 @@ int main() {
     double cgpa=0;
     // Print the results
 
-    for(int i=0;i<30;i++)
+    for(int i=0;i<100;i++)
     {
         if(records[i]->stud_flag)
         {
@@ -353,7 +354,7 @@ int main() {
     }
 
 
-    for(int i=0;i<30;i++)
+    for(int i=0;i<100;i++)
     {   
         // printf("\n%s\n", records[i]->student_id);
         if(strcmp(records[i]->student_id,our_student_id)==0)

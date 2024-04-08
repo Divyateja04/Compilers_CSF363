@@ -1,0 +1,124 @@
+(1) 
+input.txt:
+RAM123
+
+output.txt: 
+@66@18@9@664#
+
+
+Course		units	grade	points	grade point	RAM123
+PHYF111 	3	A-	8	24	
+MATHF111	4	B	6	24	
+CSF211		4	B-	4	16	
+CSF363		3	B-	4	12	
+CSF351		3	B	6	18	
+CSF222		3	B	6	18	
+CSF302		2	A	10	20	
+BIOF123		3	A-	8	24	
+CSF111		3	A	10	30	
+		28			186	664
+
+
+(2) 
+input.txt:
+TONY1556
+
+output.txt: 
+@66@18@8@709#
+
+Course		units	grade	points	grade point	TONY1556
+CSF351		3	B-	4	12	
+CSF302		2	A-	8	16	
+BITSF110	2	A	10	20	
+CSF111		3	A-	8	24	
+CSF436		3	A-	8	24	
+CSF222 		3	B-	4	12	
+PHYF111		3	B	6	18	
+CSF363		3	A	10	30	
+		22			156	709
+
+
+
+(3) 
+input.txt:
+MSDH99
+
+output.txt: 
+@66@18@10@710#
+
+
+Course		units	grade	points	grade point	MSDH99
+ECOMF213	4	C	2	8	
+ECEF343		3	A	10	30	
+BITSF110	2	C	2	4	
+CSF436		3	B	6	18	
+CSF211		4	B	6	24	
+CSF351		3	A	10	30	
+MATHF111	4	A-	8	32	
+CSF302		2	A	10	20	
+PHYF111		3	A-	8	24	
+BIOF123		3	A	10	30	
+		31			220	710
+
+
+
+
+(4) 
+input.txt:
+VSG333
+
+output.txt: 
+@66@18@11@521# 
+
+Course		units	grade	points	grade point	VSG333
+CSF302		2	A	10	20	
+ECEF343		3	B-	4	12	
+CSF436		3	A	10	30	
+CSF351		3	B-	4	12	
+BITSF110	2	A-	8	16	
+MATHF111	4	A-	8	32	
+MATF211		3	B-	4	12	
+CSF222		3	C	2	6	
+CSF111		3	B-	4	12	
+ECOMF213	4	C	2	8	
+CSF363 		3	B-	4	12	
+		33			172	521
+
+
+
+
+(5) 
+input.txt:
+BAT111
+
+output.txt: 
+@66@18@12@584#
+
+Course		units	grade	points	grade point	BAT111
+ECOMF213	4	B-	4	16	
+CSF222		3	B-	4	12	
+BITSF110	2	B-	4	8	
+CSF363		3	A	10	30	
+MATHF111	4	A-	8	32	
+CSF436		3	A-	8	24	
+PHYF111		3	A-	8	24	
+BIOF123		3	A-	8	24	
+CSF211		4	C	2	8	
+CSF302		2	A	10	20	
+CSF351		3	B-	4	12	
+CSF111		3	C	2	6	
+		37			216	584
+
+
+
+
+(6) 
+input.txt: 
+ABC123
+
+output.txt: 
+@66@18@0@0#
+
+
+//no record is there with studID ABC123
+
