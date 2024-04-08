@@ -1,0 +1,8 @@
+*.exe
+*.out
+Makefile
+.vscode/
+*.yy.c
+temp.txt
+y.tab.h
+y.tab.c

@@ -1,0 +1,1 @@
+flex ADMK3773.l && gcc lex.yy.c -ll && ./a.out

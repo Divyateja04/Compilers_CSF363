@@ -1,0 +1,18 @@
+%{
+#include <stdio.h>
+%}
+%token PROGRAM INT REAL BEGINK END NL BOOLEAN CHAR VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE NUMBER LPAREN RPAREN LBRACKET RBRACKET COMMA SEMICOLON COLON DOT PLUS MINUS TIMES DIVIDE EQUAL LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
+
+%%
+
+%%
+
+void main()
+{
+    printf("Enter the program:\n");
+    yyparse();
+}
+
+void yyerror(){
+    printf("Syntax error\n");
+}
