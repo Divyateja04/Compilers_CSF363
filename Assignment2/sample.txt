@@ -1,4 +1,5 @@
-program AddTwoNumbers ;
+program AddTwoNumbers
+;
 var
 num1 , num2 , sum : Integer ;
 begin

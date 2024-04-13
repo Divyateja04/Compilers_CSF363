@@ -49,6 +49,12 @@ int lineNumber = 1;
 
 [0-9]+ { fprintf(yyout, "\n%d, NUMBER, NUMBER", lineNumber); return NUMBER; }
 
+[a-zA-Z][a-zA-Z0-9]* { fprintf(yyout, "\n%d, IDENTIFIER, IDENTIFIER", lineNumber); return IDENTIFIER; }
+
+[\n] { lineNumber++; fprintf(yyout, "\n%d, OTHER, NL", lineNumber); }
+[\t] {}
+[ ] {}
+
 \n { lineNumber++; fprintf(yyout, "\n%d, OTHER, NL", lineNumber); }
 . {}
 
