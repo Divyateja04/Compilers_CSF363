@@ -50,6 +50,8 @@ int lineNumber = 1;
 [)] { return RPAREN;}
 [[] { return LBRACKET; }
 []] { return RBRACKET; }
+[\'] { return QUOTE; }
+[\"] { return DQUOTE; }
 
 [0-9]+ { return NUMBER; }
 

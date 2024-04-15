@@ -48,6 +48,8 @@ int lineNumber = 1;
 [)] { fprintf(yyout, "\n%d, SYMBOL, RPAREN", lineNumber); }
 [[] { fprintf(yyout, "\n%d, SYMBOL, LBRACKET", lineNumber); }
 []] { fprintf(yyout, "\n%d, SYMBOL, RBRACKET", lineNumber); }
+[\'] { fprintf(yyout, "\n%d, SYMBOL, QUOTE", lineNumber); }
+[\"] { fprintf(yyout, "\n%d, SYMBOL, DQUOTE", lineNumber); }
 
 [0-9]+ { fprintf(yyout, "\n%d, NUMBER, NUMBER", lineNumber); }
 
