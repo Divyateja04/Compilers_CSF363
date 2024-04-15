@@ -6,12 +6,16 @@ int lineNumber = 1;
 
 %%
 [p|P][r|R][o|O][g|G][r|R][a|A][m|M] { fprintf(yyout, "\n%d, KEYWORD, PROGRAM", lineNumber); }
-[i|I][n|N][t|T] { fprintf(yyout, "\n%d, KEYWORD, INT", lineNumber); }
+[i|I][n|N][t|T][e|E][g|G][e|E][r|R] { fprintf(yyout, "\n%d, KEYWORD, INTEGER", lineNumber); }
 [r|R][e|E][a|A][l|L] { fprintf(yyout, "\n%d, KEYWORD, REAL", lineNumber); }
 [b|B][o|O][o|O][l|L][e|E][a|A][n|N] { fprintf(yyout, "\n%d, KEYWORD, BOOLEAN", lineNumber); }
 [c|C][h|H][a|A][r|R] { fprintf(yyout, "\n%d, KEYWORD, CHAR", lineNumber); }
 [v|V][a|A][r|R] { fprintf(yyout, "\n%d, KEYWORD, VAR", lineNumber); }
 [f|F][o|O][r|R] { fprintf(yyout, "\n%d, KEYWORD, FOR", lineNumber); }
+[t|T][o|O] { fprintf(yyout, "\n%d, KEYWORD, TO", lineNumber); }
+[d|D][o|O][w|W][n|N][t|T][o|O] { fprintf(yyout, "\n%d, KEYWORD, DOWNTO", lineNumber); }
+[i|I][f|F] { fprintf(yyout, "\n%d, KEYWORD, IF", lineNumber); }
+[e|E][l|L][s|S][e|E] { fprintf(yyout, "\n%d, KEYWORD, ELSE", lineNumber); }
 [d|D][o|O] { fprintf(yyout, "\n%d, KEYWORD, DO", lineNumber);}
 [w|W][h|H][i|I][l|L][e|E] { fprintf(yyout, "\n%d, KEYWORD, WHILE", lineNumber); }
 [a|A][r|R][r|R][a|A][y|Y] { fprintf(yyout, "\n%d, KEYWORD, ARRAY", lineNumber); }

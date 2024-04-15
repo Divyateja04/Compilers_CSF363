@@ -8,12 +8,16 @@ int lineNumber = 1;
 
 %%
 [p|P][r|R][o|O][g|G][r|R][a|A][m|M] { return PROGRAM; }
-[i|I][n|N][t|T] { return INT; }
+[i|I][n|N][t|T][e|E][g|G][e|E][r|R] { return INTEGER; }
 [r|R][e|E][a|A][l|L] { return REAL; }
 [b|B][o|O][o|O][l|L][e|E][a|A][n|N] { return BOOLEAN; }
 [c|C][h|H][a|A][r|R] { return CHAR; }
 [v|V][a|A][r|R] { return VAR; }
 [f|F][o|O][r|R] { return FOR; }
+[t|T][o|O] { return TO; }
+[d|D][o|O][w|W][n|N][t|T][o|O] { return DOWNTO; }
+[i|I][f|F] { return IF; }
+[e|E][l|L][s|S][e|E] { return ELSE; }
 [d|D][o|O] { return DO; }
 [w|W][h|H][i|I][l|L][e|E] { return WHILE; }
 [a|A][r|R][r|R][a|A][y|Y] { return ARRAY; }
