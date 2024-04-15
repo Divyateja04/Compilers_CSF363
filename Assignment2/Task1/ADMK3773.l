@@ -55,7 +55,7 @@ int lineNumber = 1;
 
 [a-zA-Z][a-zA-Z0-9]* { fprintf(yyout, "\n%d, IDENTIFIER, IDENTIFIER", lineNumber); }
 
-[\n] { lineNumber++; fprintf(yyout, "\n%d, OTHER, NL", lineNumber); }
+[\n] { fprintf(yyout, "\n%d, OTHER, NL", lineNumber); lineNumber++;  }
 [\t] {}
 [ ] {}
 
