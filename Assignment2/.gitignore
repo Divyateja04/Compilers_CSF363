@@ -1,8 +1,8 @@
-*.exe
-*.out
+**/*.exe
+**/*.out
 Makefile
 .vscode/
-*.yy.c
+**/*.yy.c
 temp.txt
-y.tab.h
-y.tab.c
+**/y.tab.h
+**/y.tab.c

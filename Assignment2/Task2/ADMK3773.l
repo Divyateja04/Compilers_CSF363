@@ -55,7 +55,6 @@ int lineNumber = 1;
 [\t] {}
 [ ] {}
 
-\n { lineNumber++; fprintf(yyout, "\n%d, OTHER, NL", lineNumber); }
 . {}
 
 %%
