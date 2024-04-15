@@ -6,6 +6,8 @@ extern int yylval;
 int lineNumber = 1;
 %}
 
+%x READ_STRING_INPUT
+
 %%
 [p|P][r|R][o|O][g|G][r|R][a|A][m|M] { return PROGRAM; }
 [i|I][n|N][t|T][e|E][g|G][e|E][r|R] { return INTEGER; }
@@ -50,8 +52,10 @@ int lineNumber = 1;
 [)] { return RPAREN;}
 [[] { return LBRACKET; }
 []] { return RBRACKET; }
-[\'] { return QUOTE; }
-[\"] { return DQUOTE; }
+
+[\"] { BEGIN(READ_STRING_INPUT); }
+<READ_STRING_INPUT>[^\n^\"]* { return STRING; }
+<READ_STRING_INPUT>[\"] { BEGIN(INITIAL); }
 
 [0-9]+ { return NUMBER; }
 

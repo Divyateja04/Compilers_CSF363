@@ -4,58 +4,62 @@
 int lineNumber = 1;
 %}
 
+%x READ_STRING_INPUT
+
 %%
-[p|P][r|R][o|O][g|G][r|R][a|A][m|M] { fprintf(yyout, "\n%d, KEYWORD, PROGRAM", lineNumber); }
-[i|I][n|N][t|T][e|E][g|G][e|E][r|R] { fprintf(yyout, "\n%d, KEYWORD, INTEGER", lineNumber); }
-[r|R][e|E][a|A][l|L] { fprintf(yyout, "\n%d, KEYWORD, REAL", lineNumber); }
-[b|B][o|O][o|O][l|L][e|E][a|A][n|N] { fprintf(yyout, "\n%d, KEYWORD, BOOLEAN", lineNumber); }
-[c|C][h|H][a|A][r|R] { fprintf(yyout, "\n%d, KEYWORD, CHAR", lineNumber); }
-[v|V][a|A][r|R] { fprintf(yyout, "\n%d, KEYWORD, VAR", lineNumber); }
-[f|F][o|O][r|R] { fprintf(yyout, "\n%d, KEYWORD, FOR", lineNumber); }
-[t|T][o|O] { fprintf(yyout, "\n%d, KEYWORD, TO", lineNumber); }
-[d|D][o|O][w|W][n|N][t|T][o|O] { fprintf(yyout, "\n%d, KEYWORD, DOWNTO", lineNumber); }
-[i|I][f|F] { fprintf(yyout, "\n%d, KEYWORD, IF", lineNumber); }
-[e|E][l|L][s|S][e|E] { fprintf(yyout, "\n%d, KEYWORD, ELSE", lineNumber); }
-[d|D][o|O] { fprintf(yyout, "\n%d, KEYWORD, DO", lineNumber);}
-[w|W][h|H][i|I][l|L][e|E] { fprintf(yyout, "\n%d, KEYWORD, WHILE", lineNumber); }
-[a|A][r|R][r|R][a|A][y|Y] { fprintf(yyout, "\n%d, KEYWORD, ARRAY", lineNumber); }
-[a|A][n|N][d|D] { fprintf(yyout, "\n%d, KEYWORD, AND", lineNumber); }
-[o|O][r|R] { fprintf(yyout, "\n%d, KEYWORD, OR", lineNumber);}
-[n|N][o|O][t|T] { fprintf(yyout, "\n%d, KEYWORD, NOT", lineNumber); }
-[b|B][e|E][g|G][i|I][n|N] { fprintf(yyout, "\n%d, KEYWORD, BEGINK", lineNumber); }
-[e|E][n|N][d|D] { fprintf(yyout, "\n%d, KEYWORD, END", lineNumber); }
-[r|R][e|E][a|A][d|D] { fprintf(yyout, "\n%d, KEYWORD, READ", lineNumber); }
-[w|W][r|R][i|I][t|T][e|E] { fprintf(yyout, "\n%d, KEYWORD, WRITE", lineNumber); }
+[p|P][r|R][o|O][g|G][r|R][a|A][m|M] { fprintf(yyout, "\n%d | %s | PROGRAM", lineNumber, yytext); }
+[i|I][n|N][t|T][e|E][g|G][e|E][r|R] { fprintf(yyout, "\n%d | %s | INTEGER", lineNumber, yytext); }
+[r|R][e|E][a|A][l|L] { fprintf(yyout, "\n%d | %s | REAL", lineNumber, yytext); }
+[b|B][o|O][o|O][l|L][e|E][a|A][n|N] { fprintf(yyout, "\n%d | %s | BOOLEAN", lineNumber, yytext); }
+[c|C][h|H][a|A][r|R] { fprintf(yyout, "\n%d | %s | CHAR", lineNumber, yytext); }
+[v|V][a|A][r|R] { fprintf(yyout, "\n%d | %s | VAR", lineNumber, yytext); }
+[f|F][o|O][r|R] { fprintf(yyout, "\n%d | %s | FOR", lineNumber, yytext); }
+[t|T][o|O] { fprintf(yyout, "\n%d | %s | TO", lineNumber, yytext); }
+[d|D][o|O][w|W][n|N][t|T][o|O] { fprintf(yyout, "\n%d | %s | DOWNTO", lineNumber, yytext); }
+[i|I][f|F] { fprintf(yyout, "\n%d | %s | IF", lineNumber, yytext); }
+[e|E][l|L][s|S][e|E] { fprintf(yyout, "\n%d | %s | ELSE", lineNumber, yytext); }
+[d|D][o|O] { fprintf(yyout, "\n%d | %s | DO", lineNumber, yytext);}
+[w|W][h|H][i|I][l|L][e|E] { fprintf(yyout, "\n%d | %s | WHILE", lineNumber, yytext); }
+[a|A][r|R][r|R][a|A][y|Y] { fprintf(yyout, "\n%d | %s | ARRAY", lineNumber, yytext); }
+[a|A][n|N][d|D] { fprintf(yyout, "\n%d | %s | AND", lineNumber, yytext); }
+[o|O][r|R] { fprintf(yyout, "\n%d | %s | OR", lineNumber, yytext);}
+[n|N][o|O][t|T] { fprintf(yyout, "\n%d | %s | NOT", lineNumber, yytext); }
+[b|B][e|E][g|G][i|I][n|N] { fprintf(yyout, "\n%d | %s | BEGINK", lineNumber, yytext); }
+[e|E][n|N][d|D] { fprintf(yyout, "\n%d | %s | END", lineNumber, yytext); }
+[r|R][e|E][a|A][d|D] { fprintf(yyout, "\n%d | %s | READ", lineNumber, yytext); }
+[w|W][r|R][i|I][t|T][e|E] { fprintf(yyout, "\n%d | %s | WRITE", lineNumber, yytext); }
 
-[+] { fprintf(yyout, "\n%d, ARITHOP, PLUS", lineNumber); }
-[-] { fprintf(yyout, "\n%d, ARITHOP, MINUS", lineNumber); }
-[*] { fprintf(yyout, "\n%d, ARITHOP, MULTIPLY", lineNumber); }
-[/] { fprintf(yyout, "\n%d, ARITHOP, DIVIDE", lineNumber); }
-[%] { fprintf(yyout, "\n%d, ARITHOP, MOD", lineNumber); }
+[+] { fprintf(yyout, "\n%d | %s | PLUS", lineNumber, yytext); }
+[-] { fprintf(yyout, "\n%d | %s | MINUS", lineNumber, yytext); }
+[*] { fprintf(yyout, "\n%d | %s | MULTIPLY", lineNumber, yytext); }
+[/] { fprintf(yyout, "\n%d | %s | DIVIDE", lineNumber, yytext); }
+[%] { fprintf(yyout, "\n%d | %s | MOD", lineNumber, yytext); }
 
-[=] { fprintf(yyout, "\n%d, RELOP, EQUAL", lineNumber); }
-\< { fprintf(yyout, "\n%d, RELOP, LESS", lineNumber); }
-\> { fprintf(yyout, "\n%d, RELOP, GREATER", lineNumber); }
-\<\= { fprintf(yyout, "\n%d, RELOP, LESSEQUAL", lineNumber); }
-\>\= { fprintf(yyout, "\n%d, RELOP, GREATEREQUAL", lineNumber); }
-\<\> { fprintf(yyout, "\n%d, RELOP, NOTEQUAL", lineNumber); }
+[=] { fprintf(yyout, "\n%d | %s | EQUAL", lineNumber, yytext); }
+\< { fprintf(yyout, "\n%d | %s | LESS", lineNumber, yytext); }
+\> { fprintf(yyout, "\n%d | %s | GREATER", lineNumber, yytext); }
+\<\= { fprintf(yyout, "\n%d | %s | LESSEQUAL", lineNumber, yytext); }
+\>\= { fprintf(yyout, "\n%d | %s | GREATEREQUAL", lineNumber, yytext); }
+\<\> { fprintf(yyout, "\n%d | %s | NOTEQUAL", lineNumber, yytext); }
 
-[;] { fprintf(yyout, "\n%d, SYMBOL, SEMICOLON", lineNumber); }
-[,] { fprintf(yyout, "\n%d, SYMBOL, COMMA", lineNumber); }
-[:] { fprintf(yyout, "\n%d, SYMBOL, COLON", lineNumber); }
-[.] { fprintf(yyout, "\n%d, SYMBOL, DOT", lineNumber); }
-[(] { fprintf(yyout, "\n%d, SYMBOL, LPAREN", lineNumber); }
-[)] { fprintf(yyout, "\n%d, SYMBOL, RPAREN", lineNumber); }
-[[] { fprintf(yyout, "\n%d, SYMBOL, LBRACKET", lineNumber); }
-[]] { fprintf(yyout, "\n%d, SYMBOL, RBRACKET", lineNumber); }
-[\'] { fprintf(yyout, "\n%d, SYMBOL, QUOTE", lineNumber); }
-[\"] { fprintf(yyout, "\n%d, SYMBOL, DQUOTE", lineNumber); }
+[;] { fprintf(yyout, "\n%d | %s | SEMICOLON", lineNumber, yytext); }
+[,] { fprintf(yyout, "\n%d | %s | COMMA", lineNumber, yytext); }
+[:] { fprintf(yyout, "\n%d | %s | COLON", lineNumber, yytext); }
+[.] { fprintf(yyout, "\n%d | %s | DOT", lineNumber, yytext); }
+[(] { fprintf(yyout, "\n%d | %s | LPAREN", lineNumber, yytext); }
+[)] { fprintf(yyout, "\n%d | %s | RPAREN", lineNumber, yytext); }
+[[] { fprintf(yyout, "\n%d | %s | LBRACKET", lineNumber, yytext); }
+[]] { fprintf(yyout, "\n%d | %s | RBRACKET", lineNumber, yytext); }
 
-[0-9]+ { fprintf(yyout, "\n%d, NUMBER, NUMBER", lineNumber); }
+[\"] { BEGIN(READ_STRING_INPUT); }
+<READ_STRING_INPUT>[^\n^\"]* { fprintf(yyout, "\n%d | %s | STRING", lineNumber, yytext); }
+<READ_STRING_INPUT>[\"] { BEGIN(INITIAL); }
 
-[a-zA-Z][a-zA-Z0-9]* { fprintf(yyout, "\n%d, IDENTIFIER, IDENTIFIER", lineNumber); }
+[0-9]+ { fprintf(yyout, "\n%d | %s | NUMBER", lineNumber, yytext); }
 
-[\n] { fprintf(yyout, "\n%d, OTHER, NL", lineNumber); lineNumber++;  }
+[a-zA-Z][a-zA-Z0-9]* { fprintf(yyout, "\n%d | %s | IDENTIFIER", lineNumber, yytext); }
+
+[\n] { fprintf(yyout, "\n%d | OTHER | NL", lineNumber); lineNumber++; }
 [\t] {}
 [ ] {}
 
