@@ -63,5 +63,6 @@ int lineNumber = 1;
 
 void main(){
     yyin = fopen("sample.txt", "r");
+    yyout = fopen("output.txt", "w");
     yylex();
 }
