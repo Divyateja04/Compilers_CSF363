@@ -12,9 +12,8 @@ int lineNumber = 1;
 %%
 "//" { 
     BEGIN(COMMENT);
-    return COMMENT_START;
 }
-<COMMENT>[\n] { BEGIN(INITIAL); return COMMENT_END; }
+<COMMENT>[\n] { BEGIN(INITIAL); }
 
 [p|P][r|R][o|O][g|G][r|R][a|A][m|M] { return PROGRAM; }
 [i|I][n|N][t|T][e|E][g|G][e|E][r|R] { return INTEGER; }
