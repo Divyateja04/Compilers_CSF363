@@ -7,8 +7,15 @@ int lineNumber = 1;
 %}
 
 %x READ_STRING_INPUT
+%x COMMENT
 
 %%
+"//" { 
+    BEGIN(COMMENT);
+    return COMMENT_START;
+}
+<COMMENT>[\n] { BEGIN(INITIAL); return COMMENT_END; }
+
 [p|P][r|R][o|O][g|G][r|R][a|A][m|M] { return PROGRAM; }
 [i|I][n|N][t|T][e|E][g|G][e|E][r|R] { return INTEGER; }
 [r|R][e|E][a|A][l|L] { return REAL; }

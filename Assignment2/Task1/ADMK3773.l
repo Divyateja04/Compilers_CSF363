@@ -5,8 +5,16 @@ int lineNumber = 1;
 %}
 
 %x READ_STRING_INPUT
+%x COMMENT
 
 %%
+"//" { 
+    BEGIN(COMMENT);
+    fprintf(yyout, "\n%d | %s | COMMENT_START", lineNumber, yytext);
+}
+<COMMENT>[^\n^\"]* { fprintf(yyout, "\n%d | %s | COMMENT_STRING", lineNumber, yytext); }
+<COMMENT>[\n] { BEGIN(INITIAL); }
+
 [p|P][r|R][o|O][g|G][r|R][a|A][m|M] { fprintf(yyout, "\n%d | %s | PROGRAM", lineNumber, yytext); }
 [i|I][n|N][t|T][e|E][g|G][e|E][r|R] { fprintf(yyout, "\n%d | %s | INTEGER", lineNumber, yytext); }
 [r|R][e|E][a|A][l|L] { fprintf(yyout, "\n%d | %s | REAL", lineNumber, yytext); }
@@ -51,9 +59,9 @@ int lineNumber = 1;
 [[] { fprintf(yyout, "\n%d | %s | LBRACKET", lineNumber, yytext); }
 []] { fprintf(yyout, "\n%d | %s | RBRACKET", lineNumber, yytext); }
 
-[\"] { BEGIN(READ_STRING_INPUT); }
+[\"] { BEGIN(READ_STRING_INPUT); fprintf(yyout, "\n%d | %s | DQUOTE", lineNumber, yytext); }
 <READ_STRING_INPUT>[^\n^\"]* { fprintf(yyout, "\n%d | %s | STRING", lineNumber, yytext); }
-<READ_STRING_INPUT>[\"] { BEGIN(INITIAL); }
+<READ_STRING_INPUT>[\"] { fprintf(yyout, "\n%d | %s | DQUOTE", lineNumber, yytext); BEGIN(INITIAL); }
 
 [0-9]+ { fprintf(yyout, "\n%d | %s | NUMBER", lineNumber, yytext); }
 

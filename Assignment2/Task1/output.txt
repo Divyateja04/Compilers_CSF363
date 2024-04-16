@@ -20,7 +20,9 @@
 6 | OTHER | NL
 7 | Write | WRITE
 7 | ( | LPAREN
+7 | " | DQUOTE
 7 | Enter the first number:  | STRING
+7 | " | DQUOTE
 7 | ) | RPAREN
 7 | ; | SEMICOLON
 7 | OTHER | NL
@@ -33,7 +35,9 @@
 9 | OTHER | NL
 10 | Write | WRITE
 10 | ( | LPAREN
+10 | " | DQUOTE
 10 | Enter the second number:  | STRING
+10 | " | DQUOTE
 10 | ) | RPAREN
 10 | ; | SEMICOLON
 10 | OTHER | NL
@@ -44,36 +48,31 @@
 11 | ; | SEMICOLON
 11 | OTHER | NL
 12 | OTHER | NL
-13 | / | DIVIDE
-13 | / | DIVIDE
-13 | Perform | IDENTIFIER
-13 | addition | IDENTIFIER
+13 | // | COMMENT_START
+13 |  Perform addition | COMMENT_STRING
+13 | sum | IDENTIFIER
+13 | : | COLON
+13 | = | EQUAL
+13 | num1 | IDENTIFIER
+13 | + | PLUS
+13 | num2 | IDENTIFIER
+13 | ; | SEMICOLON
 13 | OTHER | NL
-14 | sum | IDENTIFIER
-14 | : | COLON
-14 | = | EQUAL
-14 | num1 | IDENTIFIER
-14 | + | PLUS
-14 | num2 | IDENTIFIER
-14 | ; | SEMICOLON
 14 | OTHER | NL
+15 | // | COMMENT_START
+15 |  Display the result | COMMENT_STRING
+15 | Write | WRITE
+15 | ( | LPAREN
+15 | " | DQUOTE
+15 | The sum is:  | STRING
+15 | " | DQUOTE
+15 | ) | RPAREN
+15 | ; | SEMICOLON
 15 | OTHER | NL
-16 | / | DIVIDE
-16 | / | DIVIDE
-16 | Display | IDENTIFIER
-16 | the | IDENTIFIER
-16 | result | IDENTIFIER
+16 | write | WRITE
+16 | ( | LPAREN
+16 | sum | IDENTIFIER
+16 | ) | RPAREN
 16 | OTHER | NL
-17 | Write | WRITE
-17 | ( | LPAREN
-17 | The sum is  | STRING
-17 | ) | RPAREN
-17 | ; | SEMICOLON
-17 | OTHER | NL
-18 | write | WRITE
-18 | ( | LPAREN
-18 | sum | IDENTIFIER
-18 | ) | RPAREN
-18 | OTHER | NL
-19 | end | END
-19 | . | DOT
+17 | end | END
+17 | . | DOT
