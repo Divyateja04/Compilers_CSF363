@@ -13,7 +13,7 @@ int lineNumber = 1;
     fprintf(yyout, "\n%d | %s | COMMENT_START", lineNumber, yytext);
 }
 <COMMENT>[^\n^\"]* { fprintf(yyout, "\n%d | %s | COMMENT_STRING", lineNumber, yytext); }
-<COMMENT>[\n] { BEGIN(INITIAL); }
+<COMMENT>[\n] { lineNumber++; BEGIN(INITIAL); }
 
 [p|P][r|R][o|O][g|G][r|R][a|A][m|M] { fprintf(yyout, "\n%d | %s | PROGRAM", lineNumber, yytext); }
 [i|I][n|N][t|T][e|E][g|G][e|E][r|R] { fprintf(yyout, "\n%d | %s | INTEGER", lineNumber, yytext); }
