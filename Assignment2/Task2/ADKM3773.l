@@ -69,7 +69,7 @@ int lineNumber = 1;
 
 [a-zA-Z][a-zA-Z0-9_]* {  return IDENTIFIER; }
 
-[\n]* { }
+[\n] { return NL; }
 [\t] {}
 [ ] {}
 
