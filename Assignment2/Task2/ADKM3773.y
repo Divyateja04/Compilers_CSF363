@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 extern FILE *yyin;
+int printLogs = 1;
 %}
 
 %token PROGRAM INTEGER REAL BEGINK END NL BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE
@@ -12,49 +13,62 @@ extern FILE *yyin;
 %token SEMICOLON COMMA COLON DOT LPAREN RPAREN LBRACKET RBRACKET STRING THEN OF
 
 %%
-stmt: { printf("Parsing started\n"); } MAINPROGRAM NLZEROORMORE
+stmt: { if(printLogs) printf("Parsing found\n"); } MAINPROGRAM NLZEROORMORE
 ;
 
-MAINPROGRAM: { printf("MAINPROGRAM started\n"); } PROGRAMSTRUCT VARIABLES PROGRAMBLOCK
+NLZEROORMORE: { if(printLogs) printf("NLZEROORMORE found\n"); } NL NLZEROORMORE 
+| /* empty */
+
+MAINPROGRAM: { if(printLogs) printf("MAINPROGRAM found\n"); } PROGRAMSTRUCT VARIABLES PROGRAMBLOCK
 ;
 
-PROGRAMSTRUCT: { printf("PROGRAMSTRUCT started\n"); } PROGRAM IDENTIFIER SEMICOLON NLZEROORMORE 
+PROGRAMSTRUCT: { if(printLogs) printf("PROGRAMSTRUCT found\n"); } PROGRAM IDENTIFIER SEMICOLON NLZEROORMORE 
 
-VARIABLES: { printf("VARIABLES started\n"); } VAR { printf("VAR ended\n"); } NLZEROORMORE VARS NLZEROORMORE 
+VARIABLES: { if(printLogs) printf("VARIABLES found\n"); } VAR NLZEROORMORE VARS NLZEROORMORE 
 ;
 
-VARS: { printf("VARS started\n"); } MULTIVAR VARS 
+VARS: { if(printLogs) printf("VARS found\n"); } MULTIVAR VARS | NLZEROORMORE
+;
+
+MULTIVAR: { if(printLogs) printf("MULTIVAR found 1\n"); } VARIABLELIST { if(printLogs) printf("COLON ended\n"); } COLON DATATYPE SEMICOLON NLZEROORMORE 
+| { if(printLogs) printf("MULTIVAR found 2\n"); } ARRAYDEF
+;
+
+VARIABLELIST: IDENTIFIER AFTER_IDENTIFIER
+;
+
+AFTER_IDENTIFIER: COMMA VARIABLELIST 
 | /* empty */
 ;
 
-MULTIVAR: VARIABLELIST COLON DATATYPE SEMICOLON NLZEROORMORE 
-| ARRAYDEF
+DATATYPE:  { if(printLogs) printf("DATATYPE found 1\n"); } INTEGER 
+| { if(printLogs) printf("DATATYPE found 2\n"); } REAL 
+| { if(printLogs) printf("DATATYPE found 3\n"); } BOOLEAN 
+| { if(printLogs) printf("DATATYPE found 4\n"); } CHAR 
 ;
 
-VARIABLELIST: IDENTIFIER COMMA VARIABLELIST 
-| IDENTIFIER
+PROGRAMBLOCK: { if(printLogs) printf("PROGRAMBLOCK found\n"); } BEGINK NLZEROORMORE BODY END DOT NLZEROORMORE
 ;
 
-PROGRAMBLOCK: BEGINK NLZEROORMORE BODY END DOT NLZEROORMORE
+BODY: { if(printLogs) printf("BODY found 1\n"); } STATEMENTLIST NLZEROORMORE BODY 
+| { if(printLogs) printf("BODY found 2\n"); } /* empty */
 ;
 
-BODY: STATEMENTLIST NLZEROORMORE BODY 
-| /* empty */
-;
-
-STATEMENTLIST: READ_STATEMENT 
-| WRITE_STATEMENT 
-| ASSIGNMENT_STATEMENT 
-| BLOCK_STATEMENT 
-| CONDITIONAL_STATEMENT 
-| LOOPING_STATEMENT
+STATEMENTLIST: { if(printLogs) printf("READ found\n"); } READ_STATEMENT 
+| { if(printLogs) printf("WRITE found\n"); } WRITE_STATEMENT 
+| { if(printLogs) printf("ASSIGNMENT found\n"); } ASSIGNMENT_STATEMENT 
+| { if(printLogs) printf("BLOCK found\n"); } BLOCK_STATEMENT 
+| { if(printLogs) printf("CONDITIONAL found\n"); } CONDITIONAL_STATEMENT 
+| { if(printLogs) printf("LOOPING found\n"); } LOOPING_STATEMENT
 ;
 
 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON NLZEROORMORE
 ;
 
-WRITE_STATEMENT: WRITE LPAREN IDENTIFIER RPAREN SEMICOLON NLZEROORMORE 
-| WRITE LPAREN STRING RPAREN SEMICOLON NLZEROORMORE
+WRITE_STATEMENT: WRITE LPAREN WRITE_CONTENT RPAREN SEMICOLON NLZEROORMORE 
+;
+
+WRITE_CONTENT: STRING | IDENTIFIER | NUMBER
 ;
 
 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL EXPRESSION SEMICOLON NLZEROORMORE
@@ -92,7 +106,7 @@ CONDITION: IDENTIFIER RELOP IDENTIFIER
 
 RELOP: EQUAL 
 | LESS 
-|  GREATER 
+| GREATER 
 | LESSEQUAL 
 | GREATEREQUAL 
 | NOTEQUAL
@@ -125,17 +139,8 @@ FORDOWNTO: FOR IDENTIFIER COLON EQUAL NUMBER DOWNTO EXPRESSIONOP DO BLOCK_STATEM
 WHILEDO: WHILE LPAREN CONDITION RPAREN DO NLZEROORMORE BLOCK_STATEMENT
 ;
 
-DATATYPE: INTEGER 
-| REAL 
-| BOOLEAN 
-| CHAR 
-;
-
 ARRAYDEF: IDENTIFIER COLON ARRAY LBRACKET NUMBER DOT DOT NUMBER RBRACKET OF DATATYPE SEMICOLON NLZEROORMORE
 ;
-
-NLZEROORMORE: NL NLZEROORMORE 
-| /* empty */
 
 %%
 
@@ -143,15 +148,15 @@ void main()
 {
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
-        printf("File not found\n");
+        if(printLogs) printf("File not found\n");
         exit(1);
     }
     else{
-        printf("File found\n");
+        if(printLogs) printf("File found\n");
         yyparse();
     }
 }
 
 void yyerror(){
-    printf("\n\nSyntax error\n");
+    if(printLogs) printf("\n\nSyntax error\n");
 }
