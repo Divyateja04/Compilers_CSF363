@@ -1,4 +1,4 @@
-rm -f ADMK3773.out
-lex ADMK3773.l
-gcc lex.yy.c -ll -o ADMK3773.out
-./ADMK3773.out
+rm -f ADKM3773.out
+lex ADKM3773.l
+gcc lex.yy.c -ll -o ADKM3773.out
+./ADKM3773.out
