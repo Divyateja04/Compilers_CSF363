@@ -15,5 +15,5 @@ begin
 
     // Display the result
     Write("The sum is ");
-    write(sum)
+    write(sum);
 end.
