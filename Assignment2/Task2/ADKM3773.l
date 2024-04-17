@@ -36,6 +36,8 @@ int lineNumber = 1;
 [e|E][n|N][d|D] { return END; }
 [r|R][e|E][a|A][d|D] { return READ;}
 [w|W][r|R][i|I][t|T][e|E] { return WRITE; }
+[t|T][h|H][e|E][n|N] { return THEN; }
+[o|O][f|F] {return OF;}
 
 [+] { return PLUS; }
 [-] { return MINUS; }
@@ -65,7 +67,7 @@ int lineNumber = 1;
 
 [0-9]+ { return NUMBER; }
 
-[a-zA-Z][a-zA-Z0-9]* {  return IDENTIFIER; }
+[a-zA-Z][a-zA-Z0-9_]* {  return IDENTIFIER; }
 
 [\n] { return NL; }
 [\t] {}

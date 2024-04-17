@@ -36,6 +36,7 @@ int lineNumber = 1;
 [e|E][n|N][d|D] { fprintf(yyout, "\n%d | %s | END", lineNumber, yytext); }
 [r|R][e|E][a|A][d|D] { fprintf(yyout, "\n%d | %s | READ", lineNumber, yytext); }
 [w|W][r|R][i|I][t|T][e|E] { fprintf(yyout, "\n%d | %s | WRITE", lineNumber, yytext); }
+[t|T][h|H][e|E][n|N] { fprintf(yyout, "\n%d | %s | THEN", lineNumber, yytext); }
 
 [+] { fprintf(yyout, "\n%d | %s | PLUS", lineNumber, yytext); }
 [-] { fprintf(yyout, "\n%d | %s | MINUS", lineNumber, yytext); }
