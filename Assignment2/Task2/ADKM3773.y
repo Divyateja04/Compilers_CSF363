@@ -1,8 +1,12 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+
+int yylex(void);
+int yyerror();
 extern FILE *yyin;
-int printLogs = 1;
+
+int printLogs = 0;
 %}
 
 %token PROGRAM INTEGER REAL BEGINK END NL BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE
@@ -154,11 +158,13 @@ void main()
         exit(1);
     }
     else{
-        if(printLogs) printf("File found\n");
+        printf("Input file found, Parsing...\n");
         yyparse();
+        printf("Parsing complete, no error found.\n");
     }
 }
 
-void yyerror(){
-    if(printLogs) printf("\n\nSyntax error\n");
+int yyerror(){
+    printf("\n\nSyntax error\n");
+    return 0;
 }
