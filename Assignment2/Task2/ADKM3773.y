@@ -6,7 +6,7 @@ int yylex(void);
 int yyerror();
 extern FILE *yyin;
 
-int printLogs = 0;
+int printLogs = 1;
 %}
 
 %token PROGRAM INTEGER REAL BEGINK END NL BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE
@@ -34,7 +34,7 @@ VARIABLES: { if(printLogs) printf("VARIABLES found\n"); } VAR NLZEROORMORE VARS 
 VARS: { if(printLogs) printf("VARS found\n"); } MULTIVAR VARS | NLZEROORMORE
 ;
 
-MULTIVAR: { if(printLogs) printf("MULTIVAR found 1\n"); } VARIABLELIST { if(printLogs) printf("COLON ended\n"); } COLON DATATYPE SEMICOLON NLZEROORMORE 
+MULTIVAR: { if(printLogs) printf("MULTIVAR found 1\n"); } VARIABLELIST COLON DATATYPE SEMICOLON NLZEROORMORE 
 | { if(printLogs) printf("MULTIVAR found 2\n"); } ARRAYDEF
 ;
 
@@ -66,7 +66,7 @@ STATEMENTLIST: { if(printLogs) printf("READ found\n"); } READ_STATEMENT
 | { if(printLogs) printf("LOOPING found\n"); } LOOPING_STATEMENT
 ;
 
-READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON NLZEROORMORE
+READ_STATEMENT: { if(printLogs) printf("READ started\n"); } READ LPAREN IDENTIFIER RPAREN SEMICOLON NLZEROORMORE
 ;
 
 WRITE_STATEMENT: WRITE LPAREN WRITE_CONTENT RPAREN SEMICOLON NLZEROORMORE { if(printLogs) printf("WRITE over\n"); } 
@@ -160,7 +160,7 @@ void main()
     else{
         printf("Input file found, Parsing...\n");
         yyparse();
-        printf("Parsing complete, no error found.\n");
+        /* printf("Parsing complete, no error found.\n"); */
     }
 }
 

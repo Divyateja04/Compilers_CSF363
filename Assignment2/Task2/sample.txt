@@ -1,19 +1,16 @@
-program AddTwoNumbers;
-
+program ReverseNumber;
 var
-    num1, num2, sum: Integer;
-
+  number, reversedNumber, remainder: Integer;
 begin
-    Write("Enter the first number: ");
-    read(num1);
-
-    Write("Enter the second number: ");
-    read(num2);
-
-    // Perform addition
-    sum := num1 + num2;
-
-    // Display the result
-    Write("The sum is ");
-    write(sum);
+  write("Enter a number to reverse:");
+  read(number);
+  reversedNumber := 0;
+  while number <> 0 do
+  begin
+    remainder := number % 10;
+    reversedNumber := reversedNumber * 10 + remainder;
+    number := number div 10;
+  end;
+  write("The reversed number is: ");
+  write(reversedNumber);
 end.
