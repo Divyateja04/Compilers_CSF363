@@ -6,7 +6,7 @@ int yylex(void);
 int yyerror();
 extern FILE *yyin;
 
-int printLogs = 1;
+int printLogs = 0;
 %}
 
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE ARRAY_DOT

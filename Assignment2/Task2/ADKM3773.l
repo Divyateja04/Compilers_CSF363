@@ -4,7 +4,7 @@
 #include "y.tab.h"
 extern int yylval;
 int lineNumber = 1;
-int printToken = 1;
+int printToken = 0;
 %}
 
 %x READ_STRING_INPUT
