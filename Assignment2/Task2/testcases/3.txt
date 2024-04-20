@@ -9,9 +9,8 @@ begin
   begin
     remainder := number % 10;
     reversedNumber := reversedNumber * 10 + remainder;
-    number := number div 10;
+    number := number / 10;
   end;
   write("The reversed number is: ");
   write(reversedNumber);
 end.
-

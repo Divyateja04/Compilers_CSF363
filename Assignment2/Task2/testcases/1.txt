@@ -1,4 +1,3 @@
-
 program ArrayAverage;
 var
   numbers: array[1..5] of Integer;
@@ -18,4 +17,4 @@ begin
   average := sum / 5;
   write("The sum and average are: "); 
   write(sum, average);
-end
+end.

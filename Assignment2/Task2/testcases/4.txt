@@ -7,7 +7,7 @@ begin
   count := 0;
   while number <> 0 do
   begin
-    digit := number - (number div 10) * 10;
+    digit := number - (number / 10) * 10;
     
     if digit <> 0 then
       begin
