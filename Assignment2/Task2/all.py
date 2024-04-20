@@ -17,7 +17,7 @@ if args.all:
         os.system('echo "======================================="')
         os.system(f'echo "Test Case {i+1}"')
         
-        os.system(f'cat ./testcases/{i + 1}.txt > sample.txt')
+        os.system(f'cat ./testcases/{i + 1}.pas > sample.txt')
         os.system(f'cat sample.txt')
         
         os.system(f'echo "Deleting old files"')

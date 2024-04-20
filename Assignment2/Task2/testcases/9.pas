@@ -1,4 +1,3 @@
-
 program Example9;
 var
   i: Integer;
