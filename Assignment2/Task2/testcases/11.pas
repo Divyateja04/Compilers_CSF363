@@ -9,7 +9,7 @@ begin
    end;
    for i := 1 to 100 do begin
       write(i, " ");
-      if doors[i] then begin
+      if doors[i] and not doors[i] then begin
 	 write("open");
     end
       else begin
