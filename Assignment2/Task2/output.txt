@@ -1,0 +1,72 @@
+=======================================
+Test Case 1
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 2
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 3
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 4
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 5
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 6
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 7
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 8
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
+=======================================
+Test Case 9
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully

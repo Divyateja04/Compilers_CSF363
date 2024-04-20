@@ -1,6 +1,8 @@
 clear
 echo "Deleting old files"
 rm -f ADKM3773.out
+rm -f lex.yy.c
+rm -f y.tab.c
 echo "Compiling yacc program"
 yacc -d ADKM3773.y -Wconflicts-rr -Wconflicts-sr -Wcounterexamples
 echo "Compiling lex program"
