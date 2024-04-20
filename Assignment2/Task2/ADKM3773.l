@@ -16,29 +16,29 @@ int printToken = 0;
 }
 <COMMENT>[\n] { BEGIN(INITIAL); }
 
-[p|P][r|R][o|O][g|G][r|R][a|A][m|M] { if(printToken) printf("\n::> | %s |", yytext); return PROGRAM; }
-[i|I][n|N][t|T][e|E][g|G][e|E][r|R] { if(printToken) printf("\n::> | %s |", yytext); return INTEGER; }
-[r|R][e|E][a|A][l|L] { if(printToken) printf("\n::> | %s |", yytext); return REAL; }
-[b|B][o|O][o|O][l|L][e|E][a|A][n|N] { if(printToken) printf("\n::> | %s |", yytext); return BOOLEAN; }
-[c|C][h|H][a|A][r|R] { if(printToken) printf("\n::> | %s |", yytext); return CHAR; }
-[v|V][a|A][r|R] { if(printToken) printf("\n::> | %s |", yytext); return VAR; }
-[f|F][o|O][r|R] { if(printToken) printf("\n::> | %s |", yytext); return FOR; }
-[t|T][o|O] { if(printToken) printf("\n::> | %s |", yytext); return TO; }
-[d|D][o|O][w|W][n|N][t|T][o|O] { if(printToken) printf("\n::> | %s |", yytext); return DOWNTO; }
-[i|I][f|F] { if(printToken) printf("\n::> | %s |", yytext); return IF; }
-[e|E][l|L][s|S][e|E] { if(printToken) printf("\n::> | %s |", yytext); return ELSE; }
-[d|D][o|O] { if(printToken) printf("\n::> | %s |", yytext); return DO; }
-[w|W][h|H][i|I][l|L][e|E] { if(printToken) printf("\n::> | %s |", yytext); return WHILE; }
-[a|A][r|R][r|R][a|A][y|Y] { if(printToken) printf("\n::> | %s |", yytext); return ARRAY; }
-[a|A][n|N][d|D] { if(printToken) printf("\n::> | %s |", yytext); return AND; }
-[o|O][r|R] { if(printToken) printf("\n::> | %s |", yytext); return OR; }
-[n|N][o|O][t|T] { if(printToken) printf("\n::> | %s |", yytext); return NOT; }
-[b|B][e|E][g|G][i|I][n|N] { if(printToken) printf("\n::> | %s |", yytext); return BEGINK; }
-[e|E][n|N][d|D] { if(printToken) printf("\n::> | %s |", yytext); return END; }
-[r|R][e|E][a|A][d|D] { if(printToken) printf("\n::> | %s |", yytext); return READ;}
-[w|W][r|R][i|I][t|T][e|E] { if(printToken) printf("\n::> | %s |", yytext); return WRITE; }
-[t|T][h|H][e|E][n|N] { if(printToken) printf("\n::> | %s |", yytext); return THEN; }
-[o|O][f|F] {if(printToken) printf("\n::> | %s |", yytext); return OF;}
+(?i:program) { if(printToken) printf("\n::> | %s |", yytext); return PROGRAM; }
+(?i:integer) { if(printToken) printf("\n::> | %s |", yytext); return INTEGER; }
+(?i:real) { if(printToken) printf("\n::> | %s |", yytext); return REAL; }
+(?i:boolean) { if(printToken) printf("\n::> | %s |", yytext); return BOOLEAN; }
+(?i:char) { if(printToken) printf("\n::> | %s |", yytext); return CHAR; }
+(?i:var) { if(printToken) printf("\n::> | %s |", yytext); return VAR; }
+(?i:for) { if(printToken) printf("\n::> | %s |", yytext); return FOR; }
+(?i:to) { if(printToken) printf("\n::> | %s |", yytext); return TO; }
+(?i:downto) { if(printToken) printf("\n::> | %s |", yytext); return DOWNTO; }
+(?i:if) { if(printToken) printf("\n::> | %s |", yytext); return IF; }
+(?i:else) { if(printToken) printf("\n::> | %s |", yytext); return ELSE; }
+(?i:do) { if(printToken) printf("\n::> | %s |", yytext); return DO; }
+(?i:while) { if(printToken) printf("\n::> | %s |", yytext); return WHILE; }
+(?i:array) { if(printToken) printf("\n::> | %s |", yytext); return ARRAY; }
+(?i:and) { if(printToken) printf("\n::> | %s |", yytext); return AND; }
+(?i:or) { if(printToken) printf("\n::> | %s |", yytext); return OR; }
+(?i:not) { if(printToken) printf("\n::> | %s |", yytext); return NOT; }
+(?i:begin) { if(printToken) printf("\n::> | %s |", yytext); return BEGINK; }
+(?i:end) { if(printToken) printf("\n::> | %s |", yytext); return END; }
+(?i:read) { if(printToken) printf("\n::> | %s |", yytext); return READ;}
+(?i:write) { if(printToken) printf("\n::> | %s |", yytext); return WRITE; }
+(?i:then) { if(printToken) printf("\n::> | %s |", yytext); return THEN; }
+(?i:of) {if(printToken) printf("\n::> | %s |", yytext); return OF;}
 
 [+] { if(printToken) printf("\n::> | %s |", yytext); return PLUS; }
 [-] { if(printToken) printf("\n::> | %s |", yytext); return MINUS; }
