@@ -22,13 +22,13 @@ int printToken = 0;
 (?i:boolean) { if(printToken) printf("\n::> | %s |", yytext); return BOOLEAN; }
 (?i:char) { if(printToken) printf("\n::> | %s |", yytext); return CHAR; }
 (?i:var) { if(printToken) printf("\n::> | %s |", yytext); return VAR; }
-(?i:for) { if(printToken) printf("\n::> | %s |", yytext); return FOR; }
 (?i:to) { if(printToken) printf("\n::> | %s |", yytext); return TO; }
 (?i:downto) { if(printToken) printf("\n::> | %s |", yytext); return DOWNTO; }
 (?i:if) { if(printToken) printf("\n::> | %s |", yytext); return IF; }
 (?i:else) { if(printToken) printf("\n::> | %s |", yytext); return ELSE; }
-(?i:do) { if(printToken) printf("\n::> | %s |", yytext); return DO; }
 (?i:while) { if(printToken) printf("\n::> | %s |", yytext); return WHILE; }
+(?i:for) { if(printToken) printf("\n::> | %s |", yytext); return FOR; }
+(?i:do) { if(printToken) printf("\n::> | %s |", yytext); return DO; }
 (?i:array) { if(printToken) printf("\n::> | %s |", yytext); return ARRAY; }
 (?i:and) { if(printToken) printf("\n::> | %s |", yytext); return AND; }
 (?i:or) { if(printToken) printf("\n::> | %s |", yytext); return OR; }
