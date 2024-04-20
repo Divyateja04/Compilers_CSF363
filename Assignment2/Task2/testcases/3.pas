@@ -2,7 +2,7 @@ program ReverseNumber;
 var
   number, reversedNumber, remainder: Integer;
 begin
-  write("Enter a number to reverse:");
+  write("Enter a number to reverse:", 3, number);
   read(number);
   reversedNumber := 0;
   while number <> 0 do

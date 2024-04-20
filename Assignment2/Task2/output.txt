@@ -24,107 +24,9 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | ArrayAverage |
-::> | ; |
-::> | var |
-::> | numbers |
-::> | : |
-::> | array |
-::> | [ |
-::> | 1 |
-::> | .. |
-::> | 5 |
-::> | ] |
-::> | of |
-::> | Integer |
-::> | ; |
-::> | i |
-::> | , |
-::> | sum |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | average |
-::> | : |
-::> | real |
-::> | ; |
-::> | begin |
-::> | write |
-::> | ( |
-::> | Enter 5 integer values: |
-::> | ) |
-::> | ; |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | 1 |
-::> | to |
-::> | 5 |
-::> | do |
-::> | begin |
-::> | read |
-::> | ( |
-::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
-::> | ) |
-::> | ; |
-::> | end |
-::> | ; |
-::> | sum |
-::> | : |
-::> | = |
-::> | 0 |
-::> | ; |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | 1 |
-::> | to |
-::> | 5 |
-::> | do |
-::> | begin |
-::> | sum |
-::> | : |
-::> | = |
-::> | sum |
-::> | + |
-::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
-::> | ; |
-::> | end |
-::> | ; |
-::> | average |
-::> | : |
-::> | = |
-::> | sum |
-::> | / |
-::> | 5 |
-::> | ; |
-::> | write |
-::> | ( |
-::> | The sum and average are:  |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | sum |
-::> | , |
-::> | average |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 2
-
 program MaxValueArray;
 var
   numbers: array[1..10] of Integer;
@@ -151,110 +53,14 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | MaxValueArray |
-::> | ; |
-::> | var |
-::> | numbers |
-::> | : |
-::> | array |
-::> | [ |
-::> | 1 |
-::> | .. |
-::> | 10 |
-::> | ] |
-::> | of |
-::> | Integer |
-::> | ; |
-::> | i |
-::> | , |
-::> | maxValue |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | write |
-::> | ( |
-::> | Enter 10 integer values: |
-::> | ) |
-::> | ; |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | 1 |
-::> | to |
-::> | 10 |
-::> | do |
-::> | begin |
-::> | read |
-::> | ( |
-::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
-::> | ) |
-::> | ; |
-::> | end |
-::> | ; |
-::> | maxValue |
-::> | : |
-::> | = |
-::> | numbers |
-::> | [ |
-::> | 1 |
-::> | ] |
-::> | ; |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | 2 |
-::> | to |
-::> | 10 |
-::> | do |
-::> | begin |
-::> | if |
-::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
-::> | > |
-::> | maxValue |
-::> | then |
-::> | begin |
-::> | maxValue |
-::> | : |
-::> | = |
-::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
-::> | ; |
-::> | end |
-::> | ; |
-::> | end |
-::> | ; |
-::> | write |
-::> | ( |
-::> | The maximum value is:  |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | maxValue |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 3
 program ReverseNumber;
 var
   number, reversedNumber, remainder: Integer;
 begin
-  write("Enter a number to reverse:");
+  write("Enter a number to reverse:", 3, number);
   read(number);
   reversedNumber := 0;
   while number <> 0 do
@@ -271,78 +77,7 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | ReverseNumber |
-::> | ; |
-::> | var |
-::> | number |
-::> | , |
-::> | reversedNumber |
-::> | , |
-::> | remainder |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | write |
-::> | ( |
-::> | Enter a number to reverse: |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | number |
-::> | ) |
-::> | ; |
-::> | reversedNumber |
-::> | : |
-::> | = |
-::> | 0 |
-::> | ; |
-::> | while |
-::> | number |
-::> | <> |
-::> | 0 |
-::> | do |
-::> | begin |
-::> | remainder |
-::> | : |
-::> | = |
-::> | number |
-::> | % |
-::> | 10 |
-::> | ; |
-::> | reversedNumber |
-::> | : |
-::> | = |
-::> | reversedNumber |
-::> | * |
-::> | 10 |
-::> | + |
-::> | remainder |
-::> | ; |
-::> | number |
-::> | : |
-::> | = |
-::> | number |
-::> | / |
-::> | 10 |
-::> | ; |
-::> | end |
-::> | ; |
-::> | write |
-::> | ( |
-::> | The reversed number is:  |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | reversedNumber |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 4
 program NumberOfDigits;
@@ -370,90 +105,7 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | NumberOfDigits |
-::> | ; |
-::> | var |
-::> | number |
-::> | , |
-::> | count |
-::> | , |
-::> | digit |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | write |
-::> | ( |
-::> | Enter a number: |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | number |
-::> | ) |
-::> | ; |
-::> | count |
-::> | : |
-::> | = |
-::> | 0 |
-::> | ; |
-::> | while |
-::> | number |
-::> | <> |
-::> | 0 |
-::> | do |
-::> | begin |
-::> | digit |
-::> | : |
-::> | = |
-::> | number |
-::> | - |
-::> | ( |
-::> | number |
-::> | / |
-::> | 10 |
-::> | ) |
-::> | * |
-::> | 10 |
-::> | ; |
-::> | if |
-::> | digit |
-::> | <> |
-::> | 0 |
-::> | then |
-::> | begin |
-::> | count |
-::> | : |
-::> | = |
-::> | count |
-::> | + |
-::> | 1 |
-::> | ; |
-::> | end |
-::> | ; |
-::> | number |
-::> | : |
-::> | = |
-::> | number |
-::> | / |
-::> | 10 |
-::> | ; |
-::> | end |
-::> | ; |
-::> | write |
-::> | ( |
-::> | The number of digits is:  |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | count |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 5
 program NumberOfDigits;
@@ -483,83 +135,7 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | NumberOfDigits |
-::> | ; |
-::> | var |
-::> | number |
-::> | , |
-::> | count |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | write |
-::> | ( |
-::> | Enter a number: |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | number |
-::> | ) |
-::> | ; |
-::> | count |
-::> | : |
-::> | = |
-::> | 0 |
-::> | ; |
-::> | while |
-::> | number |
-::> | <> |
-::> | 0 |
-::> | do |
-::> | begin |
-::> | if |
-::> | number |
-::> | <> |
-::> | 0 |
-::> | then |
-::> | begin |
-::> | count |
-::> | : |
-::> | = |
-::> | count |
-::> | + |
-::> | 1 |
-::> | ; |
-::> | end |
-::> | else |
-::> | begin |
-::> | count |
-::> | : |
-::> | = |
-::> | count |
-::> | ; |
-::> | end |
-::> | ; |
-::> | number |
-::> | : |
-::> | = |
-::> | number |
-::> | / |
-::> | 10 |
-::> | ; |
-::> | end |
-::> | ; |
-::> | write |
-::> | ( |
-::> | The number of digits is:  |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | count |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 6
 program FactorialCalculation;
@@ -583,65 +159,7 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | FactorialCalculation |
-::> | ; |
-::> | var |
-::> | number |
-::> | , |
-::> | factorial |
-::> | , |
-::> | i |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | write |
-::> | ( |
-::> | Enter a number to calculate its factorial: |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | number |
-::> | ) |
-::> | ; |
-::> | factorial |
-::> | : |
-::> | = |
-::> | 1 |
-::> | ; |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | number |
-::> | downto |
-::> | 1 |
-::> | do |
-::> | begin |
-::> | factorial |
-::> | : |
-::> | = |
-::> | factorial |
-::> | * |
-::> | i |
-::> | ; |
-::> | end |
-::> | ; |
-::> | write |
-::> | ( |
-::> | The factorial is:  |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | factorial |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 7
 program SumOfSquares;
@@ -663,69 +181,7 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | SumOfSquares |
-::> | ; |
-::> | var |
-::> | number |
-::> | , |
-::> | sum |
-::> | , |
-::> | i |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | write |
-::> | ( |
-::> | Enter a number to calculate the sum of squares up to that number: |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | number |
-::> | ) |
-::> | ; |
-::> | sum |
-::> | : |
-::> | = |
-::> | 0 |
-::> | ; |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | 1 |
-::> | to |
-::> | number |
-::> | do |
-::> | begin |
-::> | sum |
-::> | : |
-::> | = |
-::> | sum |
-::> | + |
-::> | ( |
-::> | i |
-::> | * |
-::> | i |
-::> | ) |
-::> | ; |
-::> | end |
-::> | ; |
-::> | write |
-::> | ( |
-::> | The sum of squares up is |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | sum |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 8
 program forif;
@@ -747,56 +203,9 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | forif |
-::> | ; |
-::> | var |
-::> | i |
-::> | , |
-::> | j |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | 1 |
-::> | to |
-::> | 20 |
-::> | do |
-::> | begin |
-::> | if |
-::> | i |
-::> | % |
-::> | 3 |
-::> | = |
-::> | 0 |
-::> | then |
-::> | begin |
-::> | j |
-::> | : |
-::> | = |
-::> | i |
-::> | + |
-::> | 2 |
-::> | ; |
-::> | write |
-::> | ( |
-::> | j |
-::> | ) |
-::> | ; |
-::> | end |
-::> | ; |
-::> | end |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 9
-
 program Example9;
 var
   i: Integer;
@@ -818,203 +227,101 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
-
-::> | program |
-::> | Example9 |
-::> | ; |
-::> | var |
-::> | i |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | i |
-::> | : |
-::> | = |
-::> | 10 |
-::> | ; |
-::> | if |
-::> | i |
-::> | > |
-::> | 10 |
-::> | then |
-::> | begin |
-::> | i |
-::> | : |
-::> | = |
-::> | 10 |
-::> | ; |
-::> | i |
-::> | : |
-::> | = |
-::> | i |
-::> | - |
-::> | 1 |
-::> | ; |
-::> | write |
-::> | ( |
-::> | i |
-::> | ) |
-::> | ; |
-::> | end |
-::> | else |
-::> | begin |
-::> | i |
-::> | : |
-::> | = |
-::> | 20 |
-::> | ; |
-::> | write |
-::> | ( |
-::> | i |
-::> | ) |
-::> | ; |
-::> | end |
-::> | ; |
-::> | end |
-::> | . |Parsing completed successfully
+Parsing completed successfully
 =======================================
 Test Case 10
-
 program forif;
 var
-  i, j: Integer;
+  i, j, a, b, x: Integer;
+  arr: array[1..20] of Integer;
 begin
   for i := 1 to 20 do
-   begin
-     if i % 3 = 0 then 
-      begin
-        j := i + 2; 
-        write(j);
-        read(arr[1]);
-        read(arr[x]);
-        read(arr[1]);
+  begin
+    if i % 3 = 0 then 
+    begin
+      j := i + 2; 
+      write(j);
+      arr[1] := i;
+      arr[x] := i;
+      arr[1] := i;
 
-        write(a, b, arr[i]);
-        write(a, b[3], arr[i]);
-      end;
+      write(a, " ", b, " ", arr[i]);
     end;
+  end;
 
-    if i % 3 = 0 then
-        for i: = 3 down to 0 do
-        begin
-            write(i, 5);
-        end;
-    else
-        for i: = 3 down to 0 do
-        begin
-            write(i, 5);
-        end;
+  if i % 3 = 0 then
+  begin
+    for i := 3 downto 0 do
+    begin
+      write(i, " ", 5);
     end;
+  end
+  else
+  begin
+    for i := 3 downto 0 do
+    begin
+      write(i, " ", 5);
+    end;
+  end;
 end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 Input file found, Parsing....
 
-::> | program |
-::> | forif |
-::> | ; |
-::> | var |
-::> | i |
-::> | , |
-::> | j |
-::> | : |
-::> | Integer |
-::> | ; |
-::> | begin |
-::> | for |
-::> | i |
-::> | : |
-::> | = |
-::> | 1 |
-::> | to |
-::> | 20 |
-::> | do |
-::> | begin |
-::> | if |
-::> | i |
-::> | % |
-::> | 3 |
-::> | = |
-::> | 0 |
-::> | then |
-::> | begin |
-::> | j |
-::> | : |
-::> | = |
-::> | i |
-::> | + |
-::> | 2 |
-::> | ; |
-::> | write |
-::> | ( |
-::> | j |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | arr |
-::> | [ |
-::> | 1 |
-::> | ] |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | arr |
-::> | [ |
-::> | x |
-::> | ] |
-::> | ) |
-::> | ; |
-::> | read |
-::> | ( |
-::> | arr |
-::> | [ |
-::> | 1 |
-::> | ] |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | a |
-::> | , |
-::> | b |
-::> | , |
-::> | arr |
-::> | [ |
-::> | i |
-::> | ] |
-::> | ) |
-::> | ; |
-::> | write |
-::> | ( |
-::> | a |
-::> | , |
-::> | b |
-::> | [ |
-::> | 3 |
-::> | ] |
-::> | , |
-::> | arr |
-::> | [ |
-::> | i |
-::> | ] |
-::> | ) |
-::> | ; |
-::> | end |
-::> | ; |
-::> | end |
-::> | ; |
-::> | if |
-::> | i |
-::> | % |
-::> | 3 |
-::> | = |
-::> | 0 |
-::> | then |
-::> | for |
 
 Syntax error
+=======================================
+Test Case 11
+Program OneHundredDoors;
+var
+   doors : Array[1..100] of Boolean;
+   i, j	 : Integer;
+begin
+   for i := 1 to 100 do begin
+      j := i;
+      while j <= 100 do begin
+	 doors[j] := not doors[j];
+	 j := j + i
+      end
+   end;
+   for i := 1 to 100 do begin
+      write(i, " ");
+      if doors[i] then
+	 write("open")
+      else
+	 write("closed");
+   end
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+
+
+Syntax error
+=======================================
+Test Case 12
+program Mean;
+var
+  i, n, sum: integer;
+  mean: real;
+begin
+  n := 20;
+  sum := 0;
+  
+  for i := 1 to n do
+  begin
+    sum := sum + i;
+  end;
+  
+  mean := sum / n;
+  
+  write("The mean of the numbers from 1 to 20 is ", mean);
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Input file found, Parsing....
+Parsing completed successfully
 
