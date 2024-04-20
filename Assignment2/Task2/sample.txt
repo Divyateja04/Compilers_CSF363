@@ -13,5 +13,5 @@ begin
   
   mean := sum / n;
   
-  write('The mean of the numbers from 1 to 20 is ', mean:0:2);
+  write("The mean of the numbers from 1 to 20 is ", mean);
 end.
