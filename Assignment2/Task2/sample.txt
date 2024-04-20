@@ -1,17 +1,18 @@
-program Mean;
+Program OneHundredDoors;
 var
-  i, n, sum: integer;
-  mean: real;
+   doors : Array[1..100] of Boolean;
+   i, j	 : Integer;
 begin
-  n := 20;
-  sum := 0;
-  
-  for i := 1 to n do
-  begin
-    sum := sum + i;
-  end;
-  
-  mean := sum / n;
-  
-  write("The mean of the numbers from 1 to 20 is ", mean);
+   for i := 1 to 100 do begin
+      j := i;
+	 j := j + i;
+   end;
+   for i := 1 to 100 do begin
+      write(i, " ");
+      if doors[i] = 0 then begin
+	 write("open");
+    end
+      else begin
+	 write("closed"); end;
+   end;
 end.

@@ -1,6 +1,9 @@
 # TODO
--  CHECK CONDITION
--  CHECK MOD
--  ADD NEGATIVE NUMBERS
--  Check if ' also is allowed for string
--  CHECK and, not, or
+-  Check CONDITION
+-  Check MOD
+-  Check negative numbers
+-  Check if ' also is allowed for string, currently only handling "
+-  Check and, not, or
+-  Handle array assignment
+-  Handle not with array
+-  Check condition if boolean

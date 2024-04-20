@@ -37,7 +37,7 @@ elif args.testcase:
     os.system('echo "======================================="')
     os.system(f'echo "Test Case {test_case_num}"')
     
-    os.system(f'cat ./testcases/{test_case_num}.txt > sample.txt')
+    os.system(f'cat ./testcases/{test_case_num}.pas > sample.txt')
     os.system(f'cat sample.txt')
     
     os.system(f'echo "Deleting old files"')
