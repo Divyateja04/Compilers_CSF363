@@ -1,8 +1,6 @@
 # TODO
--  FIX EXPRESSION GRAMMAR - Remove all rr conflicts
--  CHECK LPAREN RPAREN IN FOR LOOPS AND WHILE - Sir said lite
 -  CHECK CONDITION
 -  CHECK MOD
--  WRITE DOES NOT WRITE IF INPUT IS write(i, 5) NUMBERS NOT HANDLED
 -  ADD NEGATIVE NUMBERS
 -  Check if ' also is allowed for string
+-  CHECK and, not, or
