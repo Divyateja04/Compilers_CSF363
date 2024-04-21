@@ -209,6 +209,6 @@ void main()
 }
 
 int yyerror(){
-    printf("\n\nError: Syntax error\n");
+    printf("\n\nSyntax error found\n");
     return 0;
 }
