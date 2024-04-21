@@ -23,7 +23,7 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | ArrayAverage |
 ::> | ; |
@@ -37,25 +37,25 @@ Compiling the program in gcc
 ::> | 5 |
 ::> | ] |
 ::> | of |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | i |
 ::> | , |
 ::> | sum |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | average |
 ::> | : |
-::> | real |
+::> | real |DATATYPE found - REAL
 ::> | ; |
 ::> | begin |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | Enter 5 integer values: |
 ::> | ) |
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -67,19 +67,19 @@ Compiling the program in gcc
 ::> | read |
 ::> | ( |
 ::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | ) |
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | sum |
+::> | sum |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 0 |
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -94,25 +94,25 @@ Compiling the program in gcc
 ::> | sum |
 ::> | + |
 ::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | average |
+::> | average |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | sum |
 ::> | / |
 ::> | 5 |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The sum and average are:  |
 ::> | ) |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | sum |
 ::> | , |
@@ -122,8 +122,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 2
 program MaxValueArray;
 var
@@ -150,7 +149,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | MaxValueArray |
 ::> | ; |
@@ -164,21 +163,21 @@ Compiling the program in gcc
 ::> | 10 |
 ::> | ] |
 ::> | of |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | i |
 ::> | , |
 ::> | maxValue |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | Enter 10 integer values: |
 ::> | ) |
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -190,22 +189,22 @@ Compiling the program in gcc
 ::> | read |
 ::> | ( |
 ::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | ) |
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | maxValue |
+::> | maxValue |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | numbers |
-::> | [ |
-::> | 1 |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | 1 |BETWEEN_BRACKETS found - INT_NUMBER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -216,31 +215,31 @@ Compiling the program in gcc
 ::> | begin |
 ::> | if |
 ::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | > |
 ::> | maxValue |
-::> | then |
+::> | then |Condition - Expr
 ::> | begin |
 ::> | maxValue |
 ::> | : |
 ::> | = |
 ::> | numbers |
-::> | [ |
-::> | i |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | ; |
 ::> | end |
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The maximum value is:  |
 ::> | ) |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | maxValue |
 ::> | ) |
@@ -248,8 +247,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 3
 program ReverseNumber;
 var
@@ -271,7 +269,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | ReverseNumber |
 ::> | ; |
@@ -282,10 +280,10 @@ Compiling the program in gcc
 ::> | , |
 ::> | remainder |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | Enter a number to reverse: |
 ::> | , |
@@ -294,21 +292,21 @@ Compiling the program in gcc
 ::> | number |
 ::> | ) |
 ::> | ; |
-::> | read |
+::> | read |STATEMENTLIST found - READ
 ::> | ( |
 ::> | number |
 ::> | ) |
 ::> | ; |
-::> | reversedNumber |
+::> | reversedNumber |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 0 |
 ::> | ; |
-::> | while |
+::> | while |STATEMENTLIST found - LOOPING
 ::> | number |
 ::> | <> |
 ::> | 0 |
-::> | do |
+::> | do |Condition - Expr
 ::> | begin |
 ::> | remainder |
 ::> | : |
@@ -335,12 +333,12 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The reversed number is:  |
 ::> | ) |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | reversedNumber |
 ::> | ) |
@@ -348,8 +346,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 4
 program NumberOfDigits;
 var
@@ -375,7 +372,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | NumberOfDigits |
 ::> | ; |
@@ -386,29 +383,29 @@ Compiling the program in gcc
 ::> | , |
 ::> | digit |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | Enter a number: |
 ::> | ) |
 ::> | ; |
-::> | read |
+::> | read |STATEMENTLIST found - READ
 ::> | ( |
 ::> | number |
 ::> | ) |
 ::> | ; |
-::> | count |
+::> | count |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 0 |
 ::> | ; |
-::> | while |
+::> | while |STATEMENTLIST found - LOOPING
 ::> | number |
 ::> | <> |
 ::> | 0 |
-::> | do |
+::> | do |Condition - Expr
 ::> | begin |
 ::> | digit |
 ::> | : |
@@ -427,7 +424,7 @@ Compiling the program in gcc
 ::> | digit |
 ::> | <> |
 ::> | 0 |
-::> | then |
+::> | then |Condition - Expr
 ::> | begin |
 ::> | count |
 ::> | : |
@@ -447,12 +444,12 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The number of digits is:  |
 ::> | ) |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | count |
 ::> | ) |
@@ -460,8 +457,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 5
 program NumberOfDigits;
 var
@@ -489,7 +485,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | NumberOfDigits |
 ::> | ; |
@@ -498,35 +494,35 @@ Compiling the program in gcc
 ::> | , |
 ::> | count |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | Enter a number: |
 ::> | ) |
 ::> | ; |
-::> | read |
+::> | read |STATEMENTLIST found - READ
 ::> | ( |
 ::> | number |
 ::> | ) |
 ::> | ; |
-::> | count |
+::> | count |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 0 |
 ::> | ; |
-::> | while |
+::> | while |STATEMENTLIST found - LOOPING
 ::> | number |
 ::> | <> |
 ::> | 0 |
-::> | do |
+::> | do |Condition - Expr
 ::> | begin |
 ::> | if |
 ::> | number |
 ::> | <> |
 ::> | 0 |
-::> | then |
+::> | then |Condition - Expr
 ::> | begin |
 ::> | count |
 ::> | : |
@@ -554,12 +550,12 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The number of digits is:  |
 ::> | ) |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | count |
 ::> | ) |
@@ -567,8 +563,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 6
 program FactorialCalculation;
 var
@@ -590,7 +585,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | FactorialCalculation |
 ::> | ; |
@@ -601,25 +596,25 @@ Compiling the program in gcc
 ::> | , |
 ::> | i |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | Enter a number to calculate its factorial: |
 ::> | ) |
 ::> | ; |
-::> | read |
+::> | read |STATEMENTLIST found - READ
 ::> | ( |
 ::> | number |
 ::> | ) |
 ::> | ; |
-::> | factorial |
+::> | factorial |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 1 |
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -637,12 +632,12 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The factorial is:  |
 ::> | ) |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | factorial |
 ::> | ) |
@@ -650,8 +645,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 7
 program SumOfSquares;
 var
@@ -671,7 +665,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | SumOfSquares |
 ::> | ; |
@@ -682,25 +676,25 @@ Compiling the program in gcc
 ::> | , |
 ::> | i |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | Enter a number to calculate the sum of squares up to that number: |
 ::> | ) |
 ::> | ; |
-::> | read |
+::> | read |STATEMENTLIST found - READ
 ::> | ( |
 ::> | number |
 ::> | ) |
 ::> | ; |
-::> | sum |
+::> | sum |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 0 |
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -722,12 +716,12 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The sum of squares up is |
 ::> | ) |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | sum |
 ::> | ) |
@@ -735,8 +729,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 8
 program forif;
 var
@@ -756,7 +749,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | forif |
 ::> | ; |
@@ -765,10 +758,10 @@ Compiling the program in gcc
 ::> | , |
 ::> | j |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -783,7 +776,7 @@ Compiling the program in gcc
 ::> | 3 |
 ::> | = |
 ::> | 0 |
-::> | then |
+::> | then |Condition - Expr
 ::> | begin |
 ::> | j |
 ::> | : |
@@ -804,8 +797,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 9
 program Example9;
 var
@@ -827,26 +819,26 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | Example9 |
 ::> | ; |
 ::> | var |
 ::> | i |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | i |
+::> | i |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 10 |
 ::> | ; |
-::> | if |
+::> | if |STATEMENTLIST found - CONDITIONAL
 ::> | i |
 ::> | > |
 ::> | 10 |
-::> | then |
+::> | then |Condition - Expr
 ::> | begin |
 ::> | i |
 ::> | : |
@@ -883,8 +875,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 10
 program forif;
 var
@@ -923,7 +914,7 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | forif |
 ::> | ; |
@@ -938,7 +929,7 @@ Compiling the program in gcc
 ::> | , |
 ::> | x |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | arr |
 ::> | : |
@@ -949,10 +940,10 @@ Compiling the program in gcc
 ::> | 20 |
 ::> | ] |
 ::> | of |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -967,7 +958,7 @@ Compiling the program in gcc
 ::> | 3 |
 ::> | = |
 ::> | 0 |
-::> | then |
+::> | then |Condition - Expr
 ::> | begin |
 ::> | j |
 ::> | : |
@@ -982,25 +973,25 @@ Compiling the program in gcc
 ::> | ) |
 ::> | ; |
 ::> | arr |
-::> | [ |
-::> | 1 |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | 1 |BETWEEN_BRACKETS found - INT_NUMBER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | : |
 ::> | = |
 ::> | i |
 ::> | ; |
 ::> | arr |
-::> | [ |
-::> | x |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | x |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | : |
 ::> | = |
 ::> | i |
 ::> | ; |
 ::> | arr |
-::> | [ |
-::> | 1 |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | 1 |BETWEEN_BRACKETS found - INT_NUMBER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | : |
 ::> | = |
 ::> | i |
@@ -1016,22 +1007,22 @@ Compiling the program in gcc
 ::> |   |
 ::> | , |
 ::> | arr |
-::> | [ |
-::> | i |
-::> | ] |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
 ::> | ) |
 ::> | ; |
 ::> | end |
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | if |
+::> | if |STATEMENTLIST found - CONDITIONAL
 ::> | i |
 ::> | % |
 ::> | 3 |
 ::> | = |
 ::> | 0 |
-::> | then |
+::> | then |Condition - Expr
 ::> | begin |
 ::> | for |
 ::> | i |
@@ -1081,8 +1072,7 @@ Compiling the program in gcc
 ::> | end |
 ::> | . |
 
-Parsing completed successfully
-=======================================
+Parsing completed successfully=======================================
 Test Case 11
 Program OneHundredDoors;
 var
@@ -1099,15 +1089,11 @@ begin
    end;
 
    if a then begin
-	   write("only identifier");
+	   write("only identifier without brackets");
    end;
 
    if arr[i] then begin
-	   write("only array");
-   end;
-
-   if (a) then begin
-	   write("identifier with bracket");
+	   write("only array without brackets");
    end;
 
    if arr[i] and a then begin
@@ -1118,10 +1104,6 @@ begin
 	   write("array with boolean 2");
    end;
 
-   if (not doors[i] or not doors[i]) then begin
-	   write("array with boolean and bracket");
-   end;
-
    while i < 3 do begin
       write('hello');
    end;
@@ -1130,12 +1112,25 @@ begin
       write('hello');
    end;
 
-   if (a + v + x - d = 1) then begin
+   if (a + v + x - d = 1) and a = 1 then begin
 	   write("expression");
    end;
 
+   if (a +( v + x) - d = 1) and a = 1 then begin
+	   write("expression");
+   end;
+
+
    if (a + v + (x) - d = 1) then begin
 	   write("expression");
+   end;
+
+   if (not doors[i]) or (not doors[i]) then begin
+	   write("array with boolean and bracket");
+   end;
+
+   if (not doors[i] or not doors[i]) then begin
+	   write("array with boolean and bracket");
    end;
    write('inside single quore');
 end.
@@ -1143,7 +1138,7 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | Program |
 ::> | OneHundredDoors |
 ::> | ; |
@@ -1157,16 +1152,16 @@ Compiling the program in gcc
 ::> | 100 |
 ::> | ] |
 ::> | of |
-::> | Boolean |
+::> | Boolean |DATATYPE found - BOOLEAN
 ::> | ; |
 ::> | i |
 ::> | , |
 ::> | j |
 ::> | : |
-::> | Integer |
+::> | Integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | begin |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -1189,7 +1184,7 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -1207,12 +1202,228 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | if |
+::> | if |STATEMENTLIST found - CONDITIONAL
 ::> | a |
+::> | then |Condition - Took ID
+::> | begin |
+::> | write |
+::> | ( |
+::> | only identifier without brackets |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | arr |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | then |Condition - Took Array
+::> | begin |
+::> | write |
+::> | ( |
+::> | only array without brackets |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | arr |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | and |Condition - Took Array
+::> | a |
+::> | then |Condition - Took IDCondition - AND
+::> | begin |
+::> | write |
+::> | ( |
+::> | array with boolean 1 |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | not |
+::> | doors |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | or |Condition - Took ArrayCondition - NOT
+::> | not |
+::> | doors |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | then |Condition - Took ArrayCondition - NOTCondition - OR
+::> | begin |
+::> | write |
+::> | ( |
+::> | array with boolean 2 |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | while |STATEMENTLIST found - LOOPING
+::> | i |
+::> | < |
+::> | 3 |
+::> | do |Condition - Expr
+::> | begin |
+::> | write |
+::> | ( |
+::> | hello |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | while |STATEMENTLIST found - LOOPING
+::> | ( |
+::> | i |
+::> | < |
+::> | 3 |
+::> | ) |Condition - ExprCondition - Closing Paren
+::> | do |
+::> | begin |
+::> | write |
+::> | ( |
+::> | hello |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | ( |
+::> | a |
+::> | + |
+::> | v |
+::> | + |
+::> | x |
+::> | - |
+::> | d |
+::> | = |
+::> | 1 |
+::> | ) |Condition - ExprCondition - Closing Paren
+::> | and |
+::> | a |
+::> | = |
+::> | 1 |
+::> | then |Condition - ExprCondition - AND
+::> | begin |
+::> | write |
+::> | ( |
+::> | expression |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | ( |
+::> | a |
+::> | + |
+::> | ( |
+::> | v |
+::> | + |
+::> | x |
+::> | ) |
+::> | - |
+::> | d |
+::> | = |
+::> | 1 |
+::> | ) |Condition - ExprCondition - Closing Paren
+::> | and |
+::> | a |
+::> | = |
+::> | 1 |
+::> | then |Condition - ExprCondition - AND
+::> | begin |
+::> | write |
+::> | ( |
+::> | expression |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | ( |
+::> | a |
+::> | + |
+::> | v |
+::> | + |
+::> | ( |
+::> | x |
+::> | ) |
+::> | - |
+::> | d |
+::> | = |
+::> | 1 |
+::> | ) |Condition - ExprCondition - Closing Paren
 ::> | then |
+::> | begin |
+::> | write |
+::> | ( |
+::> | expression |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | ( |
+::> | not |
+::> | doors |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | ) |Condition - Took ArrayCondition - NOTCondition - Closing Paren
+::> | or |
+::> | ( |
+::> | not |
+::> | doors |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | ) |Condition - Took ArrayCondition - NOTCondition - Closing ParenCondition - OR
+::> | then |
+::> | begin |
+::> | write |
+::> | ( |
+::> | array with boolean and bracket |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |STATEMENTLIST found - CONDITIONAL
+::> | ( |
+::> | not |
+::> | doors |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | or |Condition - Took ArrayCondition - NOT
+::> | not |
+::> | doors |
+::> | [ |ARRAY_ADD_ON_ID found
+::> | i |BETWEEN_BRACKETS found - IDENTIFIER
+::> | ] |ARRAY_ADD_ON_ID closed
+::> | ) |Condition - Took ArrayCondition - NOTCondition - ORCondition - Closing Paren
+::> | then |
+::> | begin |
+::> | write |
+::> | ( |
+::> | array with boolean and bracket |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | write |STATEMENTLIST found - WRITE
+::> | ( |
+::> | inside single quore |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
-Syntax error found
-=======================================
+Parsing completed successfully=======================================
 Test Case 12
 program Mean;
 var
@@ -1234,7 +1445,7 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-
+Input file found, Parsing....Parsing started
 ::> | program |
 ::> | Mean |
 ::> | ; |
@@ -1245,24 +1456,24 @@ Compiling the program in gcc
 ::> | , |
 ::> | sum |
 ::> | : |
-::> | integer |
+::> | integer |DATATYPE found - INTEGER
 ::> | ; |
 ::> | mean |
 ::> | : |
-::> | real |
+::> | real |DATATYPE found - REAL
 ::> | ; |
 ::> | begin |
-::> | n |
+::> | n |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 20 |
 ::> | ; |
-::> | sum |
+::> | sum |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | 0 |
 ::> | ; |
-::> | for |
+::> | for |STATEMENTLIST found - LOOPING
 ::> | i |
 ::> | : |
 ::> | = |
@@ -1280,14 +1491,14 @@ Compiling the program in gcc
 ::> | ; |
 ::> | end |
 ::> | ; |
-::> | mean |
+::> | mean |STATEMENTLIST found - ASSIGNMENT
 ::> | : |
 ::> | = |
 ::> | sum |
 ::> | / |
 ::> | n |
 ::> | ; |
-::> | write |
+::> | write |STATEMENTLIST found - WRITE
 ::> | ( |
 ::> | The mean of the numbers from 1 to 20 is  |
 ::> | , |
@@ -1298,4 +1509,3 @@ Compiling the program in gcc
 ::> | . |
 
 Parsing completed successfully
-
