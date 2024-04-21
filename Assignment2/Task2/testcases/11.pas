@@ -40,12 +40,8 @@ begin
 	   write("expression");
    end;
 
-   if (a) then begin
-	   write("identifier with bracket");
-   end;
-
-   if (a[3]) then begin
-	   write("array with bracket");
+   if (a +( v + x) - d = 1) and a = 1 then begin
+	   write("expression");
    end;
 
    if (not doors[i] or not doors[i]) then begin
