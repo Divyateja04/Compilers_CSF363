@@ -15,4 +15,20 @@ begin
       else begin
 	 write("closed"); end;
    end;
+   if a + v + x - d = 1 then begin
+	 write("open");
+    end;
+   if not doors[i] or not doors[i] then begin
+	 write("open");
+    end;
+
+   if not doors[i] or not doors[i] then begin
+	 write("open");
+    end;
+   while i < 3 do begin
+      write('hello');
+   end;
+   write('inside single quore');
+   
+
 end.

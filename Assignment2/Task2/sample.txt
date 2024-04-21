@@ -1,34 +1,17 @@
-program forif;
+program Mean;
 var
-  i, j, a, b, x: Integer;
-  arr: array[1..20] of Integer;
+  i, n, sum: integer;
+  mean: real;
 begin
-  for i := 1 to 20 do
+  n := 20;
+  sum := 0;
+  
+  for i := 1 to n do
   begin
-    if i % 3 = 0 then 
-    begin
-      j := i + 2; 
-      write(j);
-      arr[1] := i;
-      arr[x] := i;
-      arr[1] := i;
-
-      write(a, " ", b, " ", arr[i]);
-    end;
+    sum := sum + i;
   end;
-
-  if i % 3 = 0 then
-  begin
-    for i := 3 downto 0 do
-    begin
-      write(i, " ", 5);
-    end;
-  end
-  else
-  begin
-    for i := 3 downto 0 do
-    begin
-      write(i, " ", 5);
-    end;
-  end;
+  
+  mean := sum / n;
+  
+  write("The mean of the numbers from 1 to 20 is ", mean);
 end.

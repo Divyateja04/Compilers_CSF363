@@ -4,10 +4,11 @@
 #include "y.tab.h"
 extern int yylval;
 int lineNumber = 1;
-int printToken = 0;
+int printToken = 1;
 %}
 
-%x READ_STRING_INPUT
+%x READ_DQ_STRING_INPUT
+%x READ_SQ_STRING_INPUT
 %x COMMENT
 
 %%
@@ -63,9 +64,13 @@ int printToken = 0;
 [[] { if(printToken) printf("\n::> | %s |", yytext); return LBRACKET; }
 []] { if(printToken) printf("\n::> | %s |", yytext); return RBRACKET; }
 
-[\"] { BEGIN(READ_STRING_INPUT); }
-<READ_STRING_INPUT>[^\n^\"]* { if(printToken) printf("\n::> | %s |", yytext); return STRING; }
-<READ_STRING_INPUT>[\"] { BEGIN(INITIAL); }
+[\"] { BEGIN(READ_DQ_STRING_INPUT); }
+<READ_DQ_STRING_INPUT>[^\n^\"]* { if(printToken) printf("\n::> | %s |", yytext); return STRING; }
+<READ_DQ_STRING_INPUT>[\"] { BEGIN(INITIAL); }
+
+[\'] { BEGIN(READ_SQ_STRING_INPUT); }
+<READ_SQ_STRING_INPUT>[^\n^\']* { if(printToken) printf("\n::> | %s |", yytext); return STRING; }
+<READ_SQ_STRING_INPUT>[\'] { BEGIN(INITIAL); }
 
 [0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return NUMBER; }
 
