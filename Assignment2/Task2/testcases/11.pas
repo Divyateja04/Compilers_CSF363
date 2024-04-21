@@ -22,7 +22,7 @@ begin
 	 write("open");
     end;
 
-   if not doors[i] or not doors[i] then begin
+   if not doors[i] or not doors[i] and 3 then begin
 	 write("open");
     end;
    while i < 3 do begin
