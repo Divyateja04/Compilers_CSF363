@@ -2,8 +2,8 @@ import os
 import argparse
 
 parser = argparse.ArgumentParser(prog='Compilers Assignment 2 Runner')
-parser.add_argument('-tc', '--testcase', type=int, help="Run one of the test cases, input being file number")
-parser.add_argument('-a', '--all', help="Run all of the test cases", action='store_true')
+parser.add_argument('-tc', type=int, help="Run one of the test cases, input being file number")
+parser.add_argument('-a', help="Run all of the test cases", action='store_true')
 parser.add_argument('-c', help="Print counterexamples", action='store_true')
 parser.add_argument('-d', help="Enable debug mode", action='store_true')
 
