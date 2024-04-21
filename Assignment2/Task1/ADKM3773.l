@@ -70,6 +70,8 @@ int lineNumber = 1;
 <READ_SQ_STRING_INPUT>[\'] { fprintf(yyout, "\n%d | %s | SYMBOL_SQUOTE", lineNumber, yytext); BEGIN(INITIAL); }
 
 [0-9]+ { fprintf(yyout, "\n%d | %s | NUMBER", lineNumber, yytext); }
+[0-9]+[.][0-9]+ { fprintf(yyout, "\n%d | %s | DECIMAL NUMBER", lineNumber, yytext); }
+
 
 [a-zA-Z][a-zA-Z0-9]* { fprintf(yyout, "\n%d | %s | IDENTIFIER", lineNumber, yytext); }
 

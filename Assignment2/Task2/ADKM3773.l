@@ -73,6 +73,8 @@ int printToken = 1;
 <READ_SQ_STRING_INPUT>[\'] { BEGIN(INITIAL); }
 
 [0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return NUMBER; }
+[0-9]+[.][0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return DECIMAL_NUMBER; }
+
 
 [a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext); return IDENTIFIER; }
 
