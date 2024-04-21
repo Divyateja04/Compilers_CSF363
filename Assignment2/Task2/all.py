@@ -34,11 +34,11 @@ if args.all:
         os.system(f'./ADKM3773.out')
 elif args.testcase:
     test_case_num = int(args.testcase)
+    os.system('clear')
     os.system('echo "======================================="')
     os.system(f'echo "Test Case {test_case_num}"')
     
     os.system(f'cat ./testcases/{test_case_num}.pas > sample.txt')
-    os.system(f'cat sample.txt')
     
     os.system(f'echo "Deleting old files"')
     os.system(f'rm -f ADKM3773.out')
