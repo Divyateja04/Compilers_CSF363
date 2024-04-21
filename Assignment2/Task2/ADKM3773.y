@@ -6,7 +6,8 @@ int yylex(void);
 int yyerror();
 extern FILE *yyin;
 
-int printLogs = 0;
+int printLogs = 1;
+int yydebug = 1;
 %}
 
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE ARRAY_DOT
@@ -18,17 +19,20 @@ int printLogs = 0;
 
 %left PLUS MINUS 
 %left MULTIPLY DIVIDE MOD
-%left AND NOT OR
-%left EQUAL LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
+%left AND OR
+%left NOT
+%left EQUAL 
+%left LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
+%left IDENTIFIER LPAREN RPAREN
 %%
-stmt: { if(printLogs) printf("Parsing started\n"); } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\nParsing completed successfully\n"); }
+stmt: { if(printLogs) printf("Parsing started"); } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\nParsing completed successfully"); }
 ;
 
 /* TYPE DECLARATIONS */
-DATATYPE:  { if(printLogs) printf("DATATYPE found - INTEGER\n"); } INTEGER 
-| { if(printLogs) printf("DATATYPE found - REAL\n"); } REAL 
-| { if(printLogs) printf("DATATYPE found - BOOLEAN\n"); } BOOLEAN 
-| { if(printLogs) printf("DATATYPE found - CHAR\n"); } CHAR 
+DATATYPE:  { if(printLogs) printf("DATATYPE found - INTEGER"); } INTEGER 
+| { if(printLogs) printf("DATATYPE found - REAL"); } REAL 
+| { if(printLogs) printf("DATATYPE found - BOOLEAN"); } BOOLEAN 
+| { if(printLogs) printf("DATATYPE found - CHAR"); } CHAR 
 ;
 
 RELOP: EQUAL
@@ -40,11 +44,11 @@ RELOP: EQUAL
 ;
 
 /* ARRAY ADD ON FOR EVERY ID */
-ARRAY_ADD_ON_ID: { if(printLogs) printf("ARRAY_ADD_ON_ID found\n"); } LBRACKET BETWEEN_BRACKETS RBRACKET
+ARRAY_ADD_ON_ID: { if(printLogs) printf("ARRAY_ADD_ON_ID found"); } LBRACKET BETWEEN_BRACKETS RBRACKET { if(printLogs) printf("ARRAY_ADD_ON_ID closed"); } 
 ;
 
-BETWEEN_BRACKETS: { if(printLogs) printf("BETWEEN_BRACKETS found - INT_NUMBER\n"); } INT_NUMBER
-| { if(printLogs) printf("BETWEEN_BRACKETS found - IDENTIFIER\n"); } IDENTIFIER
+BETWEEN_BRACKETS: { if(printLogs) printf("BETWEEN_BRACKETS found - INT_NUMBER"); } INT_NUMBER
+| { if(printLogs) printf("BETWEEN_BRACKETS found - IDENTIFIER"); } IDENTIFIER
 
 /* HEAD OF THE PROGRAM - PARSING */
 PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON
@@ -85,11 +89,11 @@ STATEMENTS: STATEMENT STATEMENTS
 | STATEMENT
 ;
 
-STATEMENT: { if(printLogs) printf("STATEMENTLIST found - READ\n"); } READ_STATEMENT 
-| { if(printLogs) printf("STATEMENTLIST found - WRITE\n"); } WRITE_STATEMENT 
-| { if(printLogs) printf("STATEMENTLIST found - ASSIGNMENT\n"); } ASSIGNMENT_STATEMENT 
-| { if(printLogs) printf("STATEMENTLIST found - CONDITIONAL\n"); } CONDITIONAL_STATEMENT 
-| { if(printLogs) printf("STATEMENTLIST found - LOOPING\n"); } LOOPING_STATEMENT
+STATEMENT: { if(printLogs) printf("STATEMENTLIST found - READ"); } READ_STATEMENT 
+| { if(printLogs) printf("STATEMENTLIST found - WRITE"); } WRITE_STATEMENT 
+| { if(printLogs) printf("STATEMENTLIST found - ASSIGNMENT"); } ASSIGNMENT_STATEMENT 
+| { if(printLogs) printf("STATEMENTLIST found - CONDITIONAL"); } CONDITIONAL_STATEMENT 
+| { if(printLogs) printf("STATEMENTLIST found - LOOPING"); } LOOPING_STATEMENT
 ;
 
 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
@@ -137,6 +141,7 @@ EXPRESSION_SEQUENCE: TERM
 | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE
 | LPAREN EXPRESSION_SEQUENCE RPAREN
 ;
+
 TERM: 
 | IDENTIFIER
 | IDENTIFIER ARRAY_ADD_ON_ID
@@ -157,11 +162,13 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 | STATEMENT_INSIDE_CONDITIONAL
 ;
 
-CONDITION: EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE
-| NOT CONDITION /* NOT a */
-| CONDITION AND CONDITION /* a AND b */
-| CONDITION OR CONDITION /* a OR b */
-| LPAREN CONDITION RPAREN
+CONDITION: IDENTIFIER { if(printLogs) printf("Condition - Took ID"); }
+| IDENTIFIER ARRAY_ADD_ON_ID { if(printLogs) printf("Condition - Took Array"); }
+| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("Condition - Expr"); }
+| NOT CONDITION /* NOT a */ { if(printLogs) printf("Condition - NOT"); }
+| CONDITION AND CONDITION /* a AND b */ { if(printLogs) printf("Condition - AND"); }
+| CONDITION OR CONDITION /* a OR b */ { if(printLogs) printf("Condition - OR"); }
+| LPAREN CONDITION RPAREN { if(printLogs) printf("Condition - Closing Paren"); }
 ;
 
 STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
@@ -205,16 +212,16 @@ void main()
 {
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
-        if(printLogs) printf("File not found\n");
+        if(printLogs) printf("File not found");
         exit(1);
     }
     else{
-        if(printLogs) printf("Input file found, Parsing....\n");
+        if(printLogs) printf("Input file found, Parsing....");
         yyparse();
     }
 }
 
 int yyerror(){
-    printf("\n\nSyntax error found\n");
+    printf("\n\nSyntax error found");
     return 0;
 }

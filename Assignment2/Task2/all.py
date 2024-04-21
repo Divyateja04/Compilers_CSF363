@@ -4,6 +4,7 @@ import argparse
 parser = argparse.ArgumentParser(prog='Compilers Assignment 2 Runner')
 parser.add_argument('-tc', '--testcase', type=int, help="Run one of the test cases, input being file number")
 parser.add_argument('-a', '--all', help="Run all of the test cases", action='store_true')
+parser.add_argument('-c', help="Print counterexamples", action='store_true')
 
 
 args = parser.parse_args()
@@ -26,7 +27,7 @@ if args.all:
         os.system(f'rm -f y.tab.h')
         os.system(f'rm -f lex.yy.c')
         os.system(f'echo "Compiling yacc program"')
-        os.system(f'yacc -d ADKM3773.y -Wconflicts-rr -Wconflicts-sr -Wcounterexamples')
+        os.system(f'yacc -d ADKM3773.y -t -Wconflicts-rr -Wconflicts-sr {"" if not args.c else "-Wcounterexamples"}')
         os.system(f'echo "Compiling lex program"')
         os.system(f'lex ADKM3773.l')
         os.system(f'echo "Compiling the program in gcc"')
@@ -46,7 +47,7 @@ elif args.testcase:
     os.system(f'rm -f y.tab.h')
     os.system(f'rm -f lex.yy.c')
     os.system(f'echo "Compiling yacc program"')
-    os.system(f'yacc -d ADKM3773.y -Wconflicts-rr -Wconflicts-sr -Wcounterexamples')
+    os.system(f'yacc -d ADKM3773.y -t -Wconflicts-rr -Wconflicts-sr {"" if not args.c else "-Wcounterexamples"}')
     os.system(f'echo "Compiling lex program"')
     os.system(f'lex ADKM3773.l')
     os.system(f'echo "Compiling the program in gcc"')
