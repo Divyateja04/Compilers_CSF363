@@ -72,7 +72,7 @@ int printToken = 1;
 <READ_SQ_STRING_INPUT>[^\n^\']* { if(printToken) printf("\n::> | %s |", yytext); return STRING; }
 <READ_SQ_STRING_INPUT>[\'] { BEGIN(INITIAL); }
 
-[0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return NUMBER; }
+[0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return INT_NUMBER; }
 [0-9]+[.][0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return DECIMAL_NUMBER; }
 
 
