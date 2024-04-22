@@ -39,6 +39,8 @@ begin
 	   write("only array without brackets");
    end;
 
+   arr[x] := arr[arr[u[3]]];
+
    if arr[i] and a then begin
 	   write("array with boolean 1");
    end;
