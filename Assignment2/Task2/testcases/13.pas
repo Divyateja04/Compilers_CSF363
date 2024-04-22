@@ -5,7 +5,6 @@ var
   r1, r2, r3, r4: Real;
   c1, c2: Char;
   b1: Boolean;
-  s1, s2: String;
 
 begin
   i1 := 2147483647; // Maximum positive integer value (for overflow)
@@ -18,7 +17,6 @@ begin
   r4 := -5.0; // Normal floating point assignment, but negative
   c1 := '\''; // Character with escape sequence: \'
   c2 := 'c';
-  b1 := True; // Boolean value
-  s1 := ''; // Empty string
-  s2 := '"Hello" World'; // Full string
+  write(''); // Empty string
+  write('"Hello" World'); // Full string
 end.
