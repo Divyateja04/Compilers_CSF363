@@ -6,10 +6,11 @@ begin
    for i := 1 to 100 do begin
       j := i;
 	   j := j + i;
+      j:= 'c';
    end;
 
    for i := 1 to 100 do begin
-      write(i, " ");
+      write(i, " ",'c');
    end;
 
    if a then begin
@@ -29,11 +30,11 @@ begin
    end;
 
    while i < 3 do begin
-      write('hello');
+      write("hello");
    end;
 
    while (i < 3) do begin
-      write('hello');
+      write("hello");
    end;
 
    if (a + v + x - d = 1) and a = 1 then begin
@@ -60,5 +61,5 @@ begin
    if (not doors[i] or not doors[i]) then begin
 	   write("array with boolean and bracket");
    end;
-   write('inside single quore');
+   write("inside single quore");
 end.
