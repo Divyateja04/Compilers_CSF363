@@ -38,6 +38,7 @@ int printToken = 0;
 (?i:end) { if(printToken) printf("\n::> | %s |", yytext); return END; }
 (?i:read) { if(printToken) printf("\n::> | %s |", yytext); return READ;}
 (?i:write) { if(printToken) printf("\n::> | %s |", yytext); return WRITE; }
+(?i:writeln) { if(printToken) printf("\n::> | %s |", yytext); return WRITE_LN; }
 (?i:then) { if(printToken) printf("\n::> | %s |", yytext); return THEN; }
 (?i:of) {if(printToken) printf("\n::> | %s |", yytext); return OF;}
 

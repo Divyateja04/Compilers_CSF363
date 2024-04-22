@@ -40,6 +40,7 @@ begin
    end;
 
    arr[x] := arr[arr[u[3]]];
+   writeln(a, 3, arr[arr[arr[3]]], "ada", 'a');
 
    if arr[i] and a then begin
 	   write("array with boolean 1");

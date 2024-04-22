@@ -37,6 +37,7 @@ int lineNumber = 1;
 [e|E][n|N][d|D] { fprintf(yyout, "\n%d | %s | KEYWORD_END", lineNumber, yytext); }
 [r|R][e|E][a|A][d|D] { fprintf(yyout, "\n%d | %s | KEYWORD_READ", lineNumber, yytext); }
 [w|W][r|R][i|I][t|T][e|E] { fprintf(yyout, "\n%d | %s | KEYWORD_WRITE", lineNumber, yytext); }
+[w|W][r|R][i|I][t|T][e|E][l|L][n|N] { fprintf(yyout, "\n%d | %s | KEYWORD_WRITELN", lineNumber, yytext); }
 [t|T][h|H][e|E][n|N] { fprintf(yyout, "\n%d | %s | KEYWORD_THEN", lineNumber, yytext); }
 
 [+] { fprintf(yyout, "\n%d | %s | AROP_PLUS", lineNumber, yytext); }
