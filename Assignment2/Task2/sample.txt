@@ -1,24 +1,24 @@
 program AllTypes;
+
 var
-  i, j : Integer;
-  a, b : Real;
-  c : Char;
-  d : Boolean;
-  e : String;
+  i1, i2, i3, i4: Integer;
+  r1, r2, r3, r4: Real;
+  c1, c2: Char;
+  b1: Boolean;
+  s1, s2: String;
+
 begin
-  i := 0;
-  j := -5;
-  a := 1.0;
-  b := -5.0;
-  c := 'A';
-  d := True;
-  e := 'Hello, World!';
-  
-  writeln('Integer i: ', i);
-  writeln('Integer j: ', j);
-  writeln('Real a: ', a);
-  writeln('Real b: ', b);
-  writeln('Char c: ', c);
-  writeln('Boolean d: ', d);
-  writeln('String e: ', e);
+  i1 := 2147483647; // Maximum positive integer value (for overflow)
+  i2 := -2147483648; // Maximum negative integer value (for underflow)
+  i3 := 5; // Normal integer assn
+  i4 := -5; // Normal integer assn but negative
+  r1 := 1.79769E308; // Maximum positive real value (for overflow)
+  r2 := -1.79769E308; // Maximum negative real value (for underflow)
+  r3 := 5.0; // Normal floating point assignment
+  r4 := -5.0; // Normal floating point assignment, but negative
+  c1 := '\''; // Character with escape sequence: \'
+  c2 := 'c';
+  b1 := True; // Boolean value
+  s1 := ''; // Empty string
+  s2 := '"Hello" World'
 end.
