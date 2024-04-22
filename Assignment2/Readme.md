@@ -16,6 +16,7 @@ lex ADKM3773.l
 gcc lex.yy.c -ll -o ADKM3773.out
 ./ADKM3773.out
 ```
+- Input for this file is taken from sample.txt and output is sent to output.txt
 
 ### Task 2
 - For this task the test cases are stored in the `testcases` folder

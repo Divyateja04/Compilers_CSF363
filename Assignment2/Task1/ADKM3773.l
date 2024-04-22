@@ -5,7 +5,7 @@ int lineNumber = 1;
 %}
 
 %x READ_DQ_STRING_INPUT
-%x READ_SQ_STRING_INPUT
+%x READ_CHAR_INPUT
 %x COMMENT
 
 %%
@@ -65,9 +65,9 @@ int lineNumber = 1;
 <READ_DQ_STRING_INPUT>[^\n^\"]* { fprintf(yyout, "\n%d | %s | STRING", lineNumber, yytext); }
 <READ_DQ_STRING_INPUT>[\"] { fprintf(yyout, "\n%d | %s | SYMBOL_DQUOTE", lineNumber, yytext); BEGIN(INITIAL); }
 
-[\'] { BEGIN(READ_SQ_STRING_INPUT); fprintf(yyout, "\n%d | %s | SYMBOL_SQUOTE", lineNumber, yytext); }
-<READ_SQ_STRING_INPUT>[^\n^\']* { fprintf(yyout, "\n%d | %s | STRING", lineNumber, yytext); }
-<READ_SQ_STRING_INPUT>[\'] { fprintf(yyout, "\n%d | %s | SYMBOL_SQUOTE", lineNumber, yytext); BEGIN(INITIAL); }
+[\'] { BEGIN(READ_CHAR_INPUT); }
+<READ_CHAR_INPUT>[^\n^\'] { fprintf(yyout, "\n%d | %s | SYMBOL_DQUOTE", lineNumber, yytext);  }
+<READ_CHAR_INPUT>[\'] { BEGIN(INITIAL); }
 
 [0-9]+ { fprintf(yyout, "\n%d | %s | INT_NUMBER", lineNumber, yytext); }
 [0-9]+[.][0-9]+ { fprintf(yyout, "\n%d | %s | DECIMAL_NUMBER", lineNumber, yytext); }
