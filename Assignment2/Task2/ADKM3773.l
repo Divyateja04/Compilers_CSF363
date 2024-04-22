@@ -75,10 +75,10 @@ int printToken = 1;
 [0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return INT_NUMBER; }
 [0-9]+[.][0-9]+ { if(printToken) printf("\n::> | %s |", yytext); return DECIMAL_NUMBER; }
 
-
 [a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext); return IDENTIFIER; }
 
-[[:space:]]+ 
+[[:space:]]+ {}
+
 .  { if(printToken) printf("\n::> | %s |", yytext); return INVALID_TOKEN;}
 
 %%
