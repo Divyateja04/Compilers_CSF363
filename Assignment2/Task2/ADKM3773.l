@@ -78,10 +78,7 @@ int printToken = 1;
 
 [a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext); return IDENTIFIER; }
 
-[\n] {}
-[\t] {}
-[ ] {}
-
-.  { }
+[[:space:]]+ 
+.  { if(printToken) printf("\n::> | %s |", yytext); return INVALID_TOKEN;}
 
 %%

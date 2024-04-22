@@ -1,22 +1,21 @@
-program AllTypes;
-
+program MaxValueArray;
 var
-  i1, i2, i3, i4: Integer;
-  r1, r2, r3, r4: Real;
-  c1, c2: Char;
-  b1: Boolean;
-
+  numbers: array[1..10] of Integer;
+  i, maxValue: Integer;
 begin
-  i1 := 2147483647; // Maximum positive integer value (for overflow)
-  i2 := -2147483648; // Maximum negative integer value (for underflow)
-  i3 := 5; // Normal integer assn
-  i4 := -5; // Normal integer assn but negative
-  r1 := 1.79769E308; // Maximum positive real value (for overflow)
-  r2 := -1.79769E308; // Maximum negative real value (for underflow)
-  r3 := 5.0; // Normal floating point assignment
-  r4 := -5.0; // Normal floating point assignment, but negative
-  c1 := '\''; // Character with escape sequence: \'
-  c2 := 'c';
-  write(''); // Empty string
-  write('"Hello" World'); // Full string
+  write("Enter 10 integer values:");
+  for i := 1 to 10 do
+  begin
+    read(numbers[i]);
+  end;
+  maxValue := numbers[1];
+  for i := 2 to 10 do
+  begin
+    if numbers[i] > maxValue then
+    begin
+      maxValue := numbers[i];
+    end;
+  end;
+  write("The maximum value is: ");  
+  write(maxValue);
 end.
