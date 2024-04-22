@@ -6,7 +6,7 @@ int yylex(void);
 int yyerror();
 extern FILE *yyin;
 
-int printLogs = 1;
+int printLogs = 0;
 int yydebug = 1;
 %}
 

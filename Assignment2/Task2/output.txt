@@ -531,28 +531,6 @@ STATEMENTLIST found - WRITE
 Parsing completed successfully
 =======================================
 Test Case 5
-program NumberOfDigits;
-var
-  number, count: Integer;
-begin
-  write("Enter a number:");
-  read(number);
-  count := 0;
-  while number <> 0 do
-  begin
-    if number <> 0 then
-    begin
-      count:=count+1;
-    end
-    else 
-    begin
-     count :=count;
-    end; 
-    number := number / 10;
-  end;
-  write("The number of digits is: ");
-  write(count);
-end.
 Deleting old files
 Compiling yacc program
 Compiling lex program
@@ -560,94 +538,9 @@ Compiling the program in gcc
 
 Input file found, Parsing....
 Parsing started
-::> | program |
-::> | NumberOfDigits |
-::> | ; |
-::> | var |
-::> | number |
-::> | , |
-::> | count |
-::> | : |
-::> | Integer |
-DATATYPE found - INTEGER
-::> | ; |
-::> | begin |
-::> | write |
-STATEMENTLIST found - WRITE
-::> | ( |
-::> | Enter a number: |
-::> | ) |
-::> | ; |
-::> | read |
-STATEMENTLIST found - READ
-::> | ( |
-::> | number |
-::> | ) |
-::> | ; |
-::> | count |
-STATEMENTLIST found - ASSIGNMENT
-::> | : |
-::> | = |
-::> | 0 |
-::> | ; |
-::> | while |
-STATEMENTLIST found - LOOPING
-::> | number |
-::> | <> |
-::> | 0 |
-::> | do |
-Condition - Expr
-::> | begin |
-::> | if |
-::> | number |
-::> | <> |
-::> | 0 |
-::> | then |
-Condition - Expr
-::> | begin |
-::> | count |
-::> | : |
-::> | = |
-::> | count |
-::> | + |
-::> | 1 |
-::> | ; |
-::> | end |
-::> | else |
-::> | begin |
-::> | count |
-::> | : |
-::> | = |
-::> | count |
-::> | ; |
-::> | end |
-::> | ; |
-::> | number |
-::> | : |
-::> | = |
-::> | number |
-::> | / |
-::> | 10 |
-::> | ; |
-::> | end |
-::> | ; |
-::> | write |
-STATEMENTLIST found - WRITE
-::> | ( |
-::> | The number of digits is:  |
-::> | ) |
-::> | ; |
-::> | write |
-STATEMENTLIST found - WRITE
-::> | ( |
-::> | count |
-::> | ) |
-::> | ; |
-::> | end |
-::> | . |
 
 
-Parsing completed successfully
+Syntax error found
 =======================================
 Test Case 6
 program FactorialCalculation;
@@ -1739,7 +1632,7 @@ begin
   n := -20;
   sum := 0;
 
-  a := (-12) + 6
+  a := (-12) + 6;
   
   for i := 1 to n do
   begin
@@ -1799,7 +1692,44 @@ STATEMENTLIST found - ASSIGNMENT
 Condition - Closing Paren with paren
 ::> | + |
 ::> | 6 |
+::> | ; |
 ::> | for |
+STATEMENTLIST found - LOOPING
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | n |
+::> | do |
+::> | begin |
+::> | sum |
+::> | : |
+::> | = |
+::> | sum |
+::> | + |
+::> | i |
+::> | ; |
+::> | end |
+::> | ; |
+::> | mean |
+STATEMENTLIST found - ASSIGNMENT
+::> | : |
+::> | = |
+::> | sum |
+::> | / |
+::> | n |
+::> | ; |
+::> | write |
+STATEMENTLIST found - WRITE
+::> | ( |
+::> | The mean of the numbers from 1 to 20 is  |
+::> | , |
+::> | mean |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
-Syntax error found
+Parsing completed successfully

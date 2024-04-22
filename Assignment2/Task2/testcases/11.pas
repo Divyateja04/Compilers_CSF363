@@ -21,7 +21,15 @@ begin
 	   write("only identifier with brackets");
    end;
 
+   if (1 * 7 = 8) then begin
+	   write("only identifier with brackets");
+   end;
+
    if arr[i] then begin
+	   write("only array without brackets");
+   end;
+
+   if ((arr[i] - 3) = 4) then begin
 	   write("only array without brackets");
    end;
 
