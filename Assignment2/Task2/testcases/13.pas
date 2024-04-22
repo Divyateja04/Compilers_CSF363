@@ -20,5 +20,5 @@ begin
   c2 := 'c';
   b1 := True; // Boolean value
   s1 := ''; // Empty string
-  s2 := '"Hello" World'
+  s2 := '"Hello" World'; // Full string
 end.
