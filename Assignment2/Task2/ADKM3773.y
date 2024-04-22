@@ -6,7 +6,7 @@ int yylex(void);
 int yyerror();
 extern FILE *yyin;
 
-int printLogs = 0;
+int printLogs = 1;
 int yydebug = 1;
 %}
 
@@ -147,10 +147,13 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 
 ANY_EXPRESSION: EXPRESSION_SEQUENCE /* Handle terms */
 | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("\nCondition - Expr"); } /* Relational operators */
+| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Expr with paren"); } /* Relational operators */
 | NOT ANY_EXPRESSION /* NOT a */ { if(printLogs) printf("\nCondition - NOT"); }
 | ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ { if(printLogs) printf("\nCondition - AND"); }
 | ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ { if(printLogs) printf("\nCondition - OR"); }
-| LPAREN ANY_EXPRESSION RPAREN { if(printLogs) printf("\nCondition - Closing Paren"); }
+| LPAREN NOT ANY_EXPRESSION RPAREN /* NOT a */ { if(printLogs) printf("\nCondition - NOT with paren"); }
+| LPAREN ANY_EXPRESSION AND ANY_EXPRESSION RPAREN /* a AND b */ { if(printLogs) printf("\nCondition - AND with paren"); }
+| LPAREN ANY_EXPRESSION OR ANY_EXPRESSION RPAREN /* a OR b */ { if(printLogs) printf("\nCondition - OR with paren"); }
 ; 
 
 EXPRESSION_SEQUENCE: TERM
@@ -159,7 +162,7 @@ EXPRESSION_SEQUENCE: TERM
 | EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE
 | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE
 | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE
-| LPAREN EXPRESSION_SEQUENCE RPAREN
+| LPAREN EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Closing Paren with paren"); }
 ;
 
 TERM: IDENTIFIER
