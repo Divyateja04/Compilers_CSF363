@@ -1,7 +1,7 @@
 Program OneHundredDoors;
 var
    doors : Array[1..100] of Boolean;
-   i, j	 : Integer;
+   $$i, j	 : Integer;
 begin
    for i := 1 to 100 do begin
       j := i;

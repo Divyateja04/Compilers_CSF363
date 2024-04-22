@@ -82,6 +82,6 @@ int printToken = 0;
 [\t] {}
 [ ] {}
 
-. { }
+.  {  if(printToken) printf("\n::> | %s |", yytext); return INVALID_TOKEN; }
 
 %%
