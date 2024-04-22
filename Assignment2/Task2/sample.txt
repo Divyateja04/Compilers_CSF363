@@ -1,64 +1,22 @@
-Program OneHundredDoors;
+program AllTypes;
+
 var
-   doors : Array[1..100] of Boolean;
-   $$i, j	 : Integer;
+  i1, i2, i3, i4: Integer;
+  r1, r2, r3, r4: Real;
+  c1, c2: Char;
+  b1: Boolean;
+
 begin
-   for i := 1 to 100 do begin
-      j := i;
-	   j := j + i;
-   end;
-
-   for i := 1 to 100 do begin
-      write(i, " ");
-   end;
-
-   if a then begin
-	   write("only identifier without brackets");
-   end;
-
-   if arr[i] then begin
-	   write("only array without brackets");
-   end;
-
-   if arr[i] and a then begin
-	   write("array with boolean 1");
-   end;
-
-   if not doors[i] or not doors[i] then begin
-	   write("array with boolean 2");
-   end;
-
-   while i < 3 do begin
-      write('hello');
-   end;
-
-   while (i < 3) do begin
-      write('hello');
-   end;
-
-   if (a + v + x - d = 1) and a = 1 then begin
-	   write("expression");
-   end;
-
-   if (a +( v + x) - d = 1) and a = 1 then begin
-	   write("expression");
-   end;
-
-
-   if (a + v + (x) - d = 1) then begin
-	   write("expression");
-   end;
-
-   if (not doors[i]) or (not doors[i]) then begin
-	   write("array with boolean and bracket");
-   end;
-
-   if (not doors[i]) or (not doors[i]) and not x then begin
-	   write("array with boolean and bracket");
-   end;
-
-   if (not doors[i] or not doors[i]) then begin
-	   write("array with boolean and bracket");
-   end;
-   write('inside single quore');
+  i1 := 2147483647; // Maximum positive integer value (for overflow)
+  i2 := -2147483648; // Maximum negative integer value (for underflow)
+  i3 := 5; // Normal integer assn
+  i4 := -5; // Normal integer assn but negative
+  r1 := 1.79769E308; // Maximum positive real value (for overflow)
+  r2 := -1.79769E308; // Maximum negative real value (for underflow)
+  r3 := 5.0; // Normal floating point assignment
+  r4 := -5.0; // Normal floating point assignment, but negative
+  c1 := '\''; // Character with escape sequence: \'
+  c2 := 'c';
+  write(''); // Empty string
+  write('"Hello" World'); // Full string
 end.
