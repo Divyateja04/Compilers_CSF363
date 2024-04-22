@@ -65,9 +65,9 @@ int lineNumber = 1;
 <READ_DQ_STRING_INPUT>[^\n^\"]* { fprintf(yyout, "\n%d | %s | STRING", lineNumber, yytext); }
 <READ_DQ_STRING_INPUT>[\"] { fprintf(yyout, "\n%d | %s | SYMBOL_DQUOTE", lineNumber, yytext); BEGIN(INITIAL); }
 
-[\'] { BEGIN(READ_CHAR_INPUT); }
-<READ_CHAR_INPUT>[^\n^\'] { fprintf(yyout, "\n%d | %s | SYMBOL_DQUOTE", lineNumber, yytext);  }
-<READ_CHAR_INPUT>[\'] { BEGIN(INITIAL); }
+[\'] { BEGIN(READ_CHAR_INPUT); fprintf(yyout, "\n%d | %s | SYMBOL_SQUOTE", lineNumber, yytext); }
+<READ_CHAR_INPUT>[^\n^\'] { fprintf(yyout, "\n%d | %s | CHARACTER", lineNumber, yytext); }
+<READ_CHAR_INPUT>[\'] { fprintf(yyout, "\n%d | %s | SYMBOL_SQUOTE", lineNumber, yytext); BEGIN(INITIAL); }
 
 [0-9]+ { fprintf(yyout, "\n%d | %s | INT_NUMBER", lineNumber, yytext); }
 [0-9]+[.][0-9]+ { fprintf(yyout, "\n%d | %s | DECIMAL_NUMBER", lineNumber, yytext); }
@@ -75,11 +75,9 @@ int lineNumber = 1;
 
 [a-zA-Z][a-zA-Z0-9]* { fprintf(yyout, "\n%d | %s | IDENTIFIER", lineNumber, yytext); }
 
-[\n] { fprintf(yyout, "\n%d | OTHER | NL", lineNumber); lineNumber++; }
-[\t] {}
-[ ] {}
+[[:space:]]+ {}
 
-. {}
+. { fprintf(yyout, "\n%d | %s | INVALID TOKEN", lineNumber, yytext); }
 
 %%
 

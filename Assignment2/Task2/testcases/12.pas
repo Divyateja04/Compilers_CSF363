@@ -3,8 +3,10 @@ var
   i, n, sum: integer;
   mean: real;
 begin
-  n := 20;
+  n := -20;
   sum := 0;
+
+  a := (-12) + 6;
   
   for i := 1 to n do
   begin

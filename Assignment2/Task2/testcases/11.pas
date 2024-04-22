@@ -17,7 +17,15 @@ begin
 	   write("only identifier without brackets");
    end;
 
+   if (a) then begin
+	   write("only identifier with brackets");
+   end;
+
    if arr[i] then begin
+	   write("only array without brackets");
+   end;
+
+   if (arr[i]) then begin
 	   write("only array without brackets");
    end;
 
