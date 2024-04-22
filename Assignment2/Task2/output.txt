@@ -1,3 +1,4 @@
+
 =======================================
 Test Case 1
 program ArrayAverage;
@@ -23,9 +24,11 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERDATATYPE found - INTEGERDATATYPE found - REALSTATEMENTLIST found - WRITESTATEMENTLIST found - LOOPINGARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - LOOPINGARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - WRITESTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 2
 program MaxValueArray;
 var
@@ -52,9 +55,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERDATATYPE found - INTEGERSTATEMENTLIST found - WRITESTATEMENTLIST found - LOOPINGARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedSTATEMENTLIST found - ASSIGNMENTARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - INT_NUMBERARRAY_ADD_ON_ID closedSTATEMENTLIST found - LOOPINGARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - ExprARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedSTATEMENTLIST found - WRITESTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 3
 program ReverseNumber;
 var
@@ -76,9 +81,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERSTATEMENTLIST found - WRITESTATEMENTLIST found - READSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - LOOPINGCondition - ExprSTATEMENTLIST found - WRITESTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 4
 program NumberOfDigits;
 var
@@ -104,9 +111,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERSTATEMENTLIST found - WRITESTATEMENTLIST found - READSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - LOOPINGCondition - ExprCondition - ExprSTATEMENTLIST found - WRITESTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 5
 program NumberOfDigits;
 var
@@ -134,9 +143,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERSTATEMENTLIST found - WRITESTATEMENTLIST found - READSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - LOOPINGCondition - ExprCondition - ExprSTATEMENTLIST found - WRITESTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 6
 program FactorialCalculation;
 var
@@ -158,9 +169,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERSTATEMENTLIST found - WRITESTATEMENTLIST found - READSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - LOOPINGSTATEMENTLIST found - WRITESTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 7
 program SumOfSquares;
 var
@@ -180,9 +193,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERSTATEMENTLIST found - WRITESTATEMENTLIST found - READSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - LOOPINGSTATEMENTLIST found - WRITESTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 8
 program forif;
 var
@@ -202,9 +217,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERSTATEMENTLIST found - LOOPINGCondition - Expr
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 9
 program Example9;
 var
@@ -226,9 +243,11 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - CONDITIONALCondition - Expr
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 10
 program forif;
 var
@@ -267,9 +286,11 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERDATATYPE found - INTEGERSTATEMENTLIST found - LOOPINGCondition - ExprARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - INT_NUMBERARRAY_ADD_ON_ID closedARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - INT_NUMBERARRAY_ADD_ON_ID closedARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedSTATEMENTLIST found - CONDITIONALCondition - Expr
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 11
 Program OneHundredDoors;
 var
@@ -335,9 +356,11 @@ Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - BOOLEANDATATYPE found - INTEGERSTATEMENTLIST found - LOOPINGSTATEMENTLIST found - LOOPINGSTATEMENTLIST found - CONDITIONALSTATEMENTLIST found - CONDITIONALARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedSTATEMENTLIST found - CONDITIONALARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - ANDSTATEMENTLIST found - CONDITIONALARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - NOTARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - NOTCondition - ORSTATEMENTLIST found - LOOPINGCondition - ExprSTATEMENTLIST found - LOOPINGCondition - ExprCondition - Closing ParenSTATEMENTLIST found - CONDITIONALCondition - ExprCondition - Closing ParenCondition - ExprCondition - ANDSTATEMENTLIST found - CONDITIONALCondition - ExprCondition - Closing ParenCondition - ExprCondition - ANDSTATEMENTLIST found - CONDITIONALCondition - ExprCondition - Closing ParenSTATEMENTLIST found - CONDITIONALARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - NOTCondition - Closing ParenARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - NOTCondition - Closing ParenCondition - ORSTATEMENTLIST found - CONDITIONALARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - NOTARRAY_ADD_ON_ID foundBETWEEN_BRACKETS found - IDENTIFIERARRAY_ADD_ON_ID closedCondition - NOTCondition - ORCondition - Closing ParenSTATEMENTLIST found - WRITE
 
-Parsing completed successfully=======================================
+
+
+Parsing completed successfully
+=======================================
 Test Case 12
 program Mean;
 var
@@ -359,6 +382,40 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-Input file found, Parsing....Parsing startedDATATYPE found - INTEGERDATATYPE found - REALSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - LOOPINGSTATEMENTLIST found - ASSIGNMENTSTATEMENTLIST found - WRITE
+
+
 
 Parsing completed successfully
+=======================================
+Test Case 13
+program AllTypes;
+var
+  i, j : Integer;
+  a, b : Real;
+  c : Char;
+  d : Boolean;
+  e : String;
+begin
+  i := 0;
+  j := -5;
+  a := 1.0;
+  b := -5.0;
+  c := 'A';
+  d := True;
+  e := 'Hello, World!';
+  
+  writeln('Integer i: ', i);
+  writeln('Integer j: ', j);
+  writeln('Real a: ', a);
+  writeln('Real b: ', b);
+  writeln('Char c: ', c);
+  writeln('Boolean d: ', d);
+  writeln('String e: ', e);
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+
+
+Syntax error found

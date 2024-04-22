@@ -16,6 +16,7 @@ if args.a:
     COUNT = len(test_cases)
 
     for i in range(COUNT):
+        os.system('echo ""')
         os.system('echo "======================================="')
         os.system(f'echo "Test Case {i+1}"')
         
