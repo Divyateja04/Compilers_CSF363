@@ -53,6 +53,10 @@ begin
 	   write("array with boolean and bracket");
    end;
 
+   if (not doors[i]) or (not doors[i]) and not x then begin
+	   write("array with boolean and bracket");
+   end;
+
    if (not doors[i] or not doors[i]) then begin
 	   write("array with boolean and bracket");
    end;

@@ -25,6 +25,103 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | ArrayAverage |
+::> | ; |
+::> | var |
+::> | numbers |
+::> | : |
+::> | array |
+::> | [ |
+::> | 1 |
+::> | .. |
+::> | 5 |
+::> | ] |
+::> | of |
+::> | Integer |
+::> | ; |
+::> | i |
+::> | , |
+::> | sum |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | average |
+::> | : |
+::> | real |
+::> | ; |
+::> | begin |
+::> | write |
+::> | ( |
+::> | Enter 5 integer values: |
+::> | ) |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | 5 |
+::> | do |
+::> | begin |
+::> | read |
+::> | ( |
+::> | numbers |
+::> | [ |
+::> | i |
+::> | ] |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | sum |
+::> | : |
+::> | = |
+::> | 0 |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | 5 |
+::> | do |
+::> | begin |
+::> | sum |
+::> | : |
+::> | = |
+::> | sum |
+::> | + |
+::> | numbers |
+::> | [ |
+::> | i |
+::> | ] |
+::> | ; |
+::> | end |
+::> | ; |
+::> | average |
+::> | : |
+::> | = |
+::> | sum |
+::> | / |
+::> | 5 |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The sum and average are:  |
+::> | ) |
+::> | ; |
+::> | write |
+::> | ( |
+::> | sum |
+::> | , |
+::> | average |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -56,6 +153,102 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | MaxValueArray |
+::> | ; |
+::> | var |
+::> | numbers |
+::> | : |
+::> | array |
+::> | [ |
+::> | 1 |
+::> | .. |
+::> | 10 |
+::> | ] |
+::> | of |
+::> | Integer |
+::> | ; |
+::> | i |
+::> | , |
+::> | maxValue |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | write |
+::> | ( |
+::> | Enter 10 integer values: |
+::> | ) |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | 10 |
+::> | do |
+::> | begin |
+::> | read |
+::> | ( |
+::> | numbers |
+::> | [ |
+::> | i |
+::> | ] |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | maxValue |
+::> | : |
+::> | = |
+::> | numbers |
+::> | [ |
+::> | 1 |
+::> | ] |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 2 |
+::> | to |
+::> | 10 |
+::> | do |
+::> | begin |
+::> | if |
+::> | numbers |
+::> | [ |
+::> | i |
+::> | ] |
+::> | > |
+::> | maxValue |
+::> | then |
+::> | begin |
+::> | maxValue |
+::> | : |
+::> | = |
+::> | numbers |
+::> | [ |
+::> | i |
+::> | ] |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The maximum value is:  |
+::> | ) |
+::> | ; |
+::> | write |
+::> | ( |
+::> | maxValue |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -82,6 +275,81 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | ReverseNumber |
+::> | ; |
+::> | var |
+::> | number |
+::> | , |
+::> | reversedNumber |
+::> | , |
+::> | remainder |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | write |
+::> | ( |
+::> | Enter a number to reverse: |
+::> | , |
+::> | 3 |
+::> | , |
+::> | number |
+::> | ) |
+::> | ; |
+::> | read |
+::> | ( |
+::> | number |
+::> | ) |
+::> | ; |
+::> | reversedNumber |
+::> | : |
+::> | = |
+::> | 0 |
+::> | ; |
+::> | while |
+::> | number |
+::> | <> |
+::> | 0 |
+::> | do |
+::> | begin |
+::> | remainder |
+::> | : |
+::> | = |
+::> | number |
+::> | % |
+::> | 10 |
+::> | ; |
+::> | reversedNumber |
+::> | : |
+::> | = |
+::> | reversedNumber |
+::> | * |
+::> | 10 |
+::> | + |
+::> | remainder |
+::> | ; |
+::> | number |
+::> | : |
+::> | = |
+::> | number |
+::> | / |
+::> | 10 |
+::> | ; |
+::> | end |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The reversed number is:  |
+::> | ) |
+::> | ; |
+::> | write |
+::> | ( |
+::> | reversedNumber |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -112,6 +380,89 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | NumberOfDigits |
+::> | ; |
+::> | var |
+::> | number |
+::> | , |
+::> | count |
+::> | , |
+::> | digit |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | write |
+::> | ( |
+::> | Enter a number: |
+::> | ) |
+::> | ; |
+::> | read |
+::> | ( |
+::> | number |
+::> | ) |
+::> | ; |
+::> | count |
+::> | : |
+::> | = |
+::> | 0 |
+::> | ; |
+::> | while |
+::> | number |
+::> | <> |
+::> | 0 |
+::> | do |
+::> | begin |
+::> | digit |
+::> | : |
+::> | = |
+::> | number |
+::> | - |
+::> | ( |
+::> | number |
+::> | / |
+::> | 10 |
+::> | ) |
+::> | * |
+::> | 10 |
+::> | ; |
+::> | if |
+::> | digit |
+::> | <> |
+::> | 0 |
+::> | then |
+::> | begin |
+::> | count |
+::> | : |
+::> | = |
+::> | count |
+::> | + |
+::> | 1 |
+::> | ; |
+::> | end |
+::> | ; |
+::> | number |
+::> | : |
+::> | = |
+::> | number |
+::> | / |
+::> | 10 |
+::> | ; |
+::> | end |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The number of digits is:  |
+::> | ) |
+::> | ; |
+::> | write |
+::> | ( |
+::> | count |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -144,6 +495,82 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | NumberOfDigits |
+::> | ; |
+::> | var |
+::> | number |
+::> | , |
+::> | count |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | write |
+::> | ( |
+::> | Enter a number: |
+::> | ) |
+::> | ; |
+::> | read |
+::> | ( |
+::> | number |
+::> | ) |
+::> | ; |
+::> | count |
+::> | : |
+::> | = |
+::> | 0 |
+::> | ; |
+::> | while |
+::> | number |
+::> | <> |
+::> | 0 |
+::> | do |
+::> | begin |
+::> | if |
+::> | number |
+::> | <> |
+::> | 0 |
+::> | then |
+::> | begin |
+::> | count |
+::> | : |
+::> | = |
+::> | count |
+::> | + |
+::> | 1 |
+::> | ; |
+::> | end |
+::> | else |
+::> | begin |
+::> | count |
+::> | : |
+::> | = |
+::> | count |
+::> | ; |
+::> | end |
+::> | ; |
+::> | number |
+::> | : |
+::> | = |
+::> | number |
+::> | / |
+::> | 10 |
+::> | ; |
+::> | end |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The number of digits is:  |
+::> | ) |
+::> | ; |
+::> | write |
+::> | ( |
+::> | count |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -170,6 +597,64 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | FactorialCalculation |
+::> | ; |
+::> | var |
+::> | number |
+::> | , |
+::> | factorial |
+::> | , |
+::> | i |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | write |
+::> | ( |
+::> | Enter a number to calculate its factorial: |
+::> | ) |
+::> | ; |
+::> | read |
+::> | ( |
+::> | number |
+::> | ) |
+::> | ; |
+::> | factorial |
+::> | : |
+::> | = |
+::> | 1 |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | number |
+::> | downto |
+::> | 1 |
+::> | do |
+::> | begin |
+::> | factorial |
+::> | : |
+::> | = |
+::> | factorial |
+::> | * |
+::> | i |
+::> | ; |
+::> | end |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The factorial is:  |
+::> | ) |
+::> | ; |
+::> | write |
+::> | ( |
+::> | factorial |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -194,6 +679,68 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | SumOfSquares |
+::> | ; |
+::> | var |
+::> | number |
+::> | , |
+::> | sum |
+::> | , |
+::> | i |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | write |
+::> | ( |
+::> | Enter a number to calculate the sum of squares up to that number: |
+::> | ) |
+::> | ; |
+::> | read |
+::> | ( |
+::> | number |
+::> | ) |
+::> | ; |
+::> | sum |
+::> | : |
+::> | = |
+::> | 0 |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | number |
+::> | do |
+::> | begin |
+::> | sum |
+::> | : |
+::> | = |
+::> | sum |
+::> | + |
+::> | ( |
+::> | i |
+::> | * |
+::> | i |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The sum of squares up is |
+::> | ) |
+::> | ; |
+::> | write |
+::> | ( |
+::> | sum |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -218,6 +765,52 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | forif |
+::> | ; |
+::> | var |
+::> | i |
+::> | , |
+::> | j |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | 20 |
+::> | do |
+::> | begin |
+::> | if |
+::> | i |
+::> | % |
+::> | 3 |
+::> | = |
+::> | 0 |
+::> | then |
+::> | begin |
+::> | j |
+::> | : |
+::> | = |
+::> | i |
+::> | + |
+::> | 2 |
+::> | ; |
+::> | write |
+::> | ( |
+::> | j |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -244,6 +837,60 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | Example9 |
+::> | ; |
+::> | var |
+::> | i |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | i |
+::> | : |
+::> | = |
+::> | 10 |
+::> | ; |
+::> | if |
+::> | i |
+::> | > |
+::> | 10 |
+::> | then |
+::> | begin |
+::> | i |
+::> | : |
+::> | = |
+::> | 10 |
+::> | ; |
+::> | i |
+::> | : |
+::> | = |
+::> | i |
+::> | - |
+::> | 1 |
+::> | ; |
+::> | write |
+::> | ( |
+::> | i |
+::> | ) |
+::> | ; |
+::> | end |
+::> | else |
+::> | begin |
+::> | i |
+::> | : |
+::> | = |
+::> | 20 |
+::> | ; |
+::> | write |
+::> | ( |
+::> | i |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -287,6 +934,162 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | forif |
+::> | ; |
+::> | var |
+::> | i |
+::> | , |
+::> | j |
+::> | , |
+::> | a |
+::> | , |
+::> | b |
+::> | , |
+::> | x |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | arr |
+::> | : |
+::> | array |
+::> | [ |
+::> | 1 |
+::> | .. |
+::> | 20 |
+::> | ] |
+::> | of |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | 20 |
+::> | do |
+::> | begin |
+::> | if |
+::> | i |
+::> | % |
+::> | 3 |
+::> | = |
+::> | 0 |
+::> | then |
+::> | begin |
+::> | j |
+::> | : |
+::> | = |
+::> | i |
+::> | + |
+::> | 2 |
+::> | ; |
+::> | write |
+::> | ( |
+::> | j |
+::> | ) |
+::> | ; |
+::> | arr |
+::> | [ |
+::> | 1 |
+::> | ] |
+::> | : |
+::> | = |
+::> | i |
+::> | ; |
+::> | arr |
+::> | [ |
+::> | x |
+::> | ] |
+::> | : |
+::> | = |
+::> | i |
+::> | ; |
+::> | arr |
+::> | [ |
+::> | 1 |
+::> | ] |
+::> | : |
+::> | = |
+::> | i |
+::> | ; |
+::> | write |
+::> | ( |
+::> | a |
+::> | , |
+::> |   |
+::> | , |
+::> | b |
+::> | , |
+::> |   |
+::> | , |
+::> | arr |
+::> | [ |
+::> | i |
+::> | ] |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |
+::> | i |
+::> | % |
+::> | 3 |
+::> | = |
+::> | 0 |
+::> | then |
+::> | begin |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 3 |
+::> | downto |
+::> | 0 |
+::> | do |
+::> | begin |
+::> | write |
+::> | ( |
+::> | i |
+::> | , |
+::> |   |
+::> | , |
+::> | 5 |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | else |
+::> | begin |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 3 |
+::> | downto |
+::> | 0 |
+::> | do |
+::> | begin |
+::> | write |
+::> | ( |
+::> | i |
+::> | , |
+::> |   |
+::> | , |
+::> | 5 |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
@@ -357,9 +1160,151 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | Program |
+::> | OneHundredDoors |
+::> | ; |
+::> | var |
+::> | doors |
+::> | : |
+::> | Array |
+::> | [ |
+::> | 1 |
+::> | .. |
+::> | 100 |
+::> | ] |
+::> | of |
+::> | Boolean |
+::> | ; |
+::> | i |
+::> | , |
+::> | j |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | begin |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | 100 |
+::> | do |
+::> | begin |
+::> | j |
+::> | : |
+::> | = |
+::> | i |
+::> | ; |
+::> | j |
+::> | : |
+::> | = |
+::> | j |
+::> | + |
+::> | i |
+::> | ; |
+::> | end |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | 100 |
+::> | do |
+::> | begin |
+::> | write |
+::> | ( |
+::> | i |
+::> | , |
+::> |   |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |
+::> | a |
+::> | then |
+::> | begin |
+::> | write |
+::> | ( |
+::> | only identifier without brackets |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |
+::> | arr |
+::> | [ |
+::> | i |
+::> | ] |
+::> | then |
+::> | begin |
+::> | write |
+::> | ( |
+::> | only array without brackets |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |
+::> | arr |
+::> | [ |
+::> | i |
+::> | ] |
+::> | and |
+::> | a |
+::> | then |
+::> | begin |
+::> | write |
+::> | ( |
+::> | array with boolean 1 |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | if |
+::> | not |
+::> | doors |
+::> | [ |
+::> | i |
+::> | ] |
+::> | or |
+::> | not |
+::> | doors |
+::> | [ |
+::> | i |
+::> | ] |
+::> | then |
+::> | begin |
+::> | write |
+::> | ( |
+::> | array with boolean 2 |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | while |
+::> | i |
+::> | < |
+::> | 3 |
+::> | do |
+::> | begin |
+::> | write |
+::> | ( |
+::> | hello |
+::> | ) |
+::> | ; |
+::> | end |
+::> | ; |
+::> | while |
+::> | ( |
+::> | i |
+::> | < |
 
 
-Parsing completed successfully
+Syntax error found
 =======================================
 Test Case 12
 program Mean;
@@ -383,39 +1328,143 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | Mean |
+::> | ; |
+::> | var |
+::> | i |
+::> | , |
+::> | n |
+::> | , |
+::> | sum |
+::> | : |
+::> | integer |
+::> | ; |
+::> | mean |
+::> | : |
+::> | real |
+::> | ; |
+::> | begin |
+::> | n |
+::> | : |
+::> | = |
+::> | 20 |
+::> | ; |
+::> | sum |
+::> | : |
+::> | = |
+::> | 0 |
+::> | ; |
+::> | for |
+::> | i |
+::> | : |
+::> | = |
+::> | 1 |
+::> | to |
+::> | n |
+::> | do |
+::> | begin |
+::> | sum |
+::> | : |
+::> | = |
+::> | sum |
+::> | + |
+::> | i |
+::> | ; |
+::> | end |
+::> | ; |
+::> | mean |
+::> | : |
+::> | = |
+::> | sum |
+::> | / |
+::> | n |
+::> | ; |
+::> | write |
+::> | ( |
+::> | The mean of the numbers from 1 to 20 is  |
+::> | , |
+::> | mean |
+::> | ) |
+::> | ; |
+::> | end |
+::> | . |
 
 
 Parsing completed successfully
 =======================================
 Test Case 13
 program AllTypes;
+
 var
-  i, j : Integer;
-  a, b : Real;
-  c : Char;
-  d : Boolean;
-  e : String;
+  i1, i2, i3, i4: Integer;
+  r1, r2, r3, r4: Real;
+  c1, c2: Char;
+  b1: Boolean;
+
 begin
-  i := 0;
-  j := -5;
-  a := 1.0;
-  b := -5.0;
-  c := 'A';
-  d := True;
-  e := 'Hello, World!';
-  
-  writeln('Integer i: ', i);
-  writeln('Integer j: ', j);
-  writeln('Real a: ', a);
-  writeln('Real b: ', b);
-  writeln('Char c: ', c);
-  writeln('Boolean d: ', d);
-  writeln('String e: ', e);
-end.Deleting old files
+  i1 := 2147483647; // Maximum positive integer value (for overflow)
+  i2 := -2147483648; // Maximum negative integer value (for underflow)
+  i3 := 5; // Normal integer assn
+  i4 := -5; // Normal integer assn but negative
+  r1 := 1.79769E308; // Maximum positive real value (for overflow)
+  r2 := -1.79769E308; // Maximum negative real value (for underflow)
+  r3 := 5.0; // Normal floating point assignment
+  r4 := -5.0; // Normal floating point assignment, but negative
+  c1 := '\''; // Character with escape sequence: \'
+  c2 := 'c';
+  write(''); // Empty string
+  write('"Hello" World'); // Full string
+end.
+Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+::> | program |
+::> | AllTypes |
+::> | ; |
+::> | var |
+::> | i1 |
+::> | , |
+::> | i2 |
+::> | , |
+::> | i3 |
+::> | , |
+::> | i4 |
+::> | : |
+::> | Integer |
+::> | ; |
+::> | r1 |
+::> | , |
+::> | r2 |
+::> | , |
+::> | r3 |
+::> | , |
+::> | r4 |
+::> | : |
+::> | Real |
+::> | ; |
+::> | c1 |
+::> | , |
+::> | c2 |
+::> | : |
+::> | Char |
+::> | ; |
+::> | b1 |
+::> | : |
+::> | Boolean |
+::> | ; |
+::> | begin |
+::> | i1 |
+::> | : |
+::> | = |
+::> | 2147483647 |
+::> | ; | Maximum positive integer value (for overflow)
+::> | i2 |
+::> | : |
+::> | = |
+::> | - |
 
 
 Syntax error found
