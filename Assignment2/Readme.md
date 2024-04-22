@@ -20,8 +20,8 @@ gcc lex.yy.c -ll -o ADKM3773.out
 
 ### Task 2
 - For this task the test cases are stored in the `testcases` folder
-- You can run `python all.py`. It has multiple arguments
+- You can run `python run.py`. It has multiple arguments
   - `-a` runs all the test cases in the folder 
-  - For convenience you can run `python all.py -a > output.txt` so that the outputs go into the output folder
-  - `-tc NUMBER` runs the testcase corresponding to `testcases/NUMBER.pas`
+  - For convenience you can run `python run.py -a > output.txt` so that the outputs go into the output folder
+  - `-tc NUMBER` runs the testcase corresponding to `testcases/NUMBER.pas`, as in you can create a testcase 13.pas and then use `python run.py -tc 13`
   - Other flags are there for debugging
