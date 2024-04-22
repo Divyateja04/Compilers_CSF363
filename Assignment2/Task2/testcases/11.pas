@@ -9,6 +9,8 @@ begin
       j:= 'c';
    end;
 
+   a := 1+---3;
+
    for i := 1 to 100 do begin
       write(i, " ",'c');
    end;
@@ -62,11 +64,19 @@ begin
    end;
 
 
-   if (a + v + (x) - d = 1) then begin
+   if (a + v + (x) - d) then begin
 	   write("expression");
    end;
 
    if (not doors[i]) or (not doors[i]) then begin
+	   write("array with boolean and bracket");
+   end;
+
+   if id and id > 2 then begin
+	   write("array with boolean and bracket");
+   end;
+
+   if ((not doors[i]) or (not doors[i])) then begin
 	   write("array with boolean and bracket");
    end;
 
@@ -78,4 +88,5 @@ begin
 	   write("array with boolean and bracket");
    end;
    write("inside single quore");
+
 end.

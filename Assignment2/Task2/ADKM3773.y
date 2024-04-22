@@ -153,12 +153,7 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 ANY_EXPRESSION: EXPRESSION_SEQUENCE /* Handle terms */
 | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("\nCondition - Expr"); } /* Relational operators */
 | LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Expr with paren"); } /* Relational operators */
-| NOT ANY_EXPRESSION /* NOT a */ { if(printLogs) printf("\nCondition - NOT"); }
-| ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ { if(printLogs) printf("\nCondition - AND"); }
-| ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ { if(printLogs) printf("\nCondition - OR"); }
-| LPAREN NOT ANY_EXPRESSION RPAREN /* NOT a */ { if(printLogs) printf("\nCondition - NOT with paren"); }
-| LPAREN ANY_EXPRESSION AND ANY_EXPRESSION RPAREN /* a AND b */ { if(printLogs) printf("\nCondition - AND with paren"); }
-| LPAREN ANY_EXPRESSION OR ANY_EXPRESSION RPAREN /* a OR b */ { if(printLogs) printf("\nCondition - OR with paren"); }
+| BOOLEAN_EXPRESSION_SEQUENCE
 ; 
 
 EXPRESSION_SEQUENCE: TERM
@@ -169,6 +164,12 @@ EXPRESSION_SEQUENCE: TERM
 | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE
 | MINUS EXPRESSION_SEQUENCE
 | LPAREN EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Closing Paren with paren"); }
+;
+
+BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ { if(printLogs) printf("\nCondition - NOT"); }
+| ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ { if(printLogs) printf("\nCondition - AND"); }
+| ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ { if(printLogs) printf("\nCondition - OR"); }
+| LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN
 ;
 
 TERM: IDENTIFIER
