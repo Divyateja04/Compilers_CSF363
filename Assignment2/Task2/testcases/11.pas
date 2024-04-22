@@ -32,28 +32,28 @@ begin
       write('hello');
    end;
 
-   while (i < 3) do begin
+   while i < 3 do begin
       write('hello');
    end;
 
-   if (a + v + x - d = 1) and a = 1 then begin
+   if (a + v + x) - d = 1 and a = 1 then begin
 	   write("expression");
    end;
 
-   if (a +( v + x) - d = 1) and a = 1 then begin
+   if (a +( v + x) - d) = 1 and a = 1 then begin
 	   write("expression");
    end;
 
 
-   if (a + v + (x) - d = 1) then begin
+   if (a + v + (x) - d) = 1 then begin
 	   write("expression");
    end;
 
-   if (not doors[i]) or (not doors[i]) then begin
+   if not doors[i] or not doors[i] then begin
 	   write("array with boolean and bracket");
    end;
 
-   if (not doors[i] or not doors[i]) then begin
+   if not doors[i] or not doors[i] then begin
 	   write("array with boolean and bracket");
    end;
    write('inside single quore');

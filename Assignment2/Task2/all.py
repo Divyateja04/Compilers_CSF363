@@ -10,7 +10,7 @@ parser.add_argument('-d', help="Enable debug mode", action='store_true')
 
 args = parser.parse_args()
 
-if args.all:
+if args.a:
     # Open testcases directory
     test_cases = os.listdir('./testcases')
     COUNT = len(test_cases)
@@ -34,8 +34,8 @@ if args.all:
         os.system(f'echo "Compiling the program in gcc"')
         os.system(f'gcc y.tab.c lex.yy.c -ll -o ADKM3773.out')
         os.system(f'./ADKM3773.out')
-elif args.testcase:
-    test_case_num = int(args.testcase)
+elif args.tc:
+    test_case_num = int(args.tc)
     os.system('clear')
     os.system('echo "======================================="')
     os.system(f'echo "Test Case {test_case_num}"')

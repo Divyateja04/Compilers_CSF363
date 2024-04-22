@@ -151,7 +151,7 @@ CONDITION: IDENTIFIER { if(printLogs) printf("Condition - Took ID"); }
 | NOT CONDITION /* NOT a */ { if(printLogs) printf("Condition - NOT"); }
 | CONDITION AND CONDITION /* a AND b */ { if(printLogs) printf("Condition - AND"); }
 | CONDITION OR CONDITION /* a OR b */ { if(printLogs) printf("Condition - OR"); }
-| LPAREN CONDITION RPAREN { if(printLogs) printf("Condition - Closing Paren"); }
+/* | LPAREN CONDITION RPAREN { if(printLogs) printf("Condition - Closing Paren"); } */
 ; 
 
 /* EXPRESSION SEQUENCE USING FACTOR METHOD FROM CLASS */
