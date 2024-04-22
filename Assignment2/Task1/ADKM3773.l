@@ -75,7 +75,7 @@ int lineNumber = 1;
 
 [a-zA-Z][a-zA-Z0-9]* { fprintf(yyout, "\n%d | %s | IDENTIFIER", lineNumber, yytext); }
 
-[[:space:]]+ 
+[[:space:]]+ {}
 
 . { fprintf(yyout, "\n%d | %s | INVALID TOKEN", lineNumber, yytext); }
 
