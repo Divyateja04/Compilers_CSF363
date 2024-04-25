@@ -334,6 +334,7 @@ begin
    end;
 
    arr[x] := arr[arr[u[3]]];
+   writeln(a, 3, arr[arr[arr[3]]], "ada", 'a');
 
    if arr[i] and a then begin
 	   write("array with boolean 1");
@@ -422,3 +423,199 @@ Compiling the program in gcc
 
 
 Parsing completed successfully
+=======================================
+Test Case 13
+program NumberOfDigits;
+var
+  number, count: Integer;
+  flag : boolean; 
+begin
+  write("Enter a number:");
+  read(number);
+  count := 0;
+  while number <> 0 do
+  begin
+    if flag  then
+    begin
+      count:=count+1;
+      flag := 1;
+    end
+    else 
+    begin
+     count :=count;
+    end; 
+    number := number / 10;
+  end;
+  write("The number of digits is: ");
+  write(count);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 14
+program NumberOfDigits;
+var
+  number, count: Integer;
+begin
+  write("Enter a number:");
+  read(number);
+  count := 0;
+  while number <> 0 do
+  begin
+    if number <> 0 then
+    begin
+      count:=count+1;
+    end
+    else 
+    begin
+     count :=count;
+    end; 
+    number := number / 10;
+  end;
+  write("The number of digits is: ");
+  write(count);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 15
+program MaxValueArray;
+var
+  numbers: array[1..10] of Integer;
+  i, j, maxValue: Integer;
+begin
+  write("Enter 10 integer values:");
+  for i := 1 to 10 do
+  begin
+    read(numbers[i]);
+  end;
+  j := 1; 
+  maxValue := numbers[1];
+  for i := j+2 to j+5 do
+  begin
+    if numbers[i] <> maxValue then
+    begin
+      maxValue := numbers[i];
+    end;
+  end;
+ 
+  write("The value is ");  
+  write(maxValue);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 16
+program ArrayAverage;
+var
+  grade : char ;
+  isready : boolean ;
+  numbers : array [1..10] of Integer ;
+  number, i, sum : Integer;
+  maxValue : real;
+  // the programs starts here
+begin
+  write("Enter a number:");
+  read(number);
+  while number <> 0 do
+  begin
+    if number > 0 then
+    begin
+      count:=count+1;
+    end
+    else
+    begin
+     count :=count;
+    end;
+    number := number - (number / 10) * 10;
+    number := number %  10;
+  end;
+  for i := 2 to 10 do
+  begin
+    if numbers[i] <= maxValue then
+    begin
+      maxValue := numbers[i] + 10;
+    end;
+  end;
+  average := sum / 5;
+  write(sum, maxValue);
+  // the program ends here
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+ the programs starts here the program ends here
+
+
+Parsing completed successfully
+=======================================
+Test Case 17
+program Example9;
+var
+  i: Integer;
+   
+begin
+  i := 10;
+  if i > 10 then
+  begin
+    i := 10 + i;
+    i := i*1 
+    write(i)
+  end
+  else
+  begin
+    i = 20;
+    write(i);
+  end;
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+
+
+Syntax error found
+=======================================
+Test Case 18
+program SumOfSquares;
+var
+  number, sum, i: Integer;
+begin
+  write("Enter a number to calculate the sum of squares up to that number:");
+  read(number);
+  sum := 0;
+  for i := 1 to number do
+  begin
+    sum := sum + (i  i);
+  end;
+  write("The sum of squares up is");
+  write(sum);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+
+
+Syntax error found
