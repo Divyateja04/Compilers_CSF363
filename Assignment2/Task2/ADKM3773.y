@@ -8,7 +8,29 @@ extern FILE *yyin;
 
 int printLogs = 0;
 int yydebug = 1;
+
+typedef struct Node{
+    char type[10];
+    float val;
+    struct Nodee* child[10];
+    int num_children;
+}Node;
+
+Node* createNode(char* type, float val);
+void addChild(Node* parent, Node* child);
+
+typedef struct SymbolTable{
+    char name[50];
+    char type[10];
+}SymbolTable;
 %}
+
+%union {
+    struct{
+        char type[10];
+        float val;
+    }t;
+}
 
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE WRITE_LN ARRAY_DOT
 %token PLUS MINUS MULTIPLY DIVIDE MOD 
@@ -220,6 +242,19 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 
 
 %%
+
+Node* createNode(char* type, float val){
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    strcpy(newNode->type, type);
+    newNode->val = val;
+    newNode->num_children = 0;
+    return newNode;
+}
+
+void addChild(Node* parent, Node* child){
+    parent->child[parent->num_children] = child;
+    parent->num_children++;
+}
 
 void main()
 {
