@@ -12,7 +12,7 @@ begin
   sum := 0;
   for i := 1 to 5 do
   begin
-    sum := sum + numbers[i];
+    sum := sum + 6 * 7 + numbers[i];
   end;
   average := sum / 5;
   write("The sum and average are: "); 
