@@ -49,34 +49,44 @@ void displayQuadruple()
             }
             sprintf(quad[i].operator, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
-
+        }
+        if(strcmp(quad[i].result, "while_cond_end") == 0){
+            int j = i+1;
+            while(strcmp(quad[j].result, "while_body_end") != 0){
+                // we need to go until the end of while body and 
+                // replace the goto with the actual line number
+                j++;
+            }
+            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].operand2, "false: goto %03d", j+1);
         }
     }
     // This is the part where it's printed
     for(int i=0; i<quadrupleIndex; i++){
         if(strncmp(quad[i].result, "if_start", 8) == 0
-        || strncmp(quad[i].result, "if_cond_start", 13) == 0
-        || strncmp(quad[i].result, "ifthen_body_start", 17) == 0
-        || strncmp(quad[i].result, "else_body_start", 15) == 0
         || strncmp(quad[i].result, "while_start", 11) == 0
-        || strncmp(quad[i].result, "while_cond_start", 16) == 0
-        || strncmp(quad[i].result, "while_body_start", 16) == 0
+        || strncmp(quad[i].result, "for_start", 9) == 0
         ){
             printf("\n");
         };
 
         printf(":%03d:> ", i);
-        printf(" %s = ", quad[i].result);
+        printf(" %s ", quad[i].result);
+
+        // Print = only if there's something after that
+        if(strcmp(quad[i].operand1, "NA") != 0
+        || strcmp(quad[i].operator, "NA") != 0
+        || strcmp(quad[i].operand2, "NA") != 0
+        ) printf(" = ");
+
         if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
         if(strcmp(quad[i].operator, "NA") != 0) printf(" %s ", quad[i].operator);
         if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
         printf(";\n");
 
-        if(strncmp(quad[i].result, "if_cond_end", 11) == 0
-        || strncmp(quad[i].result, "ifthen_body_end", 15) == 0
-        || strncmp(quad[i].result, "else_body_end", 13) == 0
-        || strncmp(quad[i].result, "while_body_end", 14) == 0
+        if(strncmp(quad[i].result, "if_end", 11) == 0
         || strncmp(quad[i].result, "while_end", 9) == 0
+        || strncmp(quad[i].result, "for_end", 7) == 0
         ){
             printf("\n");
         };
@@ -264,8 +274,12 @@ AFTER_IF_THEN_BODY: ELSE {
     addQuadruple("NA", "NA", "NA", "else_body_start"); 
 } BODY_OF_CONDITIONAL {
     addQuadruple("NA", "NA", "NA", "else_body_end"); 
-} SEMICOLON
-| SEMICOLON
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "if_end"); 
+}
+| SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "if_end"); 
+}
 ;
 
 BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END
@@ -416,8 +430,7 @@ STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
 
 /* LOOPING STATEMENT */
 LOOPING_STATEMENT: WHILE_LOOP
-| FOR_LOOP_TO
-| FOR_LOOP_DOWNTO
+| FOR_LOOP
 ;
 
 WHILE_LOOP: WHILE {
@@ -433,11 +446,35 @@ WHILE_LOOP: WHILE {
 }
 ;
 
-FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON 
+FOR_LOOP: FOR {
+    addQuadruple("NA", "NA", "NA", "for_start");
+} IDENTIFIER COLON EQUAL {
+    addQuadruple("NA", "NA", "NA", "for_assn_start");
+} EXPRESSION_SEQUENCE {
+    addQuadruple(popFromStack(), "NA", "NA", $<data>3);
+} AFTER_FOR_CONDITION
 ;
 
-FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON
-;
+AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
+    addQuadruple(popFromStack(), "NA", "NA", $<data>1);
+    addQuadruple("NA", "NA", "NA", "for_assn_end");
+} DO {
+    addQuadruple("NA", "NA", "NA", "for_body_start");
+} BODY_OF_LOOP {
+    addQuadruple("NA", "NA", "NA", "for_body_end");
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "for_end");
+}
+| DOWNTO EXPRESSION_SEQUENCE {
+    addQuadruple(popFromStack(), "NA", "NA", $<data>1);
+    addQuadruple("NA", "NA", "NA", "for_assn_end");
+} DO {
+    addQuadruple("NA", "NA", "NA", "for_body_start");
+} BODY_OF_LOOP {
+    addQuadruple("NA", "NA", "NA", "for_body_end");
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "for_end");
+}
 
 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END
 ;
