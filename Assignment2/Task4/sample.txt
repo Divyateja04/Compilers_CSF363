@@ -4,6 +4,8 @@ var
   i, sum : Integer;
   average : real;
 begin
+  i := i + i * (i - i) + (i - i) * d;
+  x := (7 < 5) and (6 > 5);
   write("Enter 5 integer values:");
   for i := 1 to 5 do
   begin

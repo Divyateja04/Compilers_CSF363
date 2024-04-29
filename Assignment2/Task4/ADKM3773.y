@@ -85,12 +85,12 @@ DATATYPE:  { if(printLogs) printf("\nDATATYPE found - INTEGER"); } INTEGER
 | { if(printLogs) printf("\nDATATYPE found - CHAR"); } CHAR 
 ;
 
-RELOP: EQUAL
-| NOTEQUAL
-| LESS
-| LESSEQUAL
-| GREATER
-| GREATEREQUAL
+RELOP: EQUAL { strcpy($<data>$, "="); }
+| NOTEQUAL { strcpy($<data>$, "!="); }
+| LESS { strcpy($<data>$, "<"); }
+| LESSEQUAL { strcpy($<data>$, "<="); }
+| GREATER { strcpy($<data>$, ">"); }
+| GREATEREQUAL { strcpy($<data>$, ">="); }
 ;
 
 /* ARRAY ADD ON FOR EVERY ID */
@@ -210,8 +210,24 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 
 /* EXPRESSION FORMULATION */
 ANY_EXPRESSION: EXPRESSION_SEQUENCE 
-| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("\nCondition - Expr"); } /* Relational operators */
-| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Expr with paren"); } /* Relational operators */
+| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), $<data>2, popFromStack(), str1);
+    displayQuadruple(); 
+    pushToStack(str1);
+} 
+| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), $<data>3, popFromStack(), str1);
+    displayQuadruple(); 
+    pushToStack(str1);
+}
 | BOOLEAN_EXPRESSION_SEQUENCE
 ; 
 
@@ -273,9 +289,33 @@ EXPRESSION_SEQUENCE: TERM
 | LPAREN EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Closing Paren with paren"); }
 ;
 
-BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ { if(printLogs) printf("\nCondition - NOT"); }
-| ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ { if(printLogs) printf("\nCondition - AND"); }
-| ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ { if(printLogs) printf("\nCondition - OR"); }
+BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple("0", "!", popFromStack(), str1);
+    displayQuadruple(); 
+    pushToStack(str1);
+}
+| ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "&", popFromStack(), str1);
+    displayQuadruple(); 
+    pushToStack(str1);
+}
+| ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "|", popFromStack(), str1);
+    displayQuadruple(); 
+    pushToStack(str1);
+}
 | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN
 ;
 
