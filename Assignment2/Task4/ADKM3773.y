@@ -11,7 +11,7 @@ int printLogs = 0;
 int yydebug = 1;
 
 int count=0;
-int qind=0;
+int quadrupleIndex=0;
 int tos=-1;
 int temp_char=0;
 
@@ -20,28 +20,31 @@ struct quadruple{
     char operand1[100];
     char operand2[100];
     char result[100];
-} quad[25];
+} quad[1000];
 
 struct stack {
     char c[100]; 
-} stac[25];
+} stac[1000];
 
 void addQuadruple(char op1[], char op[], char op2[], char result[])
 {
-    strcpy(quad[qind].operator, op);
-    strcpy(quad[qind].operand1, op1);
-    strcpy(quad[qind].operand2, op2);
-    strcpy(quad[qind].result, result);
-    qind++;
+    strcpy(quad[quadrupleIndex].operator, op);
+    strcpy(quad[quadrupleIndex].operand1, op1);
+    strcpy(quad[quadrupleIndex].operand2, op2);
+    strcpy(quad[quadrupleIndex].result, result);
+    quadrupleIndex++;
 }
 
 void displayQuadruple()
 {
-    printf("%s ", quad[qind-1].result);
-    printf("=");
-    printf("%s ", quad[qind-1].operand1);
-    printf("%s ", quad[qind-1].operator);
-    printf("%s\n", quad[qind-1].operand2);
+    for(int i=0; i<quadrupleIndex; i++){
+        printf(":%03d:> ", i);
+        printf(" %s = ", quad[i].result);
+        if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
+        if(strcmp(quad[i].operator, "NA") != 0) printf(" %s ", quad[i].operator);
+        if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
+        printf(";\n");
+    }
 }
 
 void pushToStack(char *c){
@@ -75,14 +78,14 @@ char* popFromStack()
 %left LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
 %left LPAREN RPAREN
 %%
-stmt: { if(printLogs) printf("\nParsing started"); } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); }
+stmt: PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); }
 ;
 
 /* TYPE DECLARATIONS */
-DATATYPE:  { if(printLogs) printf("\nDATATYPE found - INTEGER"); } INTEGER 
-| { if(printLogs) printf("\nDATATYPE found - REAL"); } REAL 
-| { if(printLogs) printf("\nDATATYPE found - BOOLEAN"); } BOOLEAN 
-| { if(printLogs) printf("\nDATATYPE found - CHAR"); } CHAR 
+DATATYPE: INTEGER 
+| REAL 
+| BOOLEAN 
+| CHAR 
 ;
 
 RELOP: EQUAL { strcpy($<data>$, "="); }
@@ -136,7 +139,11 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
 ; 
 
 /* MAIN BODY OF THE PROGRAM */
-BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT
+BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
+    printf("============================\n");
+    displayQuadruple();
+    printf("============================\n");
+}
 ;
 
 /* ANY STATEMENTS INSIDE THE PROGRAM */
@@ -191,14 +198,39 @@ WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
 ;
 
 /* ASSIGNMENT */
-ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON
-| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON
-| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON
+ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    addQuadruple("NA", "NA", $<data>4, $<data>1);
+}
+| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    addQuadruple("NA", "NA", $<data>4, $<data>1);
+}
+| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
+    addQuadruple("NA", "NA", $<data>4, $<data>1);
+}
 ;
 
 /* CONDITIONAL STATEMENT */
-CONDITIONAL_STATEMENT: IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL ELSE BODY_OF_CONDITIONAL SEMICOLON
-| IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL SEMICOLON
+CONDITIONAL_STATEMENT: IF {
+    addQuadruple("NA", "NA", "NA", "if_start"); 
+    addQuadruple("NA", "NA", "NA", "if_cond_start");
+} ANY_EXPRESSION {
+    addQuadruple(popFromStack(), "NA", "NA", "if_cond_end");
+} AFTER_IF_ANY_EXPR 
+;
+
+AFTER_IF_ANY_EXPR: THEN {
+    addQuadruple("NA", "NA", "NA", "if_body_start"); 
+} BODY_OF_CONDITIONAL {
+    addQuadruple("NA", "NA", "NA", "if_body_end"); 
+} AFTER_IF_THEN_BODY 
+;
+
+AFTER_IF_THEN_BODY: ELSE {
+    addQuadruple("NA", "NA", "NA", "else_body_start"); 
+} BODY_OF_CONDITIONAL {
+    addQuadruple("NA", "NA", "NA", "else_body_end"); 
+} SEMICOLON
+| SEMICOLON
 ;
 
 BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END
@@ -209,15 +241,15 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 ;
 
 /* EXPRESSION FORMULATION */
-ANY_EXPRESSION: EXPRESSION_SEQUENCE 
+ANY_EXPRESSION: EXPRESSION_SEQUENCE  /* I think we can ignore this because it will anyways call the other one */
 | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
     char str[5];
     char str1[5]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), $<data>2, popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 } 
 | LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN {
     char str[5];
@@ -225,21 +257,21 @@ ANY_EXPRESSION: EXPRESSION_SEQUENCE
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), $<data>3, popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
-| BOOLEAN_EXPRESSION_SEQUENCE
+| BOOLEAN_EXPRESSION_SEQUENCE /* I think we can ignore this because it will anyways call the other one */
 ; 
 
-EXPRESSION_SEQUENCE: TERM 
+EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being pushed onto stack anyways */
 | EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE {
     char str[5];
     char str1[5]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "+", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE {
     char str[5];
@@ -247,8 +279,8 @@ EXPRESSION_SEQUENCE: TERM
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "-", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE {
     char str[5];
@@ -256,8 +288,8 @@ EXPRESSION_SEQUENCE: TERM
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "*", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE {
     char str[5];
@@ -265,8 +297,8 @@ EXPRESSION_SEQUENCE: TERM
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "/", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE {
     char str[5];
@@ -274,8 +306,8 @@ EXPRESSION_SEQUENCE: TERM
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "%", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | MINUS EXPRESSION_SEQUENCE {
     char str[5];
@@ -283,10 +315,10 @@ EXPRESSION_SEQUENCE: TERM
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("0", "-", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
-| LPAREN EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Closing Paren with paren"); }
+| LPAREN EXPRESSION_SEQUENCE RPAREN /* I think we can ignore this because it will anyways call the other one */
 ;
 
 BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
@@ -295,8 +327,8 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("0", "!", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ {
     char str[5];
@@ -304,8 +336,8 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "&", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ {
     char str[5];
@@ -313,8 +345,8 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "|", popFromStack(), str1);
-    displayQuadruple(); 
     pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN
 ;
@@ -345,7 +377,6 @@ STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
 | WRITE_STATEMENT
 | ASSIGNMENT_STATEMENT
 | LOOPING_STATEMENT
-| CONDITIONAL_STATEMENT
 ;
 
 /* LOOPING STATEMENT */
@@ -354,10 +385,20 @@ LOOPING_STATEMENT: WHILE_LOOP
 | FOR_LOOP_DOWNTO
 ;
 
-WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON
+WHILE_LOOP: WHILE {
+    addQuadruple("NA", "NA", "NA", "while_start");
+    addQuadruple("NA", "NA", "NA", "while_cond_start");
+} ANY_EXPRESSION DO {
+    addQuadruple(popFromStack(), "NA", "NA", "while_cond_end");
+    addQuadruple("NA", "NA", "NA", "while_body_start");
+} BODY_OF_LOOP {
+    addQuadruple("NA", "NA", "NA", "while_body_end");
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "while_end");
+}
 ;
 
-FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON
+FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON 
 ;
 
 FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON
