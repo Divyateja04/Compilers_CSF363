@@ -24,9 +24,13 @@ begin
     digit := number - (number / 10) * 10;
     
     if digit <> 0 then
-      begin
+    begin
       count:=count+1;
-      end;
+    end
+    else
+    begin
+      count:=count+0;
+    end;
     number := number / 10;
   end;
   average := sum / 5;
