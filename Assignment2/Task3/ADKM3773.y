@@ -1,6 +1,10 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>  
+
 
 int yylex(void);
 int yyerror();
@@ -16,41 +20,37 @@ typedef struct Node{
     int num_children;
 }Node;
 
-Node* createNode(char* type, float val);
-void addChild(Node* parent, Node* child);
-
-
+int symbol_table_index = 0;
+int line_number = 0;
 
 typedef struct Symbol{
     char id_name[50];
     char data_type[10];
-     union {
-    int ival;
-    float fval;
-    char cval;
-    bool bval;
-} val;
-    int line_number;
+    char val[10];
+    char varorarray[2];
+    char min_index[5];
+    char max_index[5];
 }Symbol;
 
 Symbol* symbol_table[100];
-for(int i = 0; i < 100; i++){
-    symbol_table[i] = (Symbol *)malloc(sizeof(Symbol));
-    symbol_table[i].id_name = "";
-    symbol_table[i].data_type = "";
-    symbol_table[i].val = 0;
-    symbol_table[i].line_number = 0;
-}
-int symbol_table_index = 0;
+void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_data_type[], char new_varorarray[]);
+void addVarName(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_varorarray[]);
+bool check(Symbol** symbol_table, char new_id_name[], int symbol_table_index);
+void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[], int symbol_table_index);
+
+
 %}
 
 %union {
-    struct{
-        char type[10];
-        float val;
-    }t;
+    struct t{
+    char id_name[50];
+    char data_type[10];
+    char val[10];
+    char varorarray[2];
+    char min_index[5];
+    char max_index[5];
+}t;
 }
-
 
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE WRITE_LN ARRAY_DOT
 %token PLUS MINUS MULTIPLY DIVIDE MOD 
@@ -66,15 +66,17 @@ int symbol_table_index = 0;
 %left EQUAL 
 %left LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
 %left LPAREN RPAREN
+
+
 %%
 stmt: { if(printLogs) printf("\nParsing started"); } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); }
 ;
 
 /* TYPE DECLARATIONS */
-DATATYPE:  { if(printLogs) printf("\nDATATYPE found - INTEGER"); } INTEGER 
-| { if(printLogs) printf("\nDATATYPE found - REAL"); } REAL 
-| { if(printLogs) printf("\nDATATYPE found - BOOLEAN"); } BOOLEAN 
-| { if(printLogs) printf("\nDATATYPE found - CHAR"); } CHAR 
+DATATYPE:  { if(printLogs) printf("\nDATATYPE found - INTEGER"); } INTEGER { strcpy($<t.data_type>$, $<t.data_type>2); }
+| { if(printLogs) printf("\nDATATYPE found - REAL"); } REAL { strcpy($<t.data_type>$, $<t.data_type>2); }
+| { if(printLogs) printf("\nDATATYPE found - BOOLEAN"); } BOOLEAN { strcpy($<t.data_type>$, $<t.data_type>2); }
+| { if(printLogs) printf("\nDATATYPE found - CHAR"); } CHAR { strcpy($<t.data_type>$, $<t.data_type>2); }
 ;
 
 RELOP: EQUAL
@@ -89,7 +91,7 @@ RELOP: EQUAL
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { if(printLogs) printf("\nARRAY_ADD_ON_ID closed"); } 
 ;
 
-BETWEEN_BRACKETS: INT_NUMBER
+BETWEEN_BRACKETS: INT_NUMBER 
 | IDENTIFIER
 | IDENTIFIER ARRAY_ADD_ON_ID
 
@@ -101,7 +103,7 @@ VARIABLE_DECLARATION: VAR DECLARATION_LISTS
 | VAR
 ;
 
-DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS {  }
+DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS
 | DECLARATION_LIST
 ;
 
@@ -110,17 +112,37 @@ DECLARATION_LIST: SINGLE_VARIABLE
 | ARRAY_DECLARATION
 ;
 
-SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON
+SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.     data_type>3, "1");
+symbol_table_index++;
+}
 ;
 
-MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON
+MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { addVarName(symbol_table, symbol_table_index, $<t.id_name>1, "1");
+    symbol_table_index++;
+enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); }
 ;
 
-MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS 
-| COMMA IDENTIFIER
+MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {     
+        addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
+    symbol_table_index++;
+    
+}
+| COMMA IDENTIFIER { addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
+    symbol_table_index++;
+}
 ;
 
-ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
+    if (!check(symbol_table, $<t.id_name>1, symbol_table_index))
+    {
+        strcpy(symbol_table[symbol_table_index]->id_name, $<t.id_name>1);
+        strcpy(symbol_table[symbol_table_index]->data_type, $<t.data_type>10);
+        strcpy(symbol_table[symbol_table_index]->varorarray, "2"); 
+        strcpy(symbol_table[symbol_table_index]->min_index, $<t.min_index>5); 
+        strcpy(symbol_table[symbol_table_index]->max_index, $<t.min_index>7); 
+        symbol_table_index++;
+    }
+}
 ; 
 
 /* MAIN BODY OF THE PROGRAM */
@@ -219,7 +241,7 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ { if(printLogs) prin
 | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN
 ;
 
-TERM: IDENTIFIER
+TERM: IDENTIFIER 
 | IDENTIFIER ARRAY_ADD_ON_ID
 | INT_NUMBER
 | DECIMAL_NUMBER
@@ -260,25 +282,63 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 | CONDITIONAL_STATEMENT
 ;
 
-
 %%
 
-Node* createNode(char* type, float val){
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    strcpy(newNode->type, type);
-    newNode->val = val;
-    newNode->num_children = 0;
-    return newNode;
+void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_data_type[], char new_varorarray[]){
+    if (!check(symbol_table, new_id_name, symbol_table_index))
+    {
+        strcpy(symbol_table[symbol_table_index]->id_name, new_id_name);
+        strcpy(symbol_table[symbol_table_index]->data_type, new_data_type);
+        strcpy(symbol_table[symbol_table_index]->varorarray, new_varorarray); 
+        symbol_table_index++;
+    }
 }
 
-void addChild(Node* parent, Node* child){
-    parent->child[parent->num_children] = child;
-    parent->num_children++;
+void addVarName(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_varorarray[]){
+    if(!check(symbol_table, new_id_name, symbol_table_index))
+    {
+        strcpy(symbol_table[symbol_table_index]->id_name, new_id_name);
+        strcpy(symbol_table[symbol_table_index]->varorarray, new_varorarray);     
+        symbol_table_index++;
+    }
 }
+
+bool check(Symbol** symbol_table, char new_id_name[], int symbol_table_index){
+    for(int i = 0; i < symbol_table_index; i++){
+        if(strcmp(symbol_table[i]->id_name, new_id_name) == 0){        
+            printf("\nVariable < %s > already declared", new_id_name);
+            printf("Exiting...");
+            exit(1);
+        }
+    }
+    return false;
+}
+
+void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[10], int symbol_table_index){
+    printf("enter called");
+    for(int i = 0; i < symbol_table_index; i++){
+        printf("\n%s", symbol_table[i]->data_type);
+        if(strcmp(symbol_table[i]->data_type, "null") == 0){
+            strcpy(symbol_table[i]->data_type, data_type);
+        }
+    }
+}
+
 
 
 void main()
 {
+    for(int i = 0; i < 100; i++){
+        symbol_table[i] = (Symbol *)malloc(sizeof(Symbol));
+        strcpy(symbol_table[i]->id_name, "");
+        strcpy(symbol_table[i]->data_type, "null");
+        strcpy(symbol_table[i]->val, "0");
+        strcpy(symbol_table[i]->varorarray, "0");
+        strcpy(symbol_table[i]->min_index, "null");
+        strcpy(symbol_table[i]->max_index, "null");
+        
+    }
+
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
         if(printLogs) printf("\nFile not found");
@@ -287,6 +347,21 @@ void main()
     else{
         if(printLogs) printf("\nInput file found, Parsing....");
         yyparse();
+    }
+
+    printf("\n========\nSymbol Table:\n========");
+    for(int i = 0; i < symbol_table_index; i++){
+        if(strcmp(symbol_table[i]->varorarray, "1") == 0){
+        printf("\nID Name: %s", symbol_table[i]->id_name);
+        printf(", Data Type: %s", symbol_table[i]->data_type);
+        printf(", Value: %s", symbol_table[i]->val);
+        }
+        else if(strcmp(symbol_table[i]->varorarray, "2") == 0){
+            printf("\nArray Name: %s", symbol_table[i]->id_name);
+            printf(", Data Type: %s", symbol_table[i]->data_type);
+            printf(", Min Index: %s", symbol_table[i]->min_index);
+            printf(", Max Index: %s", symbol_table[i]->max_index);
+        }
     }
 }
 
