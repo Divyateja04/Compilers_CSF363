@@ -16,7 +16,7 @@ int tos=-1;
 int temp_char=0;
 
 struct quadruple{
-    char operator[5];
+    char operator[50];
     char operand1[100];
     char operand2[100];
     char result[100];
@@ -37,13 +37,49 @@ void addQuadruple(char op1[], char op[], char op2[], char result[])
 
 void displayQuadruple()
 {
+    // This is the part where processing for loops takes place
     for(int i=0; i<quadrupleIndex; i++){
+        // Check if the current quadruple starts a if condition
+        if(strcmp(quad[i].result, "if_cond_end") == 0){
+            int j = i+1;
+            while(strcmp(quad[j].result, "ifthen_body_end") != 0){
+                // we need to go until the end of if body and 
+                // replace the goto with the actual line number
+                j++;
+            }
+            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].operand2, "false: goto %03d", j+1);
+
+        }
+    }
+    // This is the part where it's printed
+    for(int i=0; i<quadrupleIndex; i++){
+        if(strncmp(quad[i].result, "if_start", 8) == 0
+        || strncmp(quad[i].result, "if_cond_start", 13) == 0
+        || strncmp(quad[i].result, "ifthen_body_start", 17) == 0
+        || strncmp(quad[i].result, "else_body_start", 15) == 0
+        || strncmp(quad[i].result, "while_start", 11) == 0
+        || strncmp(quad[i].result, "while_cond_start", 16) == 0
+        || strncmp(quad[i].result, "while_body_start", 16) == 0
+        ){
+            printf("\n");
+        };
+
         printf(":%03d:> ", i);
         printf(" %s = ", quad[i].result);
         if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
         if(strcmp(quad[i].operator, "NA") != 0) printf(" %s ", quad[i].operator);
         if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
         printf(";\n");
+
+        if(strncmp(quad[i].result, "if_cond_end", 11) == 0
+        || strncmp(quad[i].result, "ifthen_body_end", 15) == 0
+        || strncmp(quad[i].result, "else_body_end", 13) == 0
+        || strncmp(quad[i].result, "while_body_end", 14) == 0
+        || strncmp(quad[i].result, "while_end", 9) == 0
+        ){
+            printf("\n");
+        };
     }
 }
 
@@ -212,16 +248,15 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
 /* CONDITIONAL STATEMENT */
 CONDITIONAL_STATEMENT: IF {
     addQuadruple("NA", "NA", "NA", "if_start"); 
-    addQuadruple("NA", "NA", "NA", "if_cond_start");
 } ANY_EXPRESSION {
     addQuadruple(popFromStack(), "NA", "NA", "if_cond_end");
 } AFTER_IF_ANY_EXPR 
 ;
 
 AFTER_IF_ANY_EXPR: THEN {
-    addQuadruple("NA", "NA", "NA", "if_body_start"); 
+    addQuadruple("NA", "NA", "NA", "ifthen_body_start"); 
 } BODY_OF_CONDITIONAL {
-    addQuadruple("NA", "NA", "NA", "if_body_end"); 
+    addQuadruple("NA", "NA", "NA", "ifthen_body_end"); 
 } AFTER_IF_THEN_BODY 
 ;
 
