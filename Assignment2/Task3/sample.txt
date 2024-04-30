@@ -1,10 +1,16 @@
-program ArrayAverage;
+program FactorialCalculation;
 var
-numbers: array[1..5] of Integer;
-  ig, sum : Integer;
-  average : real;
+  number, factorial, i: Integer;
 begin
-  
-sum := 10;
-  
+  write("Enter a number to calculate its factorial:");
+  read(number);
+  factorial := 1;
+  for i := number downto 1 do
+  begin
+    factorial := factorial * i;
+  end;
+  write("The factorial is: ");
+  write(factorial);
 end.
+
+
