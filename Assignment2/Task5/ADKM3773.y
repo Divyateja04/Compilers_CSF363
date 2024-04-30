@@ -107,7 +107,7 @@ void interpreter() {
     int current_line = -1;
     while(current_line++ < quadrupleIndex) {
         printf("Result:%s Operand1:%s Operator:%s Operand2:%s\n", quad[current_line].result, quad[current_line].operand1, quad[current_line].operator, quad[current_line].operand2);
-        printInterpreterSymbolTable();
+        // printInterpreterSymbolTable();
 
         // Operator is NA
         // simple assignment operation e.g. s = 6
@@ -124,21 +124,18 @@ void interpreter() {
         }
 
         // For loop
-        if (strcmp(quad[current_line].result, "for_cond_end") == 0 || strcmp(quad[current_line].result, "while_cond_end") == 0) {
-            if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
-                // Extract the true goto line number from the operator string
-                char* true_goto = strstr(quad[current_line].operator, "true: goto ");
-                if (true_goto != NULL) {
-                    true_goto += strlen("true: goto "); // Move the pointer to the start of the line number
-                    current_line = atoi(true_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+        if (
+            strcmp(quad[current_line].result, "for_cond_end") == 0 || 
+            strcmp(quad[current_line].result, "while_cond_end") == 0
+            ) {
+            int true_line, false_line;
+            if (sscanf(quad[current_line].operator, "true: goto %d", &true_line) == 1 &&
+                sscanf(quad[current_line].operand2, "false: goto %d", &false_line) == 1) {
+                if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
+                    current_line = true_line - 1;
                     printf("Going to line %d\n", current_line + 1);
-                }
-            } else {
-                // Extract the false goto line number from the operator string
-                char* false_goto = strstr(quad[current_line].operator, "false: goto ");
-                if (false_goto != NULL) {
-                    false_goto += strlen("false: goto "); // Move the pointer to the start of the line number
-                    current_line = atoi(false_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+                } else {
+                    current_line = false_line - 1;
                     printf("Going to line %d\n", current_line + 1);
                 }
             }
@@ -146,34 +143,33 @@ void interpreter() {
         }
 
         // If condition
-        if (strcmp(quad[current_line].result, "if_cond_end") == 0) {
-            if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
-                // Extract the true goto line number from the operator string
-                char* true_goto = strstr(quad[current_line].operator, "true: goto ");
-                if (true_goto != NULL) {
-                    true_goto += strlen("true: goto "); // Move the pointer to the start of the line number
-                    current_line = atoi(true_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+        if (
+            strcmp(quad[current_line].result, "if_cond_end") == 0
+            ) {
+            int true_line, false_line;
+            if (sscanf(quad[current_line].operator, "true: goto %d", &true_line) == 1 &&
+                sscanf(quad[current_line].operator, "false: goto %d", &false_line) == 1) {
+                if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
+                    current_line = true_line - 1;
                     printf("Going to line %d\n", current_line + 1);
-                }
-            } else {
-                // Extract the false goto line number from the operator string
-                char* false_goto = strstr(quad[current_line].operator, "false: goto ");
-                if (false_goto != NULL) {
-                    false_goto += strlen("false: goto "); // Move the pointer to the start of the line number
-                    current_line = atoi(false_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+                } else {
+                    current_line = false_line - 1;
                     printf("Going to line %d\n", current_line + 1);
                 }
             }
             continue;
         }
         
-        if (strcmp(quad[current_line].result, "for_body_end") == 0 || strcmp(quad[current_line].result, "while_body_end") == 0) {
-            char* end_goto = strstr(quad[current_line].operator, "goto ");
-                if (end_goto != NULL) {
-                    end_goto += strlen("goto "); // Move the pointer to the start of the line number
-                    current_line = atoi(end_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
-                    printf("Going to line %d\n", current_line + 1);
-                }
+        if (
+            strcmp(quad[current_line].result, "for_body_end") == 0 || 
+            strcmp(quad[current_line].result, "while_body_end") == 0 || 
+            strcmp(quad[current_line].result, "ifthen_body_end") == 0
+            ) {
+            int end_line;
+            if (sscanf(quad[current_line].operator, "goto %d", &end_line) == 1) {
+                current_line = end_line - 1;
+                printf("Going to line %d\n", current_line + 1);
+            }
             continue;
         }
 
@@ -200,6 +196,9 @@ void interpreter() {
                     break;
                 case '>':
                     updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) > getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+                case '=':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) == getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
                     break;
             }
             continue;
