@@ -369,7 +369,7 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     char str1[5]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
-    addQuadruple("0", "-", popFromStack(), str1);
+    addQuadruple("NA", "-", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
 }
@@ -381,7 +381,7 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     char str1[5]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
-    addQuadruple("0", "!", popFromStack(), str1);
+    addQuadruple("NA", "!", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
 }
