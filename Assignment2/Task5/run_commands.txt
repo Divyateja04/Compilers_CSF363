@@ -1,0 +1,4 @@
+yacc -d ADKM3773.y  -Wconflicts-rr -Wconflicts-sr -Wcounterexamples
+lex ADKM3773.l
+gcc y.tab.c lex.yy.c -ll -o ADKM3773.out
+./ADKM3773.out
