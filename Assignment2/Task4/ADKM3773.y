@@ -16,7 +16,7 @@ int tos=-1;
 int temp_char=0;
 
 struct quadruple{
-    char operator[50];
+    char operator[100];
     char operand1[100];
     char operand2[100];
     char result[100];
