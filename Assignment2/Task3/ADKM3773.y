@@ -12,16 +12,7 @@ extern FILE *yyin;
 
 int printLogs = 0;
 int yydebug = 1;
-
-typedef struct Node{
-    char type[10];
-    float val;
-    struct Nodee* child[10];
-    int num_children;
-}Node;
-
 int symbol_table_index = 0;
-int line_number = 0;
 
 typedef struct Symbol{
     char id_name[50];
@@ -43,8 +34,10 @@ void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[], int s
 Symbol* findSymbol(Symbol** symbol_table, char id_name[], int symbol_table_index);
 bool checkIsVarSet(Symbol** symbol_table, char id_name[], int symbol_table_index);
 bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int symbol_table_index);
-void CustomError1(char* message);
-void CustomError2(char* id_name, char* message);
+void printSymbolTable();
+void CustomError1(int lineNumber, char* message);
+void CustomError2(int lineNumber, char* id_name, char* message);
+void CustomError3(int lineNumber, char* id_name, char* index,char* message);
 
 %}
 
@@ -57,6 +50,7 @@ void CustomError2(char* id_name, char* message);
     char min_index[5];
     char max_index[5];
     char operator[3];
+    int lineNumber;
 }t;
 }
 
@@ -81,43 +75,45 @@ stmt: { if(printLogs) printf("\nParsing started"); } PROGRAM_DECLARATION VARIABL
 ;
 
 /* TYPE DECLARATIONS */
-DATATYPE:  { if(printLogs) printf("\nDATATYPE found - INTEGER"); } INTEGER { strcpy($<t.data_type>$, $<t.data_type>2); }
-| { if(printLogs) printf("\nDATATYPE found - REAL"); } REAL { strcpy($<t.data_type>$, $<t.data_type>2); }
-| { if(printLogs) printf("\nDATATYPE found - BOOLEAN"); } BOOLEAN { strcpy($<t.data_type>$, $<t.data_type>2); }
-| { if(printLogs) printf("\nDATATYPE found - CHAR"); } CHAR { strcpy($<t.data_type>$, $<t.data_type>2); }
+DATATYPE: INTEGER { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| REAL { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| BOOLEAN { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| CHAR { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
 ;
 
-RELOP: EQUAL { strcpy($<t.operator>$, "="); }
-| NOTEQUAL { strcpy($<t.operator>$, "<>"); }
-| LESS { strcpy($<t.operator>$, "<"); }
-| LESSEQUAL { strcpy($<t.operator>$, "<="); }
-| GREATER { strcpy($<t.operator>$, ">"); }
-| GREATEREQUAL { strcpy($<t.operator>$, ">="); }
+RELOP: EQUAL { strcpy($<t.operator>$, "="); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| NOTEQUAL { strcpy($<t.operator>$, "<>"); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| LESS { strcpy($<t.operator>$, "<"); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| LESSEQUAL { strcpy($<t.operator>$, "<="); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| GREATER { strcpy($<t.operator>$, ">"); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| GREATEREQUAL { strcpy($<t.operator>$, ">="); $<t.lineNumber>$ = $<t.lineNumber>1; }
 ;
 
 /* ARRAY ADD ON FOR EVERY ID */
-ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET 
+ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { $<t.lineNumber>$ = $<t.lineNumber>1;}
 ;
 
 BETWEEN_BRACKETS: INT_NUMBER { 
     if(strcmp($<t.data_type>1, "int") == 0){
         strcpy($<t.val>$, $<t.val>1);
+        $<t.lineNumber>$ = $<t.lineNumber>1;
     } 
     else{
-        CustomError1("Array index must be integer");
+        CustomError1($<t.lineNumber>1, "Array index must be integer");
     }     
 }
 | IDENTIFIER { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     if(symbol != NULL){    
         if((strcmp($<t.data_type>1, "int") == 0) && (symbol->isVarSet == 1)){
         strcpy($<t.val>$, $<t.val>1);
+        $<t.lineNumber>$ = $<t.lineNumber>1;
         } 
         else{
-            CustomError2($<t.id_name>1, "Variable must be integer and must be set before it's used");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable must be integer and must be set before it's accessed");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Variable not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
 
      
@@ -125,11 +121,11 @@ BETWEEN_BRACKETS: INT_NUMBER {
 | IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") != 0){
-            CustomError2($<t.id_name>1, "Identifier not an array");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Array not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not found");
     
     }
 }
@@ -141,9 +137,9 @@ PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON {
         strcpy(symbol_table[symbol_table_index]->id_name, $<t.id_name>2);
         strcpy(symbol_table[symbol_table_index]->data_type, "Program Name");
         strcpy(symbol_table[symbol_table_index]->varorarray, "0"); 
+        $<t.lineNumber>$ = $<t.lineNumber>1;
         symbol_table_index++;
     }
-
 }
 ;
 
@@ -161,13 +157,15 @@ DECLARATION_LIST: SINGLE_VARIABLE
 ;
 
 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { 
-    addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.     data_type>3, "1");
+    addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.data_type>3, "1");
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     symbol_table_index++;
 }
 ;
 
 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { 
     addVarName(symbol_table, symbol_table_index, $<t.id_name>1, "1");
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     symbol_table_index++;
     enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); 
 }
@@ -175,11 +173,13 @@ MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON {
 
 MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {     
     addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     symbol_table_index++;
     
 }
 | COMMA IDENTIFIER { 
-    addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
+    addVarName(symbol_table, symbol_table_index, $<t.id_name>2, "1");
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     symbol_table_index++;
 }
 ;
@@ -192,6 +192,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
         strcpy(symbol_table[symbol_table_index]->varorarray, "2"); 
         strcpy(symbol_table[symbol_table_index]->min_index, $<t.val>5); 
         strcpy(symbol_table[symbol_table_index]->max_index, $<t.val>7); 
+        $<t.lineNumber>$ = $<t.lineNumber>1;
         symbol_table_index++;
     }
 }
@@ -217,197 +218,223 @@ STATEMENT: READ_STATEMENT
 /* READ STATEMENT */
 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>3;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.id_name>3, "Identifier not a variable");
+            CustomError2($<t.lineNumber>3, $<t.id_name>3, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>3, "Variable not found");
+        CustomError2($<t.lineNumber>3, $<t.id_name>3, "Variable not declared");
     }
 }
 | READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>3;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") != 0){
-            CustomError2($<t.id_name>3, "Identifier not an array");
+            CustomError2($<t.lineNumber>3, $<t.id_name>3, "Identifier not an array");
         }
     }
     else{
-        CustomError2($<t.id_name>3, "Array not found");
+        CustomError2($<t.lineNumber>3, $<t.id_name>3, "Array not declared");
     }
 }
 ;
 
 /* WRITE STATEMENT */
-WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
 ;
 
 WRITE_IDENTIFIER_LIST: IDENTIFIER {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.id_name>1, "Identifier not a variable");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Variable not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
 }
 | IDENTIFIER WRITE_MORE_IDENTIFIERS {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.id_name>1, "Identifier not a variable");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Variable not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
 }
 | IDENTIFIER ARRAY_ADD_ON_ID { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") != 0){
-            CustomError2($<t.id_name>1, "Identifier not an array");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Array not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
 }
 | IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") != 0){
-            CustomError2($<t.id_name>1, "Identifier not an array");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Array not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
 }
 | STRING {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "string") != 0){
-        CustomError1("Invalid data type for string");
+        CustomError1($<t.lineNumber>1, "Invalid data type for string");
     }    
 }
 | STRING WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "string") != 0){
-        CustomError1("Invalid data type for string");
+        CustomError1($<t.lineNumber>1, "Invalid data type for string");
     }    
 }
 | INT_NUMBER {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "int") != 0){
-        CustomError1("Invalid data type for integer");
+        CustomError1($<t.lineNumber>1, "Invalid data type for integer");
     }    
 }
 | INT_NUMBER WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "int") != 0){
-        CustomError1("Invalid data type for integer");
+        CustomError1($<t.lineNumber>1, "Invalid data type for integer");
     }    
 }
 | DECIMAL_NUMBER {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "real") != 0){
-        CustomError1("Invalid data type for real number");
+        CustomError1($<t.lineNumber>1, "Invalid data type for real number");
     }    
 }
 | DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "real") != 0){
-        CustomError1("Invalid data type for real number");
+        CustomError1($<t.lineNumber>1, "Invalid data type for real number");
     }    
 }
 | CHARACTER {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "char") != 0){
-        CustomError1("Invalid data type for character");
+        CustomError1($<t.lineNumber>1, "Invalid data type for character");
     }    
 }
 | CHARACTER WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "char") != 0){
-        CustomError1("Invalid data type for character");
+        CustomError1($<t.lineNumber>1, "Invalid data type for character");
     }    
 }
 ;
 
 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.id_name>2, "Identifier not a variable");
+            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>2, "Variable not found");
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
     }
 }
 | COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.id_name>2, "Identifier not a variable");
+            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>2, "Variable not found");
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
     }
 }
 | COMMA IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.id_name>2, "Identifier not a variable");
+            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>2, "Variable not found");
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
     }
 }
 | COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.id_name>2, "Identifier not a variable");
+            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>2, "Variable not found");
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
     }
 }
 | COMMA STRING {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "string") != 0){
-        CustomError1("Invalid data type for string");
+        CustomError1($<t.lineNumber>2, "Invalid data type for string");
     }    
 }
 | COMMA STRING WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "string") != 0){
-        CustomError1("Invalid data type for string");
+        CustomError1($<t.lineNumber>2, "Invalid data type for string");
     }    
 }
 | COMMA INT_NUMBER {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "int") != 0){
-        CustomError1("Invalid data type for integer");
+        CustomError1($<t.lineNumber>2, "Invalid data type for integer");
     }    
 }
 | COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "int") != 0){
-        CustomError1("Invalid data type for integer");
+        CustomError1($<t.lineNumber>2, "Invalid data type for integer");
     }    
 }
 | COMMA DECIMAL_NUMBER {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "real") != 0){
-        CustomError1("Invalid data type for real number");
+        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
     }    
 }
 | COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "real") != 0){
-        CustomError1("Invalid data type for real number");
+        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
     }    
 }
 | COMMA CHARACTER {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "char") != 0){
-        CustomError1("Invalid data type for character");
+        CustomError1($<t.lineNumber>2, "Invalid data type for character");
     }    
 }
 | COMMA CHARACTER WRITE_MORE_IDENTIFIERS {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "char") != 0){
-        CustomError1("Invalid data type for character");
+        CustomError1($<t.lineNumber>2, "Invalid data type for character");
     }    
 }
 ;
@@ -415,6 +442,7 @@ WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER { Symbol* symbol = findSymbol(symbol_ta
 /* ASSIGNMENT */
 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") == 0){
             symbol->isVarSet = 1;
@@ -422,19 +450,20 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
                 // strcpy(symbol->val, $<t.val>4);
             }
             else{
-                CustomError2($<t.id_name>1, "Invalid data type for assignment");
+                CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
             }
         }
         else if(strcmp(symbol->varorarray, "2") == 0){
-            CustomError2($<t.id_name>1, "Identifier not a variable");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Variable not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
 }
 | IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") == 0){
             if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
@@ -446,18 +475,19 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
                 // }
             }
             else{
-                CustomError2($<t.id_name>1, "Invalid data type for assignment");
+                CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
             }
         }
         else if(strcmp(symbol->varorarray, "1") == 0){
-            CustomError2($<t.id_name>1, "Identifier not an array");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Array not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") == 0){
             symbol->isVarSet = 1;
@@ -465,28 +495,30 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
                 // strcpy(symbol->val, $<t.val>4);
             }
             else{
-                CustomError2($<t.id_name>1, "Invalid data type for assignment");
+                CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
             }
         }
         else if(strcmp(symbol->varorarray, "2") == 0){
-            CustomError2($<t.id_name>1, "Identifier not a variable");
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
         }
     }
     else{
-        CustomError2($<t.id_name>1, "Variable not found");
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
 }
 ;
 
 /* CONDITIONAL STATEMENT */
 CONDITIONAL_STATEMENT: IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL ELSE BODY_OF_CONDITIONAL SEMICOLON {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if($<t.data_type>2 != "boolean"){
-        CustomError1("Invalid data type for conditional statement");
+        CustomError1($<t.lineNumber>2, "Invalid data type for conditional statement");
     }
 }
 | IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL SEMICOLON {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if($<t.data_type>2 != "boolean"){
-        CustomError1("Invalid data type for conditional statement");
+        CustomError1($<t.lineNumber>2, "Invalid data type for conditional statement");
     }
 }
 ;
@@ -499,158 +531,235 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 ;
 
 /* EXPRESSION FORMULATION */
-ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); }
-| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("\nCondition - Expr"); } /* Relational operators */
-| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Expr with paren"); } /* Relational operators */
-| BOOLEAN_EXPRESSION_SEQUENCE
+ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    strcpy($<t.data_type>$, "boolean");
+    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+        CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+    }
+ }
+| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    strcpy($<t.data_type>$, "boolean");
+    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+        CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+    }
+ }
+| BOOLEAN_EXPRESSION_SEQUENCE { $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, $<t.data_type>1); }
 ; 
 
-EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); }
+EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
 | EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    // printf("\n%s + %s", $<t.data_type>1, $<t.data_type>3);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "int");    
     } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
+    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "real") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError1("Invalid data type for addition");
+    else if((strcmp($<t.data_type>1, "char") == 0) || 
+            (strcmp($<t.data_type>3, "char")  == 0) || 
+            (strcmp($<t.data_type>1, "string")  == 0) || 
+            (strcmp($<t.data_type>3, "string")  == 0)){
+        printf("%s %s", $<t.data_type>1, $<t.data_type>3);
+        CustomError1($<t.lineNumber>1, "Invalid data type for addition");
     }
     else{
-        CustomError1("Invalid data type for addition");
+        CustomError1($<t.lineNumber>1, "Invalid data type for addition");
     }
 }
 | EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    // printf("\n%s - %s", $<t.data_type>1, $<t.data_type>3);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "int");    
     } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
+    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "real") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError1("Invalid data type for subtraction");
+    else if(
+        (strcmp($<t.data_type>1, "char") == 0) ||
+        (strcmp($<t.data_type>3, "char")  == 0) ||
+        (strcmp($<t.data_type>1, "string")  == 0) ||
+        (strcmp($<t.data_type>3, "string")  == 0)
+    ){
+        CustomError1($<t.lineNumber>1, "Invalid data type for subtraction, found character");
     }
     else{
-        CustomError1("Invalid data type for subtraction");
+        CustomError1($<t.lineNumber>1, "Invalid data type for subtraction");
     }
 }
 | EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    // printf("\n%s * %s", $<t.data_type>1, $<t.data_type>3);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "int");    
     } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
+    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "real") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError1("Invalid data type for multiplication");
+    else if((strcmp($<t.data_type>1, "char") == 0) || 
+            (strcmp($<t.data_type>3, "char")  == 0) || 
+            (strcmp($<t.data_type>1, "string")  == 0) || 
+            (strcmp($<t.data_type>3, "string")  == 0)){
+        CustomError1($<t.lineNumber>1, "Invalid data type for multiplication");
     }
     else{
-        CustomError1("Invalid data type for multiplication");
+        CustomError1($<t.lineNumber>1, "Invalid data type for multiplication");
     }
 }
 | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    // printf("\n%s / %s", $<t.data_type>1, $<t.data_type>3);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "real");    
     } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
+    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "real") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "real");
     }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError1("Invalid data type for division");
+    else if((strcmp($<t.data_type>1, "char") == 0) || 
+            (strcmp($<t.data_type>3, "char")  == 0) || 
+            (strcmp($<t.data_type>1, "string")  == 0) || 
+            (strcmp($<t.data_type>3, "string")  == 0)){
+        CustomError1($<t.lineNumber>1, "Invalid data type for division");
     }
     else{
-        CustomError1("Invalid data type for division");
+        CustomError1($<t.lineNumber>1, "Invalid data type for division");
     }
 }
 | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
+    // printf("\n%s %s", $<t.data_type>1, $<t.data_type>3);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
         strcpy($<t.data_type>$, "int");    
     } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
-        strcpy($<t.data_type>$, "real");
+    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>3, "real") == 0)){
+        CustomError1($<t.lineNumber>1, "Invalid data type for mod");
     }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "real");
+    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>3, "int") == 0)){
+        CustomError1($<t.lineNumber>1, "Invalid data type for mod");
     }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError1("Invalid data type for mod");
+    else if((strcmp($<t.data_type>1, "char") == 0) || 
+            (strcmp($<t.data_type>3, "char")  == 0) || 
+            (strcmp($<t.data_type>1, "string")  == 0) || 
+            (strcmp($<t.data_type>3, "string")  == 0)){
+        CustomError1($<t.lineNumber>1, "Invalid data type for mod");
     }
     else{
-        CustomError1("Invalid data type for mod");
+        CustomError1($<t.lineNumber>1, "Invalid data type for mod");
     }
 }
-| MINUS EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>2); }
-| LPAREN EXPRESSION_SEQUENCE RPAREN { strcpy($<t.data_type>$, $<t.data_type>2); }
+| MINUS EXPRESSION_SEQUENCE { 
+    // printf("\n- %s", $<t.data_type>2);
+    strcpy($<t.data_type>$, $<t.data_type>2); 
+    $<t.lineNumber>$ = $<t.lineNumber>2; 
+}
+| LPAREN EXPRESSION_SEQUENCE RPAREN { 
+    strcpy($<t.data_type>$, $<t.data_type>2); 
+    $<t.lineNumber>$ = $<t.lineNumber>2; 
+}
 ;
 
-BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ { if(printLogs) printf("\nCondition - NOT"); }
-| ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ { if(printLogs) printf("\nCondition - AND"); }
-| ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ { if(printLogs) printf("\nCondition - OR"); }
-| LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN
+BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION { 
+    $<t.lineNumber>$ = $<t.lineNumber>2;
+    strcpy($<t.data_type>$, "boolean");
+    if($<t.data_type>2 != "boolean"){
+        CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+    }
+}
+| ANY_EXPRESSION AND ANY_EXPRESSION {
+    $<t.lineNumber>$ = $<t.lineNumber>1;
+    strcpy($<t.data_type>$, "boolean");
+    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+        CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+    }
+}
+| ANY_EXPRESSION OR ANY_EXPRESSION {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
+    strcpy($<t.data_type>$, "boolean");
+    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+        CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+    }
+}
+| LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN {
+    $<t.lineNumber>$ = $<t.lineNumber>2;
+    strcpy($<t.data_type>$, "boolean");
+    if($<t.data_type>2 != "boolean"){
+        CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+    }
+}
 ;
 
-TERM: IDENTIFIER { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+TERM: IDENTIFIER { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+    strcpy($<t.id_name>$, $<t.id_name>1);
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") == 0){
-            printf("\nVariable < %s > found", $<t.id_name>1);
             if(checkIsVarSet(symbol_table, $<t.id_name>1, symbol_table_index)){
                 strcpy($<t.val>$, symbol->val);
                 strcpy($<t.data_type>$, symbol->data_type);
             }
             else{
-                printf("\nVariable < %s > not set", $<t.id_name>1);
-                CustomError1("Variable not set");
+                strcpy($<t.data_type>$, symbol->data_type);
+                strcpy($<t.data_type>1, symbol->data_type);
+                printf("\n%s", $<t.data_type>1);
+                printf("\n%s", $<t.data_type>$);
+                CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not set");
             }
         }
         else if(strcmp(symbol->varorarray, "2") == 0){
-            printf("\nArray < %s > found", $<t.id_name>1);
-            CustomError1("Array found in expression instead of Variable");
+            // printf("\nArray < %s > found", $<t.id_name>1);
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array found in expression instead of Variable");
         }
     }
     else{
-        printf("\nIdentifier < %s > not found", $<t.id_name>1);
-        CustomError1("Identifier not found");
+        // printf("\nIdentifier < %s > not found", $<t.id_name>1);
+        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
 }
 
 | IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") == 0){
-            printf("\nVariable < %s > found", $<t.id_name>1);
-            CustomError1("Variable found in expression instead of array");
+            // printf("\nVariable < %s > found", $<t.id_name>1);
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable found in expression instead of array");
         }
         else if(strcmp(symbol->varorarray, "2") == 0){
-            printf("\nArray < %s > found", $<t.id_name>1);
+            // printf("\nArray < %s > found", $<t.id_name>1);
             if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
                 strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
                 strcpy($<t.data_type>$, symbol->data_type);
             }
             else{
-                printf("\nArray index not set for < %s >", $<t.id_name>1);
-                CustomError1("Array index not set");
+                // printf("\nArray index not set for < %s >", $<t.id_name>1);
+                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
             }
         }
     }
     else{
-        printf("\nIdentifier < %s > not found", $<t.id_name>1);
-        CustomError1("Identifier not found");
+        // printf("\nIdentifier < %s > not found", $<t.id_name>1);
+        CustomError1($<t.lineNumber>1, "Identifier not found");
     
     }
 }
-| INT_NUMBER { strcpy($<t.val>$, $<t.val>1); strcpy($<t.data_type>$, $<t.data_type>1); }
-| DECIMAL_NUMBER { strcpy($<t.val>$, $<t.val>1); strcpy($<t.data_type>$, $<t.data_type>1); }
+| INT_NUMBER { strcpy($<t.val>$, $<t.val>1); strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+| DECIMAL_NUMBER { strcpy($<t.val>$, $<t.val>1); strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
 ;
 
 STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
@@ -666,14 +775,16 @@ LOOPING_STATEMENT: WHILE_LOOP
 ;
 
 WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON { 
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>2, "boolean") != 0){
-        CustomError1("Invalid data type for conditional statement");
+        CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
     }
 }
 ;
 
 FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
             {
@@ -686,22 +797,23 @@ FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUEN
                 // }
                 }
                 else{
-                    CustomError2($<t.id_name>2, "Invalid data type for for loop initialization");
+                    CustomError2($<t.lineNumber>2, $<t.id_name>2, "Invalid data type for for loop initialization");
                 }
             }
         }
         else{
-            CustomError1("Limits of for loop aren't of the same data type");
+            CustomError1($<t.lineNumber>2, "Limits of for loop aren't of the same data type");
         }
     }
     else{
-        CustomError2($<t.id_name>2, "Array not found");
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not found");
     }
 }
 ;
 
 FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
+    $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
             {
@@ -714,16 +826,16 @@ FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSIO
                 // }
                 }
                 else{
-                    CustomError2($<t.id_name>2, "Invalid data type for for loop initialization");
+                    CustomError2($<t.lineNumber>2, $<t.id_name>2, "Invalid data type for for loop initialization");
                 }
             }
         }
         else{
-            CustomError1("Limits of for loop aren't of the same data type");
+            CustomError1($<t.lineNumber>2, "Limits of for loop aren't of the same data type");
         }
     }
     else{
-        CustomError2($<t.id_name>2, "Array not found");
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
     }
 }
 ;
@@ -749,7 +861,6 @@ void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], c
         strcpy(symbol_table[symbol_table_index]->id_name, new_id_name);
         strcpy(symbol_table[symbol_table_index]->data_type, new_data_type);
         strcpy(symbol_table[symbol_table_index]->varorarray, new_varorarray); 
-        symbol_table_index++;
     }
 }
 
@@ -758,25 +869,24 @@ void addVarName(Symbol** symbol_table, int symbol_table_index, char new_id_name[
     {
         strcpy(symbol_table[symbol_table_index]->id_name, new_id_name);
         strcpy(symbol_table[symbol_table_index]->varorarray, new_varorarray);     
-        symbol_table_index++;
     }
 }
 
 bool check(Symbol** symbol_table, char new_id_name[], int symbol_table_index){
     for(int i = 0; i < symbol_table_index; i++){
         if(strcmp(symbol_table[i]->id_name, new_id_name) == 0){        
-            printf("\nVariable < %s > already declared", new_id_name);
-            printf("Exiting...");
-            exit(1);
+            /* printf("\nVariable < %s > already declared", new_id_name); */
+            /* printf("Exiting..."); */
+            printf("\n\nVariable < %s > already declared", new_id_name);
         }
     }
     return false;
 }
 
 void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[10], int symbol_table_index){
-    printf("enter called");
+    /* printf("enter called"); */
     for(int i = 0; i < symbol_table_index; i++){
-        printf("\n%s", symbol_table[i]->data_type);
+        /* printf("\n%s", symbol_table[i]->data_type); */
         if(strcmp(symbol_table[i]->data_type, "null") == 0){
             strcpy(symbol_table[i]->data_type, data_type);
         }
@@ -820,6 +930,23 @@ bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int sym
     return false;
 }
 
+void printSymbolTable(){
+    printf("\n========\nSymbol Table:\n========");
+    for(int i = 0; i < symbol_table_index; i++){
+        if(strcmp(symbol_table[i]->varorarray, "1") == 0){
+        printf("\nID Name: %s", symbol_table[i]->id_name);
+        printf(", Data Type: %s", symbol_table[i]->data_type);
+        printf(", Value: %s", symbol_table[i]->val);
+        }
+        else if(strcmp(symbol_table[i]->varorarray, "2") == 0){
+            printf("\nArray Name: %s", symbol_table[i]->id_name); 
+            printf(", Data Type: %s", symbol_table[i]->data_type);
+            printf(", Min Index: %s", symbol_table[i]->min_index);
+            printf(", Max Index: %s", symbol_table[i]->max_index);
+        }
+    }
+}
+
 void main()
 {
     for(int i = 0; i < 100; i++){
@@ -840,28 +967,14 @@ void main()
 
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
-        if(printLogs) printf("\nFile not found");
+        /* if(printLogs) printf("\nFile not found"); */
         exit(1);
     }
     else{
-        if(printLogs) printf("\nInput file found, Parsing....");
+        /* if(printLogs) printf("\nInput file found, Parsing...."); */
         yyparse();
     }
-
-    printf("\n========\nSymbol Table:\n========");
-    for(int i = 0; i < symbol_table_index; i++){
-        if(strcmp(symbol_table[i]->varorarray, "1") == 0){
-        printf("\nID Name: %s", symbol_table[i]->id_name);
-        printf(", Data Type: %s", symbol_table[i]->data_type);
-        printf(", Value: %s", symbol_table[i]->val);
-        }
-        else if(strcmp(symbol_table[i]->varorarray, "2") == 0){
-            printf("\nArray Name: %s", symbol_table[i]->id_name);
-            printf(", Data Type: %s", symbol_table[i]->data_type);
-            printf(", Min Index: %s", symbol_table[i]->min_index);
-            printf(", Max Index: %s", symbol_table[i]->max_index);
-        }
-    }
+    printSymbolTable();
 }
 
 int yyerror(){
@@ -869,10 +982,17 @@ int yyerror(){
     return 0;
 }
 
-void CustomError1(char* message){
-    printf("\n\n\n%s", message);
+void CustomError1(int lineNumber, char* message){
+    printf("\n\nLine: %d :: %s", lineNumber, message);
+    /* printSymbolTable(); */
 }
 
-void CustomError2(char* id_name, char* message){
-    printf("\n\n\n%s::> %s", id_name, message);
+void CustomError2(int lineNumber, char* id_name, char* message){
+    printf("\n\nLine: %d :: %s::> %s", lineNumber, id_name, message);
+    /* printSymbolTable(); */
+}
+
+void CustomError3(int lineNumber, char* id_name, char* index,char* message){
+    printf("\n\nLine: %d :: %s[%s] ::> %s", lineNumber, id_name, index, message);
+    /* printSymbolTable(); */
 }

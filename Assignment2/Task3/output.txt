@@ -1,0 +1,138 @@
+[H[2J[3J=======================================
+Test Case 1
+program ArrayAverage;
+var
+  numbers: array[1..5] of Integer;
+  i, a, b, sum : Integer;
+  average : real;
+  c: char;
+begin
+  i := i + i * (i - i) + (i - i) * d;
+  x := (7 < 5) and (6 > 5);
+  a := -3;
+  write("Enter 5 integer values:");
+  c := 'c';
+  for i := 1 to 5 do
+  begin
+    read(numbers[i]);
+  end;
+  for i := a + b to c + d do
+  begin
+    read(numbers[i]);
+  end;
+  sum := 0;
+  for i := 1 to 5 do
+  begin
+    sum := sum + 6 * 7 + numbers[i];
+  end;
+  while number <> 0 do
+  begin
+    digit := number - (number / 10) * 10;
+    
+    if digit <> 0 then
+    begin
+      count:=count+1;
+    end
+    else
+    begin
+      count:=count+0;
+    end;
+    number := number / 10;
+  end;
+  average := sum / 5;
+  write("The sum and average are: "); 
+  write(sum, average);
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+int
+int
+
+Line: 8 :: i::> Variable not set
+int
+int
+
+Line: 8 :: i::> Variable not set
+int
+int
+
+Line: 8 :: i::> Variable not set
+int
+int
+
+Line: 8 :: i::> Variable not set
+int
+int
+
+Line: 8 :: i::> Variable not set
+int
+int
+
+Line: 8 :: i::> Variable not set
+
+Line: 8 :: d::> Variable not declared
+
+Line: 8 :: Invalid data type for multiplication
+
+Line: 9 :: Invalid data type for conditional statement
+
+Line: 9 :: Invalid data type for conditional statement
+
+Line: 9 :: Invalid data type for conditional statement
+
+Line: 9 :: x::> Variable not declared
+int
+int
+
+Line: 17 :: b::> Variable not set
+
+Line: 17 :: d::> Variable not declaredchar int
+
+Line: 17 :: Invalid data type for addition
+
+Line: 17 :: Limits of for loop aren't of the same data type
+
+Line: 24 :: numbers[7] ::> Array index not set
+
+Line: 26 :: number::> Variable not declared
+
+Line: 26 :: Invalid data type for conditional statement
+
+Line: 28 :: number::> Variable not declared
+
+Line: 28 :: number::> Variable not declared
+
+Line: 28 :: digit::> Variable not declared
+
+Line: 30 :: digit::> Variable not declared
+
+Line: 30 :: Invalid data type for conditional statement
+
+Line: 32 :: count::> Variable not declared
+
+Line: 32 :: count::> Variable not declared
+
+Line: 36 :: count::> Variable not declared
+
+Line: 36 :: count::> Variable not declared
+
+Line: 30 :: Invalid data type for conditional statement
+
+Line: 38 :: number::> Variable not declared
+
+Line: 38 :: number::> Variable not declared
+
+
+Parsing completed successfully
+========
+Symbol Table:
+========
+Array Name: numbers, Data Type: int, Min Index: 1, Max Index: 5
+ID Name: sum, Data Type: int, Value: 0
+ID Name: b, Data Type: int, Value: 0
+ID Name: a, Data Type: int, Value: 0
+ID Name: i, Data Type: int, Value: 0
+ID Name: average, Data Type: real, Value: 0
+ID Name: c, Data Type: char, Value: 0
