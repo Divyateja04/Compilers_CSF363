@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
 
 int yylex(void);
-int yyerror();
+int yyerror(const char* s);
 extern FILE *yyin;
 
 int printLogs = 0;
@@ -33,6 +35,192 @@ void addQuadruple(char op1[], char op[], char op2[], char result[])
     strcpy(quad[quadrupleIndex].operand2, op2);
     strcpy(quad[quadrupleIndex].result, result);
     quadrupleIndex++;
+}
+
+struct interpreterSymbolTable{
+    char name[1000][100]; // 1000 variables with each having length of 100
+    int value[1000];
+    size_t currentSize;
+} interpreterSymbolTable[1000];
+
+void initializeInterpreterSymbolTable() {
+    for(int i = 0; i < 1000; i++) {
+        interpreterSymbolTable[i].currentSize = 0;
+    }
+}
+
+void insertIntoInterpreterSymbolTable(char name[], int value) {
+    strcpy(interpreterSymbolTable[0].name[interpreterSymbolTable[0].currentSize], name);
+    interpreterSymbolTable[0].value[interpreterSymbolTable[0].currentSize] = value;
+    interpreterSymbolTable[0].currentSize++;
+}
+
+void updateInterpreterSymbolTable(char name[], int value) {
+    for(int i = 0; i < interpreterSymbolTable[0].currentSize; i++) {
+        if(strcmp(interpreterSymbolTable[0].name[i], name) == 0) {
+            interpreterSymbolTable[0].value[i] = value;
+            return;
+        }
+    }
+    insertIntoInterpreterSymbolTable(name, value);
+}
+
+void printInterpreterSymbolTable() {
+    for(int i = 0; i < interpreterSymbolTable[0].currentSize; i++) {
+        printf("%s = %d\n", interpreterSymbolTable[0].name[i], interpreterSymbolTable[0].value[i]);
+    }
+}
+
+bool isNumber(char name[]) {
+    for(int i = 0; i < strlen(name); i++) {
+        if (!isdigit(name[i])) {
+            return false;
+        }
+    }
+    return true;
+
+}
+
+int getSymbolValueFromInterpreterSymbolTable(char name[]) {
+    if (isNumber(name)) {
+        return atoi(name);
+    }
+
+    if (strcmp(name, "NA") == 0) {
+        return 0;
+    }
+
+    for(int i = 0; i < interpreterSymbolTable[0].currentSize; i++) {
+        if(strcmp(interpreterSymbolTable[0].name[i], name) == 0) {
+            return interpreterSymbolTable[0].value[i];
+        }
+    }
+    
+    // If name is not found, add a new field with default value 0
+    strcpy(interpreterSymbolTable[0].name[interpreterSymbolTable[0].currentSize], name);
+    interpreterSymbolTable[0].value[interpreterSymbolTable[0].currentSize] = 0;
+    interpreterSymbolTable[0].currentSize++;
+    return 0;
+}
+
+void interpreter() {
+    int current_line = -1;
+    while(current_line++ < quadrupleIndex) {
+        printf("Result:%s Operand1:%s Operator:%s Operand2:%s\n", quad[current_line].result, quad[current_line].operand1, quad[current_line].operator, quad[current_line].operand2);
+        printInterpreterSymbolTable();
+
+        // Operator is NA
+        // simple assignment operation e.g. s = 6
+        if (strcmp(quad[current_line].operator, "NA") == 0) {
+            if (strcmp(quad[current_line].operand1, "NA") == 0 && strcmp(quad[current_line].operand2, "NA") == 0) {
+                // Keywords
+                continue;
+            } else if (strcmp(quad[current_line].operand1, "NA") == 0) {
+                updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+            } else if (strcmp(quad[current_line].operand2, "NA") == 0) {
+                updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1));
+            }
+            continue;
+        }
+
+        // For loop
+        if (strcmp(quad[current_line].result, "for_cond_end") == 0 || strcmp(quad[current_line].result, "while_cond_end") == 0) {
+            if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
+                // Extract the true goto line number from the operator string
+                char* true_goto = strstr(quad[current_line].operator, "true: goto ");
+                if (true_goto != NULL) {
+                    true_goto += strlen("true: goto "); // Move the pointer to the start of the line number
+                    current_line = atoi(true_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+                    printf("Going to line %d\n", current_line + 1);
+                }
+            } else {
+                // Extract the false goto line number from the operator string
+                char* false_goto = strstr(quad[current_line].operator, "false: goto ");
+                if (false_goto != NULL) {
+                    false_goto += strlen("false: goto "); // Move the pointer to the start of the line number
+                    current_line = atoi(false_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+                    printf("Going to line %d\n", current_line + 1);
+                }
+            }
+            continue;
+        }
+
+        // If condition
+        if (strcmp(quad[current_line].result, "if_cond_end") == 0) {
+            if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
+                // Extract the true goto line number from the operator string
+                char* true_goto = strstr(quad[current_line].operator, "true: goto ");
+                if (true_goto != NULL) {
+                    true_goto += strlen("true: goto "); // Move the pointer to the start of the line number
+                    current_line = atoi(true_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+                    printf("Going to line %d\n", current_line + 1);
+                }
+            } else {
+                // Extract the false goto line number from the operator string
+                char* false_goto = strstr(quad[current_line].operator, "false: goto ");
+                if (false_goto != NULL) {
+                    false_goto += strlen("false: goto "); // Move the pointer to the start of the line number
+                    current_line = atoi(false_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+                    printf("Going to line %d\n", current_line + 1);
+                }
+            }
+            continue;
+        }
+        
+        if (strcmp(quad[current_line].result, "for_body_end") == 0 || strcmp(quad[current_line].result, "while_body_end") == 0) {
+            char* end_goto = strstr(quad[current_line].operator, "goto ");
+                if (end_goto != NULL) {
+                    end_goto += strlen("goto "); // Move the pointer to the start of the line number
+                    current_line = atoi(end_goto) - 1; // Convert the line number to an integer and subtract 1 because array indices start at 0
+                    printf("Going to line %d\n", current_line + 1);
+                }
+            continue;
+        }
+
+        // For single character trivial operators (operator != NA)
+        if (strlen(quad[current_line].operator) == 1) {
+            switch (quad[current_line].operator[0]) {
+                case '+':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) + getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+                case '-':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) - getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+                case '*':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) * getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+                case '/':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) / getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+                case '%':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) % getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+                case '<':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) < getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+                case '>':
+                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) > getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    break;
+            }
+            continue;
+        }
+        
+        // For multicharacter operator (operator != NA)
+        if (strcmp(quad[current_line].operator, "<>") == 0) {
+            updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) != getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+            continue;
+        }
+        else if (strcmp(quad[current_line].operator, "<=") == 0) {
+            updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) <= getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+            continue;
+        }
+        else if (strcmp(quad[current_line].operator, ">=") == 0) {
+            updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) >= getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+            continue;
+        }
+    }
+
+    printInterpreterSymbolTable();
 }
 
 void displayQuadruple()
@@ -163,6 +351,8 @@ char* popFromStack()
     char data[100];
 }
 
+%define parse.error verbose
+
 %token NL
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE WRITE_LN ARRAY_DOT
 %token PLUS MINUS MULTIPLY DIVIDE MOD 
@@ -243,6 +433,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
     printf("============================\n");
     displayQuadruple();
+    interpreter();
     printf("============================\n");
 }
 ;
@@ -571,7 +762,7 @@ void main()
     }
 }
 
-int yyerror(){
-    printf("\n\n\nSyntax error found");
+int yyerror(const char* s){
+    printf("Error: %s\n", s);
     return 0;
 }
