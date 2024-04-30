@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <math.h>  
-
 
 int yylex(void);
 int yyerror();
@@ -13,52 +10,160 @@ extern FILE *yyin;
 int printLogs = 0;
 int yydebug = 1;
 
-typedef struct Node{
-    char type[10];
-    float val;
-    struct Nodee* child[10];
-    int num_children;
-}Node;
+int count=0;
+int quadrupleIndex=0;
+int tos=-1;
+int temp_char=0;
 
-int symbol_table_index = 0;
-int line_number = 0;
+struct quadruple{
+    char operator[100];
+    char operand1[100];
+    char operand2[100];
+    char result[100];
+} quad[1000];
 
-typedef struct Symbol{
-    char id_name[50];
-    char data_type[10];
-    char val[10];
-    char array[100][100];
-    int isVarSet;
-    int isArraySet[100];
-    char varorarray[2];
-    char min_index[5];
-    char max_index[5];
-}Symbol;
+struct stack {
+    char c[100]; 
+} stac[1000];
 
-Symbol* symbol_table[100];
-void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_data_type[], char new_varorarray[]);
-void addVarName(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_varorarray[]);
-bool check(Symbol** symbol_table, char new_id_name[], int symbol_table_index);
-void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[], int symbol_table_index);
-Symbol* findSymbol(Symbol** symbol_table, char id_name[], int symbol_table_index);
-void updateVal(Symbol* symbol, char val[], char varorarray[]);
-void CustomError(char* message);
-
-
-%}
-
-%union {
-    struct t{
-    char id_name[50];
-    char data_type[10];
-    char val[10];
-    char varorarray[2];
-    char min_index[5];
-    char max_index[5];
-    char operator[3];
-}t;
+void addQuadruple(char op1[], char op[], char op2[], char result[])
+{
+    strcpy(quad[quadrupleIndex].operator, op);
+    strcpy(quad[quadrupleIndex].operand1, op1);
+    strcpy(quad[quadrupleIndex].operand2, op2);
+    strcpy(quad[quadrupleIndex].result, result);
+    quadrupleIndex++;
 }
 
+void displayQuadruple()
+{
+    // This is the part where processing takes place
+    for(int i=0; i<quadrupleIndex; i++){
+        // Check if the current quadruple starts a if condition
+        if(strcmp(quad[i].result, "if_cond_end") == 0){
+            int j = i+1;
+            while(strcmp(quad[j].result, "ifthen_body_end") != 0){
+                // we need to go until the end of if body and 
+                // replace the goto with the actual line number
+                j++;
+            }
+            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].operand2, "false: goto %03d", j+1);
+        }
+        // Check if the current quadruple starts a while condition
+        if(strcmp(quad[i].result, "while_cond_end") == 0){
+            int j = i+1;
+            while(strcmp(quad[j].result, "while_body_end") != 0){
+                // we need to go until the end of while body and 
+                // replace the goto with the actual line number
+                j++;
+            }
+            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to while_cond_start when you reach while_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "while_cond_start") != 0 && k > 0){
+                k--;
+            }
+            sprintf(quad[j].operator, "goto %03d", k);
+        }
+        // Check if the current quadruple starts a for condition
+        if(strcmp(quad[i].result, "for_cond_end") == 0){
+            // First we put the condition in the previous line
+            int j = i-1;
+            strcpy(quad[j].operand1, quad[i].operand1);
+            strcpy(quad[j].operand2, quad[i].operand2);
+            strcpy(quad[j].operator, quad[i].operator);
+            
+            // Then we put the condition in the next line
+            strcpy(quad[i].operand1, quad[j].result);
+
+            j = i+1;
+            while(strcmp(quad[j].result, "for_body_end") != 0){
+                // we need to go until the end of for body and 
+                // replace the goto with the actual line number
+                j++;
+            }
+            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to for_cond_start when you reach for_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "for_cond_start") != 0 && k > 0){
+                k--;
+            }
+            sprintf(quad[j].operator, "goto %03d", k);
+            // Also replace the for_var with the actual name 
+            // of the variable in the for loop
+            int l = i-1;
+            while(strncmp(quad[l].result, "for_var_", 8) != 0 && l > 0){
+                l--;
+            }
+            // we just found the for_var actual name
+            // now we need to replace it with the actual name
+            int m = i;
+            char actual_name[100];
+            sscanf(quad[l].result, "for_var_%s", actual_name);
+            strcpy(quad[l].result, actual_name);
+            while(l < m){
+                if(strcmp(quad[m].operand1, "for_var") == 0){
+                    strcpy(quad[m].operand1, actual_name);
+                }
+                if(strcmp(quad[m].operand2, "for_var") == 0){
+                    strcpy(quad[m].operand2, actual_name);
+                }
+                m--;
+            }
+        }
+    }
+    // =====================================================================================
+    // This is the part where it's printed
+    for(int i=0; i<quadrupleIndex; i++){
+        if(strncmp(quad[i].result, "if_start", 8) == 0
+        || strncmp(quad[i].result, "while_start", 11) == 0
+        || strncmp(quad[i].result, "for_start", 9) == 0
+        ){
+            printf("\n");
+        };
+
+        printf(":%03d:> ", i);
+        printf(" %s ", quad[i].result);
+
+        // Print = only if there's something after that
+        if(strcmp(quad[i].operand1, "NA") != 0
+        || strcmp(quad[i].operator, "NA") != 0
+        || strcmp(quad[i].operand2, "NA") != 0
+        ) printf(" = ");
+
+        if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
+        if(strcmp(quad[i].operator, "NA") != 0) printf(" %s ", quad[i].operator);
+        if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
+        printf(";\n");
+
+        if(strncmp(quad[i].result, "if_end", 11) == 0
+        || strncmp(quad[i].result, "while_end", 9) == 0
+        || strncmp(quad[i].result, "for_end", 7) == 0
+        ){
+            printf("\n");
+        };
+    }
+}
+
+void pushToStack(char *c){
+    strcpy(stac[++tos].c, c);
+}
+
+char* popFromStack()
+{
+    char* c = stac[tos].c;
+    tos=tos-1;
+    return c;
+}
+%}
+%union {
+    char data[100];
+}
+
+%token NL
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE WRITE_LN ARRAY_DOT
 %token PLUS MINUS MULTIPLY DIVIDE MOD 
 %token EQUAL LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
@@ -73,69 +178,36 @@ void CustomError(char* message);
 %left EQUAL 
 %left LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
 %left LPAREN RPAREN
-
-
 %%
-stmt: { if(printLogs) printf("\nParsing started"); } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); }
+stmt: PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); }
 ;
 
 /* TYPE DECLARATIONS */
-DATATYPE:  { if(printLogs) printf("\nDATATYPE found - INTEGER"); } INTEGER { strcpy($<t.data_type>$, $<t.data_type>2); }
-| { if(printLogs) printf("\nDATATYPE found - REAL"); } REAL { strcpy($<t.data_type>$, $<t.data_type>2); }
-| { if(printLogs) printf("\nDATATYPE found - BOOLEAN"); } BOOLEAN { strcpy($<t.data_type>$, $<t.data_type>2); }
-| { if(printLogs) printf("\nDATATYPE found - CHAR"); } CHAR { strcpy($<t.data_type>$, $<t.data_type>2); }
+DATATYPE: INTEGER 
+| REAL 
+| BOOLEAN 
+| CHAR 
 ;
 
-RELOP: EQUAL { strcpy($<t.operator>$, "="); }
-| NOTEQUAL { strcpy($<t.operator>$, "<>"); }
-| LESS { strcpy($<t.operator>$, "<"); }
-| LESSEQUAL { strcpy($<t.operator>$, "<="); }
-| GREATER { strcpy($<t.operator>$, ">"); }
-| GREATEREQUAL { strcpy($<t.operator>$, ">="); }
+RELOP: EQUAL { strcpy($<data>$, "="); }
+| NOTEQUAL { strcpy($<data>$, "!="); }
+| LESS { strcpy($<data>$, "<"); }
+| LESSEQUAL { strcpy($<data>$, "<="); }
+| GREATER { strcpy($<data>$, ">"); }
+| GREATEREQUAL { strcpy($<data>$, ">="); }
 ;
 
 /* ARRAY ADD ON FOR EVERY ID */
-ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { strcpy($<t.val>$, $<t.val>1); } 
+ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
+    char c[100];
+    sprintf(c,"[%s]", $<data>2);
+    strcpy($<data>$, c);
+ } 
 ;
 
-BETWEEN_BRACKETS: INT_NUMBER { if(strcmp($<t.data_type>1, "int") == 0){
-        strcpy($<t.val>$, $<t.val>1);
-    } 
-    else{
-        CustomError("Array index must be integer");
-    } 
-}
-| IDENTIFIER { if((strcpm($<t.data_type>1, "int") == 0) && (checkIsVarSet(symbol_table, $<t.id_name>1, symbol_table_index))){
-        strcpy($<t.val>$, $<t.val>1);
-    } 
-    else{
-        CustomError("Array index must be integer and must be set");
-    } 
-}
-| IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") == 0){
-            printf("\nVariable < %s > found", $<t.id_name>1);
-            CustomError("Variable found in expression instead of array");
-        }
-        else if(strcmp(symbol->varorarray, "2") == 0){
-            printf("\nArray < %s > found", $<t.id_name>1);
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
-                strcpy($<t.data_type>$, symbol->data_type);
-            }
-            else{
-                printf("\nArray index not set for < %s >", $<t.id_name>1);
-                CustomError("Array index not set");
-            }
-        }
-    }
-    else{
-        printf("\nIdentifier < %s > not found", $<t.id_name>1);
-        CustomError("Identifier not found");
-    
-    }
-}
+BETWEEN_BRACKETS: INT_NUMBER
+| IDENTIFIER
+| IDENTIFIER ARRAY_ADD_ON_ID
 
 /* HEAD OF THE PROGRAM - PARSING */
 PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON
@@ -145,7 +217,7 @@ VARIABLE_DECLARATION: VAR DECLARATION_LISTS
 | VAR
 ;
 
-DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS
+DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS {  }
 | DECLARATION_LIST
 ;
 
@@ -154,41 +226,25 @@ DECLARATION_LIST: SINGLE_VARIABLE
 | ARRAY_DECLARATION
 ;
 
-SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.     data_type>3, "1");
-symbol_table_index++;
-}
+SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON
 ;
 
-MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { addVarName(symbol_table, symbol_table_index, $<t.id_name>1, "1");
-    symbol_table_index++;
-enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); }
+MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON
 ;
 
-MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {     
-        addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
-    symbol_table_index++;
-    
-}
-| COMMA IDENTIFIER { addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
-    symbol_table_index++;
-}
+MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS 
+| COMMA IDENTIFIER
 ;
 
-ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
-    if (!check(symbol_table, $<t.id_name>1, symbol_table_index))
-    {
-        strcpy(symbol_table[symbol_table_index]->id_name, $<t.id_name>1);
-        strcpy(symbol_table[symbol_table_index]->data_type, $<t.data_type>10);
-        strcpy(symbol_table[symbol_table_index]->varorarray, "2"); 
-        strcpy(symbol_table[symbol_table_index]->min_index, $<t.val>5); 
-        strcpy(symbol_table[symbol_table_index]->max_index, $<t.val>7); 
-        symbol_table_index++;
-    }
-}
+ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
 ; 
 
 /* MAIN BODY OF THE PROGRAM */
-BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT
+BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
+    printf("============================\n");
+    displayQuadruple();
+    printf("============================\n");
+}
 ;
 
 /* ANY STATEMENTS INSIDE THE PROGRAM */
@@ -205,34 +261,8 @@ STATEMENT: READ_STATEMENT
 ;
 
 /* READ STATEMENT */
-READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") == 0){
-            printf("\nVariable < %s > found", $<t.id_name>3);
-        }
-        else if(strcmp(symbol->varorarray, "2") == 0){
-            printf("\nArray < %s > found", $<t.id_name>3);
-        }
-    }
-    else{
-        printf("\nVariable < %s > not found", $<t.id_name>3);
-        CustomError("Variable Not Found");
-    }
-}
-| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") == 0){
-            printf("\nVariable < %s > found", $<t.id_name>3);
-        }
-        else if(strcmp(symbol->varorarray, "2") == 0){
-            printf("\nArray < %s > found", $<t.id_name>3);
-        }
-    }
-    else{
-        printf("\nVariable < %s > not found", $<t.id_name>3);
-        CustomError("Variable Not Found");
-    }
-}
+READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
+| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
 ;
 
 /* WRITE STATEMENT */
@@ -269,16 +299,42 @@ WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
 ;
 
 /* ASSIGNMENT */
-ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON
-| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON
-| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
-    updateVal(symbol, $<t.val>4, "1");
+ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    addQuadruple("NA", "NA", $<data>4, $<data>1);
+}
+| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    addQuadruple("NA", "NA", $<data>4, $<data>1);
+}
+| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
+    addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
 ;
 
 /* CONDITIONAL STATEMENT */
-CONDITIONAL_STATEMENT: IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL ELSE BODY_OF_CONDITIONAL SEMICOLON
-| IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL SEMICOLON
+CONDITIONAL_STATEMENT: IF {
+    addQuadruple("NA", "NA", "NA", "if_start"); 
+} ANY_EXPRESSION {
+    addQuadruple(popFromStack(), "NA", "NA", "if_cond_end");
+} AFTER_IF_ANY_EXPR 
+;
+
+AFTER_IF_ANY_EXPR: THEN {
+    addQuadruple("NA", "NA", "NA", "ifthen_body_start"); 
+} BODY_OF_CONDITIONAL {
+    addQuadruple("NA", "NA", "NA", "ifthen_body_end"); 
+} AFTER_IF_THEN_BODY 
+;
+
+AFTER_IF_THEN_BODY: ELSE {
+    addQuadruple("NA", "NA", "NA", "else_body_start"); 
+} BODY_OF_CONDITIONAL {
+    addQuadruple("NA", "NA", "NA", "else_body_end"); 
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "if_end"); 
+}
+| SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "if_end"); 
+}
 ;
 
 BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END
@@ -289,158 +345,136 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 ;
 
 /* EXPRESSION FORMULATION */
-ANY_EXPRESSION: EXPRESSION_SEQUENCE 
-| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("\nCondition - Expr"); } /* Relational operators */
-| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Expr with paren"); } /* Relational operators */
-| BOOLEAN_EXPRESSION_SEQUENCE
+ANY_EXPRESSION: EXPRESSION_SEQUENCE  /* I think we can ignore this because it will anyways call the other one */
+| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), $<data>2, popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
+} 
+| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), $<data>3, popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
+}
+| BOOLEAN_EXPRESSION_SEQUENCE /* I think we can ignore this because it will anyways call the other one */
 ; 
 
-EXPRESSION_SEQUENCE: TERM
-| EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "int");    
-    } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError("Invalid data type for addition");
-    }
-    else{
-        CustomError("Invalid data type for addition");
-    }
+EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being pushed onto stack anyways */
+| EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "+", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
 }
-| EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "int");    
-    } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError("Invalid data type for subtraction");
-    }
-    else{
-        CustomError("Invalid data type for subtraction");
-    }
+| EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "-", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
 }
-| EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "int");    
-    } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError("Invalid data type for multiplication");
-    }
-    else{
-        CustomError("Invalid data type for multiplication");
-    }
+| EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "*", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
 }
-| EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "int");    
-    } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError("Invalid data type for division");
-    }
-    else{
-        CustomError("Invalid data type for division");
-    }
+| EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "/", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
 }
-| EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE { 
-    if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "int");    
-    } 
-    else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "real") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "real");
-    }
-    else if((strcmp($<t.data_type>1, "char") == 0) || (strcmp($<t.data_type>2, "char")  == 0) || (strcmp($<t.data_type>2, "string")  == 0) || (strcmp($<t.data_type>2, "string")  == 0)){
-        CustomError("Invalid data type for mod");
-    }
-    else{
-        CustomError("Invalid data type for mod");
-    }
+| EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "%", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
 }
-| MINUS EXPRESSION_SEQUENCE
-| LPAREN EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Closing Paren with paren"); }
+| MINUS EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple("NA", "-", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
+}
+| LPAREN EXPRESSION_SEQUENCE RPAREN /* I think we can ignore this because it will anyways call the other one */
 ;
 
-BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ { if(printLogs) printf("\nCondition - NOT"); }
-| ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ { if(printLogs) printf("\nCondition - AND"); }
-| ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ { if(printLogs) printf("\nCondition - OR"); }
+BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple("NA", "!", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
+}
+| ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "&", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
+}
+| ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple(popFromStack(), "|", popFromStack(), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
+}
 | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN
 ;
 
-TERM: IDENTIFIER { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") == 0){
-            printf("\nVariable < %s > found", $<t.id_name>1);
-            if(checkIsVarSet(symbol_table, $<t.id_name>1, symbol_table_index)){
-                strcpy($<t.val>$, symbol->val);
-                strcpy($<t.data_type>$, symbol->data_type);
-            }
-            else{
-                printf("\nVariable < %s > not set", $<t.id_name>1);
-                CustomError("Variable not set");
-            }
-        }
-        else if(strcmp(symbol->varorarray, "2") == 0){
-            printf("\nArray < %s > found", $<t.id_name>1);
-            CustomError("Array found in expression instead of Variable");
-        }
-    }
-    else{
-        printf("\nIdentifier < %s > not found", $<t.id_name>1);
-        CustomError("Identifier not found");
-    }
+TERM: IDENTIFIER {
+    char c[100]; 
+    sprintf(c,"%s",$<data>1); 
+    pushToStack(c);
 }
-
-| IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") == 0){
-            printf("\nVariable < %s > found", $<t.id_name>1);
-            CustomError("Variable found in expression instead of array");
-        }
-        else if(strcmp(symbol->varorarray, "2") == 0){
-            printf("\nArray < %s > found", $<t.id_name>1);
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
-                strcpy($<t.data_type>$, symbol->data_type);
-            }
-            else{
-                printf("\nArray index not set for < %s >", $<t.id_name>1);
-                CustomError("Array index not set");
-            }
-        }
-    }
-    else{
-        printf("\nIdentifier < %s > not found", $<t.id_name>1);
-        CustomError("Identifier not found");
-    
-    }
+| IDENTIFIER ARRAY_ADD_ON_ID {
+    char c[100]; 
+    sprintf(c,"%s%s",$<data>1, $<data>2); 
+    pushToStack(c);
 }
-| INT_NUMBER { strcpy($<t.val>$, $<t.val>1); strcpy($<t.data_type>$, $<t.data_type>1); }
-| DECIMAL_NUMBER { strcpy($<t.val>$, $<t.val>1); strcpy($<t.data_type>$, $<t.data_type>1); }
+| INT_NUMBER {
+    char c[100]; 
+    sprintf(c,"%d", atoi($<data>1)); 
+    pushToStack(c);
+}
+| DECIMAL_NUMBER {
+    char c[100]; 
+    sprintf(c,"%f", atof($<data>1)); 
+    pushToStack(c);
+}
 ;
 
 STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
@@ -451,18 +485,63 @@ STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
 
 /* LOOPING STATEMENT */
 LOOPING_STATEMENT: WHILE_LOOP
-| FOR_LOOP_TO
-| FOR_LOOP_DOWNTO
+| FOR_LOOP
 ;
 
-WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON
+WHILE_LOOP: WHILE {
+    addQuadruple("NA", "NA", "NA", "while_start");
+    addQuadruple("NA", "NA", "NA", "while_cond_start");
+} ANY_EXPRESSION DO {
+    addQuadruple(popFromStack(), "NA", "NA", "while_cond_end");
+    addQuadruple("NA", "NA", "NA", "while_body_start");
+} BODY_OF_LOOP {
+    addQuadruple("NA", "NA", "NA", "while_body_end");
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "while_end");
+}
 ;
 
-FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON
+FOR_LOOP: FOR {
+    addQuadruple("NA", "NA", "NA", "for_start");
+} IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
+    // Convert for i := 0 into quadruple where it says
+    // for_i = 0
+    char temp[100];
+    sprintf(temp, "for_var_%s", $<data>3);
+    addQuadruple(popFromStack(), "NA", "NA", temp);
+    addQuadruple("NA", "NA", "NA", "for_cond_start");
+} AFTER_FOR_CONDITION
 ;
 
-FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON
-;
+AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
+    // Add a condition which says for_var <= $<data>1
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple("NA", "NA", "NA", str1);
+    addQuadruple("for_var", "<=", $<data>2, "for_cond_end");
+} DO {
+    addQuadruple("NA", "NA", "NA", "for_body_start");
+} BODY_OF_LOOP {
+    addQuadruple("NA", "NA", "NA", "for_body_end");
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "for_end");
+}
+| DOWNTO EXPRESSION_SEQUENCE {
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple("NA", "NA", "NA", str1);
+    addQuadruple("for_var", ">=", $<data>2, "for_cond_end");
+} DO {
+    addQuadruple("NA", "NA", "NA", "for_body_start");
+} BODY_OF_LOOP {
+    addQuadruple("NA", "NA", "NA", "for_body_end");
+} SEMICOLON {
+    addQuadruple("NA", "NA", "NA", "for_end");
+}
 
 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END
 ;
@@ -477,138 +556,10 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 | CONDITIONAL_STATEMENT
 ;
 
+
 %%
-
-void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_data_type[], char new_varorarray[]){
-    if (!check(symbol_table, new_id_name, symbol_table_index))
-    {
-        strcpy(symbol_table[symbol_table_index]->id_name, new_id_name);
-        strcpy(symbol_table[symbol_table_index]->data_type, new_data_type);
-        strcpy(symbol_table[symbol_table_index]->varorarray, new_varorarray); 
-        symbol_table_index++;
-    }
-}
-
-void addVarName(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_varorarray[]){
-    if(!check(symbol_table, new_id_name, symbol_table_index))
-    {
-        strcpy(symbol_table[symbol_table_index]->id_name, new_id_name);
-        strcpy(symbol_table[symbol_table_index]->varorarray, new_varorarray);     
-        symbol_table_index++;
-    }
-}
-
-bool check(Symbol** symbol_table, char new_id_name[], int symbol_table_index){
-    for(int i = 0; i < symbol_table_index; i++){
-        if(strcmp(symbol_table[i]->id_name, new_id_name) == 0){        
-            printf("\nVariable < %s > already declared", new_id_name);
-            printf("Exiting...");
-            exit(1);
-        }
-    }
-    return false;
-}
-
-void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[10], int symbol_table_index){
-    printf("enter called");
-    for(int i = 0; i < symbol_table_index; i++){
-        printf("\n%s", symbol_table[i]->data_type);
-        if(strcmp(symbol_table[i]->data_type, "null") == 0){
-            strcpy(symbol_table[i]->data_type, data_type);
-        }
-    }
-}
-
-Symbol* findSymbol(Symbol** symbol_table, char id_name[], int symbol_table_index){
-    for(int i = 0; i < symbol_table_index; i++){
-        if(strcmp(symbol_table[i]->id_name, id_name) == 0){
-            return symbol_table[i];
-        }
-    }
-    return NULL;
-}
-
-void updateVal(Symbol* symbol, char val[], char varorarray[]){
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, varorarray) == 0){
-            printf("\n%s < %s > found", varorarray, symbol->id_name);
-            strcpy(symbol->val, val);
-        }
-        else{
-            printf("\n%s < %s > found", varorarray, symbol->id_name);
-        }
-    }
-    else{
-        printf("\nVariable < %s > not found", symbol->id_name);
-        exit(1);
-    }
-}
-
-char* performOperation(char op[], Symbol* operand1, Symbol* operand2){
-    if((strcmp(operand1->data_type, "int") == 0) && (strcmp(operand2->data_type, "int") == 0)){
-    if(strcmp(op, "+") == 0){
-        return itoa((atoi(operand1->val) + atoi(operand2->val)));
-    }
-    else if(strcmp(op, "-") == 0){
-        return itoa((atoi(operand1->val) - atoi(operand2->val)));
-    }
-    else if(strcmp(op, "*") == 0){
-        return itoa((atoi(operand1->val) * atoi(operand2->val)));
-    }
-    else if(strcmp(op, "/") == 0){
-        return itoa((atoi(operand1->val) / atoi(operand2->val)));
-    }
-    else if(strcmp(op, "%") == 0){
-        return itoa((atoi(operand1->val) % atoi(operand2->val)));
-    }}
-}
-
-bool checkIsVarSet(Symbol** symbol_table, char id_name[], int symbol_table_index){
-    for(int i = 0; i < symbol_table_index; i++){
-        if(strcmp(symbol_table[i]->id_name, id_name) == 0){
-            if(symbol_table[i]->isVarSet == 1){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-    }
-    return false;
-}
-
-bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int symbol_table_index){
-    for(int i = 0; i < symbol_table_index; i++){
-        if(strcmp(symbol_table[i]->id_name, id_name) == 0){
-            if(symbol_table[i]->isArraySet[arr_ind] == 1){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-    }
-    return false;
-}
-
 void main()
 {
-    for(int i = 0; i < 100; i++){
-        symbol_table[i] = (Symbol *)malloc(sizeof(Symbol));
-        strcpy(symbol_table[i]->id_name, "");
-        strcpy(symbol_table[i]->data_type, "null");
-        strcpy(symbol_table[i]->val, "0");
-        strcpy(symbol_table[i]->varorarray, "0");
-        strcpy(symbol_table[i]->min_index, "null");
-        strcpy(symbol_table[i]->max_index, "null");
-        symbol_table[i]->isVarSet = 0;
-        memset(symbol_table[i]->isArraySet, 0, 100*sizeof(int));
-        for(int j = 0; j < 100; j++){
-            strcpy(symbol_table[i]->array[j], "null");
-        }
-        
-    }
-
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
         if(printLogs) printf("\nFile not found");
@@ -618,29 +569,9 @@ void main()
         if(printLogs) printf("\nInput file found, Parsing....");
         yyparse();
     }
-
-    printf("\n========\nSymbol Table:\n========");
-    for(int i = 0; i < symbol_table_index; i++){
-        if(strcmp(symbol_table[i]->varorarray, "1") == 0){
-        printf("\nID Name: %s", symbol_table[i]->id_name);
-        printf(", Data Type: %s", symbol_table[i]->data_type);
-        printf(", Value: %s", symbol_table[i]->val);
-        }
-        else if(strcmp(symbol_table[i]->varorarray, "2") == 0){
-            printf("\nArray Name: %s", symbol_table[i]->id_name);
-            printf(", Data Type: %s", symbol_table[i]->data_type);
-            printf(", Min Index: %s", symbol_table[i]->min_index);
-            printf(", Max Index: %s", symbol_table[i]->max_index);
-        }
-    }
 }
 
 int yyerror(){
     printf("\n\n\nSyntax error found");
     return 0;
-}
-
-void CustomError(char* message){
-    printf("\n\n\n%s", message);
-    exit(1);
 }

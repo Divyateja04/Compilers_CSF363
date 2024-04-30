@@ -16,7 +16,7 @@ int tos=-1;
 int temp_char=0;
 
 struct quadruple{
-    char operator[50];
+    char operator[100];
     char operand1[100];
     char operand2[100];
     char result[100];
@@ -49,6 +49,12 @@ void displayQuadruple()
             }
             sprintf(quad[i].operator, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to if_end when you reach ifthen_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "if_end") != 0 && k > 0){
+                k++;
+            }
+            sprintf(quad[j].operator, "goto %03d", k);
         }
         // Check if the current quadruple starts a while condition
         if(strcmp(quad[i].result, "while_cond_end") == 0){
@@ -101,12 +107,15 @@ void displayQuadruple()
             // we just found the for_var actual name
             // now we need to replace it with the actual name
             int m = i;
+            char actual_name[100];
+            sscanf(quad[l].result, "for_var_%s", actual_name);
+            strcpy(quad[l].result, actual_name);
             while(l < m){
                 if(strcmp(quad[m].operand1, "for_var") == 0){
-                    strcpy(quad[m].operand1, quad[l].result);
+                    strcpy(quad[m].operand1, actual_name);
                 }
                 if(strcmp(quad[m].operand2, "for_var") == 0){
-                    strcpy(quad[m].operand2, quad[l].result);
+                    strcpy(quad[m].operand2, actual_name);
                 }
                 m--;
             }
@@ -521,6 +530,7 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
+    addQuadruple("for_var", "+", "1", "for_var");
     addQuadruple("NA", "NA", "NA", "for_body_end");
 } SEMICOLON {
     addQuadruple("NA", "NA", "NA", "for_end");
