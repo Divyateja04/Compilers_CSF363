@@ -49,6 +49,12 @@ void displayQuadruple()
             }
             sprintf(quad[i].operator, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to if_end when you reach ifthen_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "if_end") != 0 && k > 0){
+                k++;
+            }
+            sprintf(quad[j].operator, "goto %03d", k);
         }
         // Check if the current quadruple starts a while condition
         if(strcmp(quad[i].result, "while_cond_end") == 0){
@@ -524,6 +530,7 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
+    addQuadruple("for_var", "+", "1", "for_var");
     addQuadruple("NA", "NA", "NA", "for_body_end");
 } SEMICOLON {
     addQuadruple("NA", "NA", "NA", "for_end");
