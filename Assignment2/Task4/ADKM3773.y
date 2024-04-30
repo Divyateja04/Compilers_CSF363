@@ -101,12 +101,15 @@ void displayQuadruple()
             // we just found the for_var actual name
             // now we need to replace it with the actual name
             int m = i;
+            char actual_name[100];
+            sscanf(quad[l].result, "for_var_%s", actual_name);
+            strcpy(quad[l].result, actual_name);
             while(l < m){
                 if(strcmp(quad[m].operand1, "for_var") == 0){
-                    strcpy(quad[m].operand1, quad[l].result);
+                    strcpy(quad[m].operand1, actual_name);
                 }
                 if(strcmp(quad[m].operand2, "for_var") == 0){
-                    strcpy(quad[m].operand2, quad[l].result);
+                    strcpy(quad[m].operand2, actual_name);
                 }
                 m--;
             }
