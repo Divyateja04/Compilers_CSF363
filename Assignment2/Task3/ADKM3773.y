@@ -665,13 +665,67 @@ LOOPING_STATEMENT: WHILE_LOOP
 | FOR_LOOP_DOWNTO
 ;
 
-WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON
+WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON { 
+    if(strcmp($<t.data_type>2, "boolean") != 0){
+        CustomError1("Invalid data type for conditional statement");
+    }
+}
 ;
 
-FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON
+FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
+    if(symbol != NULL){
+        if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
+            {
+                if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
+                // if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                //     strcpy(symbol->array[atoi($<t.val>2)], $<t.val>5);
+                // }
+                // else{
+                //     CustomError2($<t.id_name>1, "Array index not set");
+                // }
+                }
+                else{
+                    CustomError2($<t.id_name>2, "Invalid data type for for loop initialization");
+                }
+            }
+        }
+        else{
+            CustomError1("Limits of for loop aren't of the same data type");
+        }
+    }
+    else{
+        CustomError2($<t.id_name>2, "Array not found");
+    }
+}
 ;
 
-FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON
+FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
+    if(symbol != NULL){
+        if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
+            {
+                if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
+                // if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                //     strcpy(symbol->array[atoi($<t.val>2)], $<t.val>5);
+                // }
+                // else{
+                //     CustomError2($<t.id_name>1, "Array index not set");
+                // }
+                }
+                else{
+                    CustomError2($<t.id_name>2, "Invalid data type for for loop initialization");
+                }
+            }
+        }
+        else{
+            CustomError1("Limits of for loop aren't of the same data type");
+        }
+    }
+    else{
+        CustomError2($<t.id_name>2, "Array not found");
+    }
+}
 ;
 
 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END
