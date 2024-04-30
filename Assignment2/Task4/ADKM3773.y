@@ -59,6 +59,12 @@ void displayQuadruple()
             }
             sprintf(quad[i].operator, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to while_cond_start when you reach while_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "while_cond_start") != 0 && k > 0){
+                k--;
+            }
+            sprintf(quad[j].operator, "goto %03d", k);
         }
     }
     // This is the part where it's printed
