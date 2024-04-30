@@ -37,7 +37,7 @@ void addQuadruple(char op1[], char op[], char op2[], char result[])
 
 void displayQuadruple()
 {
-    // This is the part where processing for loops takes place
+    // This is the part where processing takes place
     for(int i=0; i<quadrupleIndex; i++){
         // Check if the current quadruple starts a if condition
         if(strcmp(quad[i].result, "if_cond_end") == 0){
@@ -50,6 +50,7 @@ void displayQuadruple()
             sprintf(quad[i].operator, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
         }
+        // Check if the current quadruple starts a while condition
         if(strcmp(quad[i].result, "while_cond_end") == 0){
             int j = i+1;
             while(strcmp(quad[j].result, "while_body_end") != 0){
@@ -66,7 +67,52 @@ void displayQuadruple()
             }
             sprintf(quad[j].operator, "goto %03d", k);
         }
+        // Check if the current quadruple starts a for condition
+        if(strcmp(quad[i].result, "for_cond_end") == 0){
+            // First we put the condition in the previous line
+            int j = i-1;
+            strcpy(quad[j].operand1, quad[i].operand1);
+            strcpy(quad[j].operand2, quad[i].operand2);
+            strcpy(quad[j].operator, quad[i].operator);
+            
+            // Then we put the condition in the next line
+            strcpy(quad[i].operand1, quad[j].result);
+
+            j = i+1;
+            while(strcmp(quad[j].result, "for_body_end") != 0){
+                // we need to go until the end of for body and 
+                // replace the goto with the actual line number
+                j++;
+            }
+            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to for_cond_start when you reach for_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "for_cond_start") != 0 && k > 0){
+                k--;
+            }
+            sprintf(quad[j].operator, "goto %03d", k);
+            // Also replace the for_var with the actual name 
+            // of the variable in the for loop
+            int l = i-1;
+            while(strncmp(quad[l].result, "for_var_", 8) != 0 && l > 0){
+                l--;
+            }
+            // we just found the for_var actual name
+            // now we need to replace it with the actual name
+            int m = i;
+            while(l < m){
+                if(strcmp(quad[m].operand1, "for_var") == 0){
+                    strcpy(quad[m].operand1, quad[l].result);
+                }
+                if(strcmp(quad[m].operand2, "for_var") == 0){
+                    strcpy(quad[m].operand2, quad[l].result);
+                }
+                m--;
+            }
+        }
     }
+    // =====================================================================================
     // This is the part where it's printed
     for(int i=0; i<quadrupleIndex; i++){
         if(strncmp(quad[i].result, "if_start", 8) == 0
@@ -454,16 +500,24 @@ WHILE_LOOP: WHILE {
 
 FOR_LOOP: FOR {
     addQuadruple("NA", "NA", "NA", "for_start");
-} IDENTIFIER COLON EQUAL {
-    addQuadruple("NA", "NA", "NA", "for_assn_start");
-} EXPRESSION_SEQUENCE {
-    addQuadruple(popFromStack(), "NA", "NA", $<data>3);
+} IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
+    // Convert for i := 0 into quadruple where it says
+    // for_i = 0
+    char temp[100];
+    sprintf(temp, "for_var_%s", $<data>3);
+    addQuadruple(popFromStack(), "NA", "NA", temp);
+    addQuadruple("NA", "NA", "NA", "for_cond_start");
 } AFTER_FOR_CONDITION
 ;
 
 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
-    addQuadruple(popFromStack(), "NA", "NA", $<data>1);
-    addQuadruple("NA", "NA", "NA", "for_assn_end");
+    // Add a condition which says for_var <= $<data>1
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple("NA", "NA", "NA", str1);
+    addQuadruple("for_var", "<=", $<data>2, "for_cond_end");
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
@@ -472,8 +526,12 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
     addQuadruple("NA", "NA", "NA", "for_end");
 }
 | DOWNTO EXPRESSION_SEQUENCE {
-    addQuadruple(popFromStack(), "NA", "NA", $<data>1);
-    addQuadruple("NA", "NA", "NA", "for_assn_end");
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple("NA", "NA", "NA", str1);
+    addQuadruple("for_var", ">=", $<data>2, "for_cond_end");
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {

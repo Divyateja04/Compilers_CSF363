@@ -14,6 +14,10 @@ begin
   begin
     read(numbers[i]);
   end;
+  for i := a + b to c + d do
+  begin
+    read(numbers[i]);
+  end;
   sum := 0;
   for i := 1 to 5 do
   begin
