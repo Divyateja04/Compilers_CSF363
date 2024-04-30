@@ -559,7 +559,7 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); }
 }
 | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE { 
     if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "int") == 0)){
-        strcpy($<t.data_type>$, "int");    
+        strcpy($<t.data_type>$, "real");    
     } 
     else if((strcmp($<t.data_type>1, "int") == 0) && (strcmp($<t.data_type>2, "real") == 0)){
         strcpy($<t.data_type>$, "real");
