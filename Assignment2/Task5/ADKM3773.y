@@ -147,9 +147,12 @@ void interpreter() {
           << " Operator:" << quad[current_line].op 
           << " Operand2:" << quad[current_line].operand2 
           << std::endl;
-        printIST();
+        // printIST();
 
-        if (strcmp(quad[current_line].result, "write") == 0 || strcmp(quad[current_line].result, "writeln") == 0) {
+        if (
+            strcmp(quad[current_line].result, "write") == 0 || 
+            strcmp(quad[current_line].result, "writeln") == 0
+            ) {
             auto stack = writeQueue.front();
             writeQueue.pop();
 
@@ -574,7 +577,7 @@ STATEMENT: READ_STATEMENT
 ;
 
 /* READ STATEMENT */
-READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
+READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON { addQuadruple("NA", "NA", "NA", "read"); }
 | READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
 ;
 
