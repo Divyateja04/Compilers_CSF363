@@ -25,13 +25,6 @@ void printTree(struct Treenode *);
 
 struct Treenode *head;
 
-// %union { 
-// 	struct var_name { 
-// 		char name[100]; 
-// 		Treenode* nd;
-// 	} node_obj; 
-// }
-
 int symbol_table_index = 0;
 
 typedef struct Symbol{
@@ -477,12 +470,47 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
 }
 ;
 
-WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
+WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { 
+    $<t.lineNumber>$ = $<t.lineNumber>3; 
+    $<t.nd>$ = initNode("WriteStatement");
+    $<t.nd>1 = initNode("WRITE");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+}
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { 
+    $<t.lineNumber>$ = $<t.lineNumber>3;
+    $<t.nd>$ = initNode("WriteStatement");
+    $<t.nd>1 = initNode("WRITE_LN");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+}
 ;
 
-WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER { $<t.lineNumber>$ = $<t.lineNumber>1; }
-| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST { $<t.lineNumber>$ = $<t.lineNumber>1; }
+WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER { 
+    $<t.lineNumber>$ = $<t.lineNumber>1; 
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST { 
+    $<t.lineNumber>$ = $<t.lineNumber>1; 
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+}
 ;
 
 WRITE_IDENTIFIER: IDENTIFIER {
@@ -506,7 +534,6 @@ WRITE_IDENTIFIER: IDENTIFIER {
     $<t.nd>$ = initNode("WriteIdentifierList");
     $<t.nd>1 = initNode("IDENTIFIER");
     addNodetoTree($<t.nd>$,$<t.nd>1);
-    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
