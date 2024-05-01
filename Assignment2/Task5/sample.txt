@@ -1,6 +1,6 @@
 program ArrayAverage;
 var
-  numbers: array[1..5] of Integer; // TODO: size matters
+  numbers: array[1..5] of char; // TODO: size matters
   i, a, b: Integer;
   average : real;
   c: char;
@@ -10,9 +10,11 @@ begin
   average := 0.5;
   c := 'c';
 
-  numbers[1] := 1;
+  numbers[1] := c;
+  numbers[2] := 5;
 
-  // writeln("Test output: ", i, " ", i, " ", average, " ", c);
+  writeln("Test output: ", i, " ", i, " ", average, " ", c);
+  writeln(numbers[1], " ", numbers[2]);
   // writeln("Test output: ", i, " ", i, " ", average, " ", c);
   // // read(a);
   // writeln("Input: ", a);

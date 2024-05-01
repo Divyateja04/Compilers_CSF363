@@ -156,7 +156,26 @@ void interpreter() {
             strcmp(quad[current_line].result, "write") == 0 || 
             strcmp(quad[current_line].result, "writeln") == 0
             ) {
-                if (interpreterSymbolTable.find(quad[current_line].operand1) != interpreterSymbolTable.end()) {
+                char array_name[100];
+                char array_index[100];
+                if (sscanf(quad[current_line].operand1, "%[^[][%[^]]]", array_name, array_index) == 2) {
+                    ArrayType array = std::get<ArrayType>(getIST(array_name));
+
+                    int index = 0;
+                    if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
+                        index = std::get<int>(interpreterSymbolTable[array_index]);
+                    } else {
+                        index = std::stoi(array_index);
+                    }
+
+                    std::visit(overloaded {
+                        [](const int& i) { std::cout << i; },
+                        [](const float& f) { std::cout << f; },
+                        [](const char& c) { std::cout << c; },
+                        [](const bool& b) { std::cout << std::boolalpha << b; },
+                        [](const ArrayType& a) { printArray(a); }
+                    }, array.array[index - array.offset]);
+                } else if (interpreterSymbolTable.find(quad[current_line].operand1) != interpreterSymbolTable.end()) {
                     std::visit(overloaded {
                         [](int i) { std::cout << i; },
                         [](float f) { std::cout << f; },
@@ -197,23 +216,16 @@ void interpreter() {
                 char array_name[100];
                 char array_index[100];
                 if (sscanf(quad[current_line].result, "%[^[][%[^]]]", array_name, array_index) == 2) {
-                    std::cerr << array_name << " " << array_index << std::endl;
-                    std::cerr << "Array assignment" << std::endl;
                     ArrayType array = std::get<ArrayType>(getIST(array_name));
 
                     int index = 0;
                     if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
-                        std::cerr << "Found index in IST" << std::endl;
                         index = std::get<int>(interpreterSymbolTable[array_index]);
                     } else {
-                        std::cerr << "Didnt find index in IST" << std::endl;
                         index = std::stoi(array_index);
                     }
 
-                    std::cerr << "Index: " << index << std::endl;
-
                     if (interpreterSymbolTable.find(quad[current_line].operand2) != interpreterSymbolTable.end()) {
-                        std::cerr << "Found in IST" << std::endl;
                         auto temp = interpreterSymbolTable[quad[current_line].operand2];
 
                         std::variant<int, float, char, bool> downcasted_temp;
@@ -232,12 +244,8 @@ void interpreter() {
 
                         array.array[index - array.offset] = downcasted_temp;
                     } else {
-                        std::cerr << "Not found in IST" << std::endl;
-                        std::cerr << "Value: " << std::stoi(quad[current_line].operand2) << std::endl;
                         array.array[index - array.offset] = std::stoi(quad[current_line].operand2);
-                        std::cerr << index - array.offset << std::endl;
                     }
-                    std::cerr << "Value has been set" << std::endl;
 
                     updateIST(array_name, array);
                 } else if (sscanf(quad[current_line].operand2, "'%c'", &char_result) == 1) {
@@ -678,7 +686,7 @@ WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER
 ;
 
 WRITE_IDENTIFIER: IDENTIFIER { addQuadruple($<data>1, "NA", "NA", "write"); }
-| IDENTIFIER ARRAY_ADD_ON_ID { addQuadruple($<data>1, "NA", "NA", "write"); }
+| IDENTIFIER ARRAY_ADD_ON_ID { char temp[100]; sprintf(temp, "%s%s", $<data>1, $<data>2); addQuadruple(temp, "NA", "NA", "write"); }
 | STRING { addQuadruple($<data>1, "NA", "NA", "write"); }
 | INT_NUMBER { addQuadruple($<data>1, "NA", "NA", "write"); }
 | DECIMAL_NUMBER { addQuadruple($<data>1, "NA", "NA", "write"); }
