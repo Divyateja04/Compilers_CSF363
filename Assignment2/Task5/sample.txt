@@ -1,13 +1,13 @@
 program ArrayAverage;
 var
   numbers: array[1..5] of Integer;
-  i, a, b, sum, d : Integer;
+  i, a, b: Integer;
   average : real;
   c: char;
 begin
   i := 100;
-  a := -3;
   average := 0.5;
+  c := 'c';
 
   write("Enter 5 integer values:");
 

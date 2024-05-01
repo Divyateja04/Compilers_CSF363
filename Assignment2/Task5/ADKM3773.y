@@ -30,6 +30,12 @@ struct stack {
     char c[100]; 
 } stac[1000];
 
+template <typename T>
+struct Array {
+    std::vector<T> array;
+    int offset;
+};
+
 void addQuadruple(char op1[], char op[], char op2[], char result[])
 {
     strcpy(quad[quadrupleIndex].op, op);
@@ -39,13 +45,16 @@ void addQuadruple(char op1[], char op[], char op2[], char result[])
     quadrupleIndex++;
 }
 
-std::unordered_map<std::string, std::variant<int, float, char, bool, std::vector<int>>> interpreterSymbolTable;
+using VariantType = std::variant<int, float, char, bool>;
+using ArrayType = struct Array<VariantType>;
 
-void updateIST(std::string symbol, std::variant<int, float, char, bool, std::vector<int>> value) {
+std::unordered_map<std::string, std::variant<int, float, char, bool, ArrayType>> interpreterSymbolTable;
+
+void updateIST(std::string symbol, std::variant<int, float, char, bool, ArrayType> value) {
     interpreterSymbolTable[symbol] = value;
 }
 
-std::variant<int, float, char, bool, std::vector<int>> getIST(std::string symbol) {
+std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
     if (symbol == "NA") {
         return 0; // TODO: deal with float case
     }
@@ -73,6 +82,8 @@ std::variant<int, float, char, bool, std::vector<int>> getIST(std::string symbol
     }
 }
 
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 void printIST() {
     for (auto& it: interpreterSymbolTable) {
         std::cout << "Symbol: " << it.first << " Value: ";
@@ -86,10 +97,15 @@ void printIST() {
                 std::cout << arg;
             else if constexpr (std::is_same_v<T, bool>)
                 std::cout << std::boolalpha << arg;
-            else if constexpr (std::is_same_v<T, std::vector<int>>) {
+            else if constexpr (std::is_same_v<T, ArrayType>) {
                 std::cout << "[";
-                for (const auto& elem : arg) {
-                    std::cout << elem << " ";
+                for (const auto& elem : arg.array) {
+                    std::visit(overloaded {
+                        [](const int& i) { std::cout << i << " "; },
+                        [](const float& f) { std::cout << f << " "; },
+                        [](const char& c) { std::cout << c << " "; },
+                        [](const bool& b) { std::cout << std::boolalpha << b << " "; }
+                    }, elem);
                 }
                 std::cout << "]";
             }
@@ -114,6 +130,8 @@ T performOperation(char op, T operand1, T operand2) {
         case '>': return operand1 > operand2;
         case '=': return operand1 == operand2;
     }
+
+    return T();
 }
 
 void interpreter() {
@@ -129,9 +147,19 @@ void interpreter() {
                 // Keywords
                 continue;
             } else if (strcmp(quad[current_line].operand1, "NA") == 0) {
-                updateIST(quad[current_line].result, getIST(quad[current_line].operand2));
+                char char_result;
+                if (sscanf(quad[current_line].operand2, "'%c'", &char_result) == 1) {
+                    updateIST(quad[current_line].result, char_result);
+                } else {
+                    updateIST(quad[current_line].result, getIST(quad[current_line].operand2));
+                }
             } else if (strcmp(quad[current_line].operand2, "NA") == 0) {
-                updateIST(quad[current_line].result, getIST(quad[current_line].operand1));
+                char char_result;
+                if (sscanf(quad[current_line].operand1, "'%c'", &char_result) == 1) {
+                    updateIST(quad[current_line].result, char_result);
+                } else {
+                    updateIST(quad[current_line].result, getIST(quad[current_line].operand1));
+                }
             }
             continue;
         }
@@ -449,7 +477,15 @@ DECLARATION_LIST: SINGLE_VARIABLE
 | ARRAY_DECLARATION
 ;
 
-SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON
+SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { 
+    if (strcmp($<data>3, "Integer") == 0) {
+        updateIST($<data>1, 0);
+    } else if (strcmp($<data>3, "real") == 0) {
+        updateIST($<data>1, 0.0f);
+    } else if (strcmp($<data>3, "char") == 0) {
+        updateIST($<data>1, '@');
+    }
+ }
 ;
 
 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON
@@ -459,8 +495,23 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS
 | COMMA IDENTIFIER
 ;
 
-ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
-; 
+ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
+    Array<VariantType> array;
+    array.offset = std::stoi($<data>7) - std::stoi($<data>5); // Storing the size of array
+    std::variant<int, float, char, bool, Array<VariantType>> arrayType = array;
+    if ($<data>9 == "Integer") {
+        array.array = std::vector<VariantType>(array.offset, 0);
+    } else if ($<data>9 == "real") {
+        array.array = std::vector<VariantType>(array.offset, 0.0f);
+    } else if ($<data>9 == "char") {
+        array.array = std::vector<VariantType>(array.offset, '\0');
+    } else if ($<data>9 == "bool") {
+        array.array = std::vector<VariantType>(array.offset, false);
+    }
+    array.offset = std::stoi($<data>7);
+    updateIST($<data>1, arrayType);
+}
+;
 
 /* MAIN BODY OF THE PROGRAM */
 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
@@ -530,7 +581,9 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    char temp[100];
+    sprintf(temp, "'%s'", $<data>4);
+    addQuadruple(temp, "NA", "NA", $<data>1);
 }
 ;
 
