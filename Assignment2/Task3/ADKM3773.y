@@ -1178,7 +1178,6 @@ FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         symbol->isVarSet = 1;
-        printf("%s--------- %s", $<t.data_type>5, $<t.data_type>2);
         if((strcmp($<t.data_type>5, "int") != 0) || (strcmp($<t.data_type>2, "int") != 0)){
             CustomError1($<t.lineNumber>2, "Invalid data type for forloop initialization");
         }
@@ -1229,92 +1228,6 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
     $<t.nd>5 = initNode("SEMICOLON");
     addNodetoTree($<t.nd>$,$<t.nd>5);
 }
-
-/* FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        symbol->isVarSet = 1;
-        if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
-            {
-                if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
-                    strcpy(symbol->val, $<t.val>5);
-                }
-                else{
-                    CustomError2($<t.lineNumber>2, $<t.id_name>2, "Invalid data type for forloop initialization");
-                }
-            }
-        }
-        else{
-            CustomError1($<t.lineNumber>2, "Limits of for loop aren't of the same data type");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
-    }
-    $<t.nd>$ = initNode("ForLoopTo");
-    $<t.nd>1 = initNode("FOR");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    $<t.nd>3 = initNode("COLON");
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-    $<t.nd>4 = initNode("EQUAL");
-    addNodetoTree($<t.nd>$,$<t.nd>4);
-    addNodetoTree($<t.nd>$,$<t.nd>5);
-    $<t.nd>6 = initNode("TO");
-    addNodetoTree($<t.nd>$,$<t.nd>6);
-    addNodetoTree($<t.nd>$,$<t.nd>7);
-    $<t.nd>8 = initNode("DO");
-    addNodetoTree($<t.nd>$,$<t.nd>8);
-    addNodetoTree($<t.nd>$,$<t.nd>9);
-    $<t.nd>10 = initNode("SEMICOLON");
-    addNodetoTree($<t.nd>$,$<t.nd>10);
-}
-;
-
-FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        symbol->isVarSet = 1;
-        if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
-            {
-                if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
-                    strcpy(symbol->val, $<t.val>5);
-                }
-                else{
-                    CustomError2($<t.lineNumber>2, $<t.id_name>2, "Invalid data type for forloop initialization");
-                }
-            }
-        }
-        else{
-            CustomError1($<t.lineNumber>2, "Limits of for loop aren't of the same data type");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
-    }
-    $<t.nd>$ = initNode("ForLoopDownTo");
-    $<t.nd>1 = initNode("FOR");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    $<t.nd>3 = initNode("COLON");
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-    $<t.nd>4 = initNode("EQUAL");
-    addNodetoTree($<t.nd>$,$<t.nd>4);
-    addNodetoTree($<t.nd>$,$<t.nd>5);
-    $<t.nd>6 = initNode("DOWNTO");
-    addNodetoTree($<t.nd>$,$<t.nd>6);
-    addNodetoTree($<t.nd>$,$<t.nd>7);
-    $<t.nd>8 = initNode("DO");
-    addNodetoTree($<t.nd>$,$<t.nd>8);
-    addNodetoTree($<t.nd>$,$<t.nd>9);
-    $<t.nd>10 = initNode("SEMICOLON");
-    addNodetoTree($<t.nd>$,$<t.nd>10);
-}
-; */
 
 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END {
     $<t.nd>$ = initNode("BodyOfLoop");
@@ -1525,7 +1438,6 @@ void main()
         /* if(printLogs) printf("\nInput file found, Parsing...."); */
         yyparse();
     }
-    printSymbolTable();
     printTree(head);
 
     FILE *file_ptr;
