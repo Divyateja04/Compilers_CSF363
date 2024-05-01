@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define CHAR_UPPER_LIMIT 100
+#define CHAR_UPPER_LIMIT_SMOL 5
+
 int yylex(void);
 int yyerror();
 extern FILE *yyin;
@@ -16,9 +19,9 @@ int tos=-1;
 int temp_char=0;
 
 struct symbolTable{
-    char name[100];
-    char type[100];
-    char value[100];
+    char name[CHAR_UPPER_LIMIT];
+    char type[CHAR_UPPER_LIMIT];
+    char value[CHAR_UPPER_LIMIT];
 } symtab[1000];
 
 void addSymTab(char name[], char type[]){
@@ -52,14 +55,14 @@ char* getSymTabType(char name[]){
 }
 
 struct quadruple{
-    char operator[100];
-    char operand1[100];
-    char operand2[100];
-    char result[100];
+    char operator[CHAR_UPPER_LIMIT];
+    char operand1[CHAR_UPPER_LIMIT];
+    char operand2[CHAR_UPPER_LIMIT];
+    char result[CHAR_UPPER_LIMIT];
 } quad[1000];
 
 struct stack {
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
 } stac[1000];
 
 void addQuadruple(char op1[], char op[], char op2[], char result[])
@@ -143,7 +146,7 @@ void displayQuadruple()
             // we just found the for_var actual name
             // now we need to replace it with the actual name
             int m = k;
-            char actual_name[100];
+            char actual_name[CHAR_UPPER_LIMIT];
             sscanf(quad[l].result, "for_var_%s", actual_name);
             strcpy(quad[l].result, actual_name);
             while(m <= j){
@@ -213,7 +216,7 @@ char* topOfStack()
 %}
 
 %union {
-    char data[100];
+    char data[CHAR_UPPER_LIMIT];
 }
 
 %token NL
@@ -252,8 +255,8 @@ RELOP: EQUAL { strcpy($<data>$, "="); }
 
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple($<data>2, "*", getSymTabType(popFromStack()), str1);
@@ -296,9 +299,9 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS
 
 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
 {
-    char arrayName[100];
+    char arrayName[CHAR_UPPER_LIMIT];
     sprintf(arrayName, "%s", $<data>1);
-    char arrayType[100];
+    char arrayType[CHAR_UPPER_LIMIT];
     sprintf(arrayType, "%s", $<data>10);
     addSymTab(arrayName, arrayType);
 }
@@ -330,7 +333,7 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
 | READ LPAREN IDENTIFIER {
     // If we just find id, we push it to stack
     // This is popped out from stack in the ARRAY_ADD_ON_ID
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
     sprintf(c,"%s",$<data>3); 
     pushToStack(c);
 } ARRAY_ADD_ON_ID RPAREN SEMICOLON
@@ -349,7 +352,7 @@ WRITE_IDENTIFIER: IDENTIFIER
 | IDENTIFIER {
     // If we just find id, we push it to stack
     // This is popped out from stack in the ARRAY_ADD_ON_ID
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
     sprintf(c,"%s",$<data>1); 
     pushToStack(c);
 } ARRAY_ADD_ON_ID
@@ -366,31 +369,31 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
 | IDENTIFIER {
     // If we just find id, we push it to stack
     // This is popped out from stack in the ARRAY_ADD_ON_ID
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
     sprintf(c,"%s",$<data>1); 
     pushToStack(c);
 } ARRAY_ADD_ON_ID {
     // Create a new temp variable to store the address of the array + the index
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
 
     // First we add a quadruple for the address of the array
     // we calculate the exact address
-    char storeAddress[100];
+    char storeAddress[CHAR_UPPER_LIMIT];
     sprintf(storeAddress, "&%s", $<data>1);
     addQuadruple(popFromStack(), "+", storeAddress, str1);
     pushToStack(str1);
 } COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    char temp[100];
+    char temp[CHAR_UPPER_LIMIT];
     sprintf(temp, "%s", popFromStack());
-    char temp2[100];
+    char temp2[CHAR_UPPER_LIMIT];
     sprintf(temp2, "*%s", popFromStack());
     addQuadruple(temp, "NA", "NA", temp2);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
-    char temp[100];
+    char temp[CHAR_UPPER_LIMIT];
     sprintf(temp, "'%s'", $<data>4);
     addQuadruple(temp, "NA", "NA", $<data>1);
 }
@@ -433,8 +436,8 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 /* EXPRESSION FORMULATION */
 ANY_EXPRESSION: EXPRESSION_SEQUENCE  /* I think we can ignore this because it will anyways call the other one */
 | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), $<data>2, popFromStack(), str1);
@@ -442,8 +445,8 @@ ANY_EXPRESSION: EXPRESSION_SEQUENCE  /* I think we can ignore this because it wi
     strcpy($<data>$, str1);
 } 
 | LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), $<data>3, popFromStack(), str1);
@@ -455,8 +458,8 @@ ANY_EXPRESSION: EXPRESSION_SEQUENCE  /* I think we can ignore this because it wi
 
 EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being pushed onto stack anyways */
 | EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "+", popFromStack(), str1);
@@ -464,8 +467,8 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "-", popFromStack(), str1);
@@ -473,8 +476,8 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     printf("|%s|", topOfStack());
@@ -483,8 +486,8 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "/", popFromStack(), str1);
@@ -492,8 +495,8 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     strcpy($<data>$, str1);
 }
 | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "%", popFromStack(), str1);
@@ -501,8 +504,8 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     strcpy($<data>$, str1);
 }
 | MINUS EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("NA", "-", popFromStack(), str1);
@@ -513,8 +516,8 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
 ;
 
 BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("NA", "!", popFromStack(), str1);
@@ -522,8 +525,8 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     strcpy($<data>$, str1);
 }
 | ANY_EXPRESSION AND ANY_EXPRESSION /* a AND b */ {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "&", popFromStack(), str1);
@@ -531,8 +534,8 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     strcpy($<data>$, str1);
 }
 | ANY_EXPRESSION OR ANY_EXPRESSION /* a OR b */ {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple(popFromStack(), "|", popFromStack(), str1);
@@ -543,26 +546,26 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
 ;
 
 TERM: IDENTIFIER {
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
     sprintf(c,"%s",$<data>1); 
     pushToStack(c);
 }
 | IDENTIFIER {
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
     sprintf(c,"%s",$<data>1); 
     pushToStack(c);
 } ARRAY_ADD_ON_ID { 
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
-    char storeAddress[100];
+    char storeAddress[CHAR_UPPER_LIMIT];
     sprintf(storeAddress, "&%s", $<data>1);
     // First we add a quadruple for the address of the array
     // we calculate the exact address and store it in a temporary variable -> str1
     addQuadruple(popFromStack(), "+", storeAddress, str1);
     // Then we add another quadruple to get the value at that address
-    char str2[5]="t";
+    char str2[CHAR_UPPER_LIMIT_SMOL]="t";
     sprintf(str,"%d", temp_char++);
     strcat(str2, str);
     sprintf(str, "*%s", str1);
@@ -571,12 +574,12 @@ TERM: IDENTIFIER {
     strcpy($<data>$, str2);
 }
 | INT_NUMBER {
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
     sprintf(c,"%d", atoi($<data>1)); 
     pushToStack(c);
 }
 | DECIMAL_NUMBER {
-    char c[100]; 
+    char c[CHAR_UPPER_LIMIT]; 
     sprintf(c,"%f", atof($<data>1)); 
     pushToStack(c);
 }
@@ -611,7 +614,7 @@ FOR_LOOP: FOR {
 } IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
     // Convert for i := 0 into quadruple where it says
     // for_i = 0
-    char temp[100];
+    char temp[CHAR_UPPER_LIMIT];
     sprintf(temp, "for_var_%s", $<data>3);
     addQuadruple(popFromStack(), "NA", "NA", temp);
     addQuadruple("NA", "NA", "NA", "for_cond_start");
@@ -620,8 +623,8 @@ FOR_LOOP: FOR {
 
 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
     // Add a condition which says for_var <= $<data>1
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("NA", "NA", "NA", str1);
@@ -635,8 +638,8 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
     addQuadruple("NA", "NA", "NA", "for_end");
 }
 | DOWNTO EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[CHAR_UPPER_LIMIT_SMOL];
+    char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("NA", "NA", "NA", str1);
@@ -661,7 +664,6 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 | ASSIGNMENT_STATEMENT
 | CONDITIONAL_STATEMENT
 ;
-
 
 %%
 void main()
