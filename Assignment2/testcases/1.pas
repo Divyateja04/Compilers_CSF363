@@ -11,6 +11,8 @@ begin
 
   writeln("Test output: ", i, " ", i, " ", average, " ", c);
   writeln("Test output: ", i, " ", i, " ", average, " ", c);
+  read(a);
+  writeln("Input: ", a);
 
   if i > 0 then
   begin
@@ -22,12 +24,14 @@ begin
     a := a + i;
     average := average / 2;
   end;
+  writeln("Average: ", average);
 
   while a > 0 do
   begin
     a := a - 1;
     average := average * 2;
   end;
+  writeln("Average: ", average);
 
   a := -1;
   if a < 0 then
