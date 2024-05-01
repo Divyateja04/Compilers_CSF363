@@ -216,7 +216,7 @@ char* topOfStack()
 %}
 
 %union {
-    char data[CHAR_UPPER_LIMIT];
+    char data[100];
 }
 
 %token NL
@@ -666,17 +666,13 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 ;
 
 %%
-void main()
+void main(int argc, char *argv[])
 {
-    yyin = fopen("sample.txt", "r");
-    if(yyin == NULL){
-        if(printLogs) printf("\nFile not found");
-        exit(1);
-    }
-    else{
-        if(printLogs) printf("\nInput file found, Parsing....");
-        yyparse();
-    }
+    char* filename;
+    filename=argv[1];
+    printf("\n");
+    yyin = fopen(filename, "r");
+    yyparse();
 }
 
 int yyerror(){

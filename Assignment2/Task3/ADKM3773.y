@@ -1396,7 +1396,7 @@ void printSymbolTable(){
     }
 }
 
-void main()
+void main(int argc, char *argv[])
 {
     for(int i = 0; i < 100; i++){
         symbol_table[i] = (Symbol *)malloc(sizeof(Symbol));
@@ -1414,15 +1414,12 @@ void main()
         
     }
 
-    yyin = fopen("sample.txt", "r");
-    if(yyin == NULL){
-        /* if(printLogs) printf("\nFile not found"); */
-        exit(1);
-    }
-    else{
-        /* if(printLogs) printf("\nInput file found, Parsing...."); */
-        yyparse();
-    }
+    char* filename;
+    filename=argv[1];
+    printf("\n");
+    yyin = fopen(filename, "r");
+    yyparse();
+    
     printSymbolTable();
     printTree(head);
 
