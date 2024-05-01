@@ -1,65 +1,37 @@
 program ArrayAverage;
 var
   numbers: array[1..5] of Integer;
-  i, a, b, d, sum, digit, number, count : Integer;
+  i, a, b: Integer;
   average : real;
-  x: boolean;
   c: char;
 begin
   i := 100;
-  a := -3;
-  count := 0;
-  number := 0;
-  digit := 0.0;
-
-  numbers[3] := 7;
-
-  write("Enter 5 integer values:", i, i);
-
+  average := 0.5;
   c := 'c';
-  write(c);
 
-  for i := 1 to 5 do
+  writeln("Test output: ", i, " ", i, " ", average, " ", c);
+  writeln("Test output: ", i, " ", i, " ", average, " ", c);
+
+  if i > 0 then
   begin
-    read(numbers[i]);
+    a := 0;
   end;
 
   for i := 1 to 5 do
   begin
-    write(numbers[i]);
+    a := a + i;
+    average := average / 2;
   end;
 
-  sum := 0;
-  for i := 1 to 5 do
+  while a > 0 do
   begin
-    sum := sum + 6 * 7 + numbers[i];
+    a := a - 1;
+    average := average * 2;
   end;
 
-  if x then
+  a := -1;
+  if a < 0 then
   begin
-    a := numbers[i] + 9;
-    write("x is true");
-  end
-  else
-  begin
-    write("x is false");
-    a := numbers[i] - 9;
+    a := 0;
   end;
-
-
-  while number <> 0 do
-  begin
-    digit := number - (number / 10) * 10;
-    
-    if digit <> 0 then
-    begin
-      count:=count+1;
-    end;
-
-    number := number / 10;
-  end;
-
-  average := sum / 5;
-  write("The sum and average are: "); 
-  write(sum, average);
 end.

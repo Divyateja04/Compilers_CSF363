@@ -11,7 +11,8 @@ begin
   average := 0.5;
   c := 'c';
 
-  write("Enter 5 integer values:", i, i);
+  writeln("Test output: ", i, " ", i, " ", average, " ", c);
+  writeln("Test output: ", i, " ", i, " ", average, " ", c);
 
   if i > 0 then
   begin
@@ -44,58 +45,61 @@ Compiling the program in gcc
 :000:>  i  =  100 ;
 :001:>  average  =  0.5 ;
 :002:>  c  =  'c' ;
-:003:>  write ;
+:003:>  writeln ;
+:004:>  writeln ;
 
-:004:>  if_start ;
-:005:>  t0  =  i  >  0 ;
-:006:>  if_cond_end  =  t0  true: goto 007  false: goto 010 ;
-:007:>  ifthen_body_start ;
-:008:>  a  =  0 ;
-:009:>  ifthen_body_end  =  goto 010 ;
-:010:>  if_end ;
-
-
-:011:>  for_start ;
-:012:>  i  =  1 ;
-:013:>  for_cond_start ;
-:014:>  t1  =  i  <=  5 ;
-:015:>  for_cond_end  =  t1  true: goto 016  false: goto 023 ;
-:016:>  for_body_start ;
-:017:>  t2  =  a  +  i ;
-:018:>  a  =  t2 ;
-:019:>  t3  =  average  /  2 ;
-:020:>  average  =  t3 ;
-:021:>  i  =  i  +  1 ;
-:022:>  for_body_end  =  goto 013 ;
-:023:>  for_end ;
+:005:>  if_start ;
+:006:>  t0  =  i  >  0 ;
+:007:>  if_cond_end  =  t0  true: goto 008  false: goto 011 ;
+:008:>  ifthen_body_start ;
+:009:>  a  =  0 ;
+:010:>  ifthen_body_end  =  goto 011 ;
+:011:>  if_end ;
 
 
-:024:>  while_start ;
-:025:>  while_cond_start ;
-:026:>  t4  =  a  >  0 ;
-:027:>  while_cond_end  =  t4  true: goto 028  false: goto 034 ;
-:028:>  while_body_start ;
-:029:>  t5  =  a  -  1 ;
-:030:>  a  =  t5 ;
-:031:>  t6  =  average  *  2 ;
-:032:>  average  =  t6 ;
-:033:>  while_body_end  =  goto 025 ;
-:034:>  while_end ;
+:012:>  for_start ;
+:013:>  i  =  1 ;
+:014:>  for_cond_start ;
+:015:>  t1  =  i  <=  5 ;
+:016:>  for_cond_end  =  t1  true: goto 017  false: goto 024 ;
+:017:>  for_body_start ;
+:018:>  t2  =  a  +  i ;
+:019:>  a  =  t2 ;
+:020:>  t3  =  average  /  2 ;
+:021:>  average  =  t3 ;
+:022:>  i  =  i  +  1 ;
+:023:>  for_body_end  =  goto 014 ;
+:024:>  for_end ;
 
-:035:>  t7  =  -  1 ;
-:036:>  a  =  t7 ;
 
-:037:>  if_start ;
-:038:>  t8  =  a  <  0 ;
-:039:>  if_cond_end  =  t8  true: goto 040  false: goto 043 ;
-:040:>  ifthen_body_start ;
-:041:>  a  =  0 ;
-:042:>  ifthen_body_end  =  goto 043 ;
-:043:>  if_end ;
+:025:>  while_start ;
+:026:>  while_cond_start ;
+:027:>  t4  =  a  >  0 ;
+:028:>  while_cond_end  =  t4  true: goto 029  false: goto 035 ;
+:029:>  while_body_start ;
+:030:>  t5  =  a  -  1 ;
+:031:>  a  =  t5 ;
+:032:>  t6  =  average  *  2 ;
+:033:>  average  =  t6 ;
+:034:>  while_body_end  =  goto 026 ;
+:035:>  while_end ;
+
+:036:>  t7  =  -  1 ;
+:037:>  a  =  t7 ;
+
+:038:>  if_start ;
+:039:>  t8  =  a  <  0 ;
+:040:>  if_cond_end  =  t8  true: goto 041  false: goto 044 ;
+:041:>  ifthen_body_start ;
+:042:>  a  =  0 ;
+:043:>  ifthen_body_end  =  goto 044 ;
+:044:>  if_end ;
 
 
 ============================
-100Enter 5 integer values:
+Test output: 100 100 0.5 
+Test output: 100 100 0.5 
+
 ============================
 
 

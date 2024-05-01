@@ -136,7 +136,8 @@ T performOperation(char op, T operand1, T operand2) {
     return T();
 }
 
-std::queue<std::string> writeQueue;
+std::queue<std::vector<std::string>> writeQueue;
+std::vector<std::string> writeVector;
 
 void interpreter() {
     int current_line = -1;
@@ -146,27 +147,30 @@ void interpreter() {
           << " Operator:" << quad[current_line].op 
           << " Operand2:" << quad[current_line].operand2 
           << std::endl;
-        // printIST();
+        printIST();
 
-        if (strcmp(quad[current_line].result, "write") == 0) {
-            std::cerr << writeQueue.size() << ", " << writeQueue.front() << std::endl;
-            while (!writeQueue.empty() && strcmp(writeQueue.front().c_str(), "\x1D") != 0) {
-                if (interpreterSymbolTable.find(writeQueue.front()) != interpreterSymbolTable.end()) {
+        if (strcmp(quad[current_line].result, "write") == 0 || strcmp(quad[current_line].result, "writeln") == 0) {
+            auto stack = writeQueue.front();
+            writeQueue.pop();
+
+            for(auto it = stack.rbegin(); it != stack.rend(); ++it) {
+                if (interpreterSymbolTable.find(*it) != interpreterSymbolTable.end()) {
                     std::visit(overloaded {
                         [](const int& i) { std::cout << i; },
                         [](const float& f) { std::cout << f; },
                         [](const char& c) { std::cout << c; },
                         [](const bool& b) { std::cout << std::boolalpha << b; },
                         [](const ArrayType& a) { printArray(a); }
-                    }, interpreterSymbolTable[writeQueue.front()]);
+                    }, interpreterSymbolTable[*it]);
                 } else {
-                    std::cout << writeQueue.front();
+                    std::cout << *it;
                 }
-                writeQueue.pop();
             }
-            if (!writeQueue.empty()) {
-                writeQueue.pop();
+
+            if (strcmp(quad[current_line].result, "writeln") == 0) {
+                std::cout << std::endl;
             }
+
             continue;
         }
 
@@ -575,36 +579,36 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
 ;
 
 /* WRITE STATEMENT */
-WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push("\x1D"); addQuadruple("NA", "NA", "NA", "write"); }
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push("\x1D"); addQuadruple("NA", "NA", "NA", "writeln"); }
+WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push(writeVector); writeVector.clear(); addQuadruple("NA", "NA", "NA", "write"); }
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push(writeVector); writeVector.clear(); addQuadruple("NA", "NA", "NA", "writeln"); }
 ;
 // char op1[], char op[], char op2[], char result[]
 WRITE_IDENTIFIER_LIST: IDENTIFIER
-| IDENTIFIER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
-| IDENTIFIER ARRAY_ADD_ON_ID { writeQueue.push($1); }
-| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
-| STRING { writeQueue.push($1); }
-| STRING WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
-| INT_NUMBER { writeQueue.push($1); }
-| INT_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
-| DECIMAL_NUMBER { writeQueue.push($1); }
-| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
-| CHARACTER { writeQueue.push($1); }
-| CHARACTER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
+| IDENTIFIER WRITE_MORE_IDENTIFIERS { writeVector.push_back($1); }
+| IDENTIFIER ARRAY_ADD_ON_ID { writeVector.push_back($1); }
+| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { writeVector.push_back($1); }
+| STRING { writeVector.push_back($1); }
+| STRING WRITE_MORE_IDENTIFIERS { writeVector.push_back($1); }
+| INT_NUMBER { writeVector.push_back($1); }
+| INT_NUMBER WRITE_MORE_IDENTIFIERS { writeVector.push_back($1); }
+| DECIMAL_NUMBER { writeVector.push_back($1); }
+| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { writeVector.push_back($1); }
+| CHARACTER { writeVector.push_back($1); }
+| CHARACTER WRITE_MORE_IDENTIFIERS { writeVector.push_back($1); }
 ;
 
 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
-| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID { writeQueue.push($2); }
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS  { writeQueue.push($2); }
-| COMMA STRING { writeQueue.push($2); }
-| COMMA STRING WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
-| COMMA INT_NUMBER { writeQueue.push($2); }
-| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
-| COMMA DECIMAL_NUMBER { writeQueue.push($2); }
-| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
-| COMMA CHARACTER { writeQueue.push($2); }
-| COMMA CHARACTER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
+| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { writeVector.push_back($2); }
+| COMMA IDENTIFIER ARRAY_ADD_ON_ID { writeVector.push_back($2); }
+| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS  { writeVector.push_back($2); }
+| COMMA STRING { writeVector.push_back($2); }
+| COMMA STRING WRITE_MORE_IDENTIFIERS { writeVector.push_back($2); }
+| COMMA INT_NUMBER { writeVector.push_back($2); }
+| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS { writeVector.push_back($2); }
+| COMMA DECIMAL_NUMBER { writeVector.push_back($2); }
+| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { writeVector.push_back($2); }
+| COMMA CHARACTER { writeVector.push_back($2); }
+| COMMA CHARACTER WRITE_MORE_IDENTIFIERS { writeVector.push_back($2); }
 ;
 
 /* ASSIGNMENT */

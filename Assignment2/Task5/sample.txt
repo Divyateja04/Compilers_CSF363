@@ -9,7 +9,8 @@ begin
   average := 0.5;
   c := 'c';
 
-  write("Enter 5 integer values:", i, i);
+  writeln("Test output: ", i, " ", i, " ", average, " ", c);
+  writeln("Test output: ", i, " ", i, " ", average, " ", c);
 
   if i > 0 then
   begin
