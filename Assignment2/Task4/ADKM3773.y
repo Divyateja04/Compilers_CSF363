@@ -15,6 +15,42 @@ int quadrupleIndex=0;
 int tos=-1;
 int temp_char=0;
 
+struct symbolTable{
+    char name[100];
+    char type[100];
+    char value[100];
+} symtab[1000];
+
+void addSymTab(char name[], char type[]){
+    // Check if the variable already exists
+    for(int i=0; i<count; i++){
+        if(strcmp(symtab[i].name, name) == 0){
+            exit(1);
+        }
+    }
+    strcpy(symtab[count].name, name);
+    strcpy(symtab[count].type, type);
+    count++;
+}
+
+void displaySymTab(){
+    printf("\n\n\nSymbol Table\n");
+    printf("====================================\n");
+    for(int i=0; i<count; i++){
+        printf("%s\t%s\n", symtab[i].name, symtab[i].type);
+    }
+    printf("====================================\n");
+}
+
+char* getSymTabType(char name[]){
+    for(int i=0; i<count; i++){
+        if(strcmp(symtab[i].name, name) == 0){
+            return symtab[i].type;
+        }
+    }
+    return "NA";
+}
+
 struct quadruple{
     char operator[100];
     char operand1[100];
@@ -49,6 +85,12 @@ void displayQuadruple()
             }
             sprintf(quad[i].operator, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to if_end when you reach ifthen_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "if_end") != 0 && k > 0){
+                k++;
+            }
+            sprintf(quad[j].operator, "goto %03d", k);
         }
         // Check if the current quadruple starts a while condition
         if(strcmp(quad[i].result, "while_cond_end") == 0){
@@ -100,18 +142,21 @@ void displayQuadruple()
             }
             // we just found the for_var actual name
             // now we need to replace it with the actual name
-            int m = i;
+            int m = k;
             char actual_name[100];
             sscanf(quad[l].result, "for_var_%s", actual_name);
             strcpy(quad[l].result, actual_name);
-            while(l < m){
+            while(m <= j){
                 if(strcmp(quad[m].operand1, "for_var") == 0){
                     strcpy(quad[m].operand1, actual_name);
+                }
+                if(strcmp(quad[m].result, "for_var") == 0){
+                    strcpy(quad[m].result, actual_name);
                 }
                 if(strcmp(quad[m].operand2, "for_var") == 0){
                     strcpy(quad[m].operand2, actual_name);
                 }
-                m--;
+                m++;
             }
         }
     }
@@ -156,9 +201,17 @@ char* popFromStack()
 {
     char* c = stac[tos].c;
     tos=tos-1;
+    if(tos <= -1) printf("Stack is empty");
+    return c;
+}
+
+char* topOfStack()
+{
+    char* c = stac[tos].c;
     return c;
 }
 %}
+
 %union {
     char data[100];
 }
@@ -190,7 +243,7 @@ DATATYPE: INTEGER
 ;
 
 RELOP: EQUAL { strcpy($<data>$, "="); }
-| NOTEQUAL { strcpy($<data>$, "!="); }
+| NOTEQUAL { strcpy($<data>$, "<>"); }
 | LESS { strcpy($<data>$, "<"); }
 | LESSEQUAL { strcpy($<data>$, "<="); }
 | GREATER { strcpy($<data>$, ">"); }
@@ -199,9 +252,14 @@ RELOP: EQUAL { strcpy($<data>$, "="); }
 
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
-    char c[100];
-    sprintf(c,"[%s]", $<data>2);
-    strcpy($<data>$, c);
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple($<data>2, "*", getSymTabType(popFromStack()), str1);
+    strcpy($<data>$, str1);
+    pushToStack(str1);
+    // printf("Arr: |%s|", topOfStack());
  } 
 ;
 
@@ -237,6 +295,13 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS
 ;
 
 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+{
+    char arrayName[100];
+    sprintf(arrayName, "%s", $<data>1);
+    char arrayType[100];
+    sprintf(arrayType, "%s", $<data>10);
+    addSymTab(arrayName, arrayType);
+}
 ; 
 
 /* MAIN BODY OF THE PROGRAM */
@@ -262,7 +327,13 @@ STATEMENT: READ_STATEMENT
 
 /* READ STATEMENT */
 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
-| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
+| READ LPAREN IDENTIFIER {
+    // If we just find id, we push it to stack
+    // This is popped out from stack in the ARRAY_ADD_ON_ID
+    char c[100]; 
+    sprintf(c,"%s",$<data>3); 
+    pushToStack(c);
+} ARRAY_ADD_ON_ID RPAREN SEMICOLON
 ;
 
 /* WRITE STATEMENT */
@@ -270,43 +341,52 @@ WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
 | WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
 ;
 
-WRITE_IDENTIFIER_LIST: IDENTIFIER
-| IDENTIFIER WRITE_MORE_IDENTIFIERS
-| IDENTIFIER ARRAY_ADD_ON_ID
-| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
-| STRING
-| STRING WRITE_MORE_IDENTIFIERS
-| INT_NUMBER
-| INT_NUMBER WRITE_MORE_IDENTIFIERS
-| DECIMAL_NUMBER
-| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
-| CHARACTER
-| CHARACTER WRITE_MORE_IDENTIFIERS
+WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER
+| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST
 ;
 
-WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
-| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS 
-| COMMA STRING
-| COMMA STRING WRITE_MORE_IDENTIFIERS
-| COMMA INT_NUMBER
-| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS
-| COMMA DECIMAL_NUMBER
-| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
-| COMMA CHARACTER
-| COMMA CHARACTER WRITE_MORE_IDENTIFIERS
+WRITE_IDENTIFIER: IDENTIFIER
+| IDENTIFIER ARRAY_ADD_ON_ID
+| STRING
+| INT_NUMBER
+| DECIMAL_NUMBER
+| CHARACTER
 ;
 
 /* ASSIGNMENT */
 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
-| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+| IDENTIFIER {
+    // If we just find id, we push it to stack
+    // This is popped out from stack in the ARRAY_ADD_ON_ID
+    char c[100]; 
+    sprintf(c,"%s",$<data>1); 
+    pushToStack(c);
+} ARRAY_ADD_ON_ID {
+    // Create a new temp variable to store the address of the array + the index
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+
+    // First we add a quadruple for the address of the array
+    // we calculate the exact address
+    char storeAddress[100];
+    sprintf(storeAddress, "&%s", $<data>1);
+    addQuadruple(popFromStack(), "+", storeAddress, str1);
+    pushToStack(str1);
+} COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    char temp[100];
+    sprintf(temp, "%s", popFromStack());
+    char temp2[100];
+    sprintf(temp2, "*%s", popFromStack());
+    addQuadruple(temp, "NA", "NA", temp2);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    char temp[100];
+    sprintf(temp, "'%s'", $<data>4);
+    addQuadruple(temp, "NA", "NA", $<data>1);
 }
 ;
 
@@ -391,6 +471,7 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     char str1[5]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
+    printf("|%s|", topOfStack());
     addQuadruple(popFromStack(), "*", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
@@ -460,10 +541,28 @@ TERM: IDENTIFIER {
     sprintf(c,"%s",$<data>1); 
     pushToStack(c);
 }
-| IDENTIFIER ARRAY_ADD_ON_ID {
+| IDENTIFIER {
     char c[100]; 
-    sprintf(c,"%s%s",$<data>1, $<data>2); 
+    sprintf(c,"%s",$<data>1); 
     pushToStack(c);
+} ARRAY_ADD_ON_ID { 
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    char storeAddress[100];
+    sprintf(storeAddress, "&%s", $<data>1);
+    // First we add a quadruple for the address of the array
+    // we calculate the exact address and store it in a temporary variable -> str1
+    addQuadruple(popFromStack(), "+", storeAddress, str1);
+    // Then we add another quadruple to get the value at that address
+    char str2[5]="t";
+    sprintf(str,"%d", temp_char++);
+    strcat(str2, str);
+    sprintf(str, "*%s", str1);
+    addQuadruple(str, "NA", "NA", str2);
+    pushToStack(str2);
+    strcpy($<data>$, str2);
 }
 | INT_NUMBER {
     char c[100]; 
@@ -524,6 +623,7 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
+    addQuadruple("for_var", "+", "1", "for_var");
     addQuadruple("NA", "NA", "NA", "for_body_end");
 } SEMICOLON {
     addQuadruple("NA", "NA", "NA", "for_end");

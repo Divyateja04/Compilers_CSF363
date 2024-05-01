@@ -19,10 +19,10 @@ int printToken = 0;
 <COMMENT>[\n] { BEGIN(INITIAL); }
 
 (?i:program) { if(printToken) printf("\n::> | %s |", yytext); return PROGRAM; }
-(?i:integer) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "int"); return INTEGER; }
-(?i:real) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "real"); return REAL; }
-(?i:boolean) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "boolean"); return BOOLEAN; }
-(?i:char) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "char"); return CHAR; }
+(?i:integer) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "int"); yylval.t.lineNumber = lineNumber; return INTEGER; }
+(?i:real) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "real"); yylval.t.lineNumber = lineNumber; return REAL; }
+(?i:boolean) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "boolean"); yylval.t.lineNumber = lineNumber; return BOOLEAN; }
+(?i:char) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "char"); yylval.t.lineNumber = lineNumber; return CHAR; }
 (?i:var) { if(printToken) printf("\n::> | %s |", yytext); return VAR; }
 (?i:to) { if(printToken) printf("\n::> | %s |", yytext); return TO; }
 (?i:downto) { if(printToken) printf("\n::> | %s |", yytext); return DOWNTO; }
@@ -67,19 +67,22 @@ int printToken = 0;
 []] { if(printToken) printf("\n::> | %s |", yytext); return RBRACKET; }
 
 [\"] { BEGIN(READ_DQ_STRING_INPUT); }
-<READ_DQ_STRING_INPUT>[^\n^\"]* { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); sprintf(yylval.t.data_type, "%s", "string"); return STRING; }
+<READ_DQ_STRING_INPUT>[^\n^\"]* { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); sprintf(yylval.t.data_type, "%s", "string"); yylval.t.lineNumber = lineNumber; return STRING; }
 <READ_DQ_STRING_INPUT>[\"] { BEGIN(INITIAL); }
 
 [\'] { BEGIN(READ_CHAR_INPUT); }
-<READ_CHAR_INPUT>[^\n^\'] { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); return CHARACTER; }
+<READ_CHAR_INPUT>[^\n^\'] { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); yylval.t.lineNumber = lineNumber; return CHARACTER; }
 <READ_CHAR_INPUT>[\'] { BEGIN(INITIAL); }
 
-[0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); sprintf(yylval.t.data_type, "%s", "int"); return INT_NUMBER; }
-[0-9]+[.][0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "real"); return DECIMAL_NUMBER; }
+[0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); yylval.t.lineNumber = lineNumber; sprintf(yylval.t.data_type, "%s", "int"); return INT_NUMBER; }
+[0-9]+[.][0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "real"); yylval.t.lineNumber = lineNumber; return DECIMAL_NUMBER; }
 
-[a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext);  sprintf(yylval.t.id_name, "%s", yytext); return IDENTIFIER; }
+[a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext);  sprintf(yylval.t.id_name, "%s", yytext); yylval.t.lineNumber = lineNumber; return IDENTIFIER; }
 
-[[:space:]]+ {}
+[\n] { lineNumber++; }
+[\t] { }
+[\r] { }
+[ ] { }
 
 .  { if(printToken) printf("\n::> | %s |", yytext); return INVALID_TOKEN;}
 
