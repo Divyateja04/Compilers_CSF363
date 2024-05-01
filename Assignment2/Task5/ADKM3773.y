@@ -115,16 +115,16 @@ void printIST() {
     }
 
     std::cout << std::endl;
-    std::cout << "\033[1;37m" << "Symbol" << std::string(max_length - 6, ' ') << "  Value" << "\033[0m\n";
+    std::cout << "\033[1;37m" << "ID Name" << std::string(max_length - 6, ' ') << "  Data Type      Value" << "\033[0m\n";
 
     for (auto& it: interpreterSymbolTable) {
         std::cout << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
         std::visit(overloaded {
-            [](const int& i) { std::cout << i; },
-            [](const float& f) { std::cout << f; },
-            [](const char& c) { std::cout << c; },
-            [](const bool& b) { std::cout << std::boolalpha << b; },
-            [](const ArrayType& a) { printArray(a); }
+            [](const int& i) { std::cout << "integer   | " << i; },
+            [](const float& f) { std::cout << "real      | " << f; },
+            [](const char& c) { std::cout << "char      | " << c; },
+            [](const bool& b) { std::cout << "bool     | " << std::boolalpha << b; },
+            [](const ArrayType& a) { std::cout << "array     | "; printArray(a); }
         }, it.second);
         std::cout << " \n";
     }
