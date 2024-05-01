@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <math.h>  
 
-
 int yylex(void);
 int yyerror();
 extern FILE *yyin;
@@ -13,12 +12,25 @@ extern FILE *yyin;
 int printLogs = 0;
 int yydebug = 1;
 
-typedef struct Node{
-    char type[10];
-    float val;
-    struct Nodee* child[10];
-    int num_children;
-}Node;
+struct Treenode
+{
+  	char *name;
+    struct Treenode * child[10];
+    int child_index;
+}; 
+
+struct Treenode* initNode(char *);
+void addNodetoTree(struct Treenode *,struct Treenode *);
+void printTree(struct Treenode *);
+
+struct Treenode *head;
+
+// %union { 
+// 	struct var_name { 
+// 		char name[100]; 
+// 		Treenode* nd;
+// 	} node_obj; 
+// }
 
 int symbol_table_index = 0;
 int line_number = 0;
@@ -35,6 +47,11 @@ typedef struct Symbol{
     char max_index[5];
 }Symbol;
 
+
+// int del = 1; /* distance of graph columns */
+// int eps = 3; /* distance of graph lines */
+
+
 Symbol* symbol_table[100];
 void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_data_type[], char new_varorarray[]);
 void addVarName(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_varorarray[]);
@@ -46,7 +63,30 @@ bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int sym
 void CustomError1(char* message);
 void CustomError2(char* id_name, char* message);
 
-Node *root = NULL;
+
+// void graphInit (void);
+// void graphFinish();
+// void graphBox (char *s, int *w, int *h);
+// void graphDrawBox (char *s, int c, int l);
+// void graphDrawArrow (int c1, int l1, int c2, int l2);
+// void exNode (Node *p, int c, int l, int *ce, int *cm);
+
+// int ex (Node *p) {
+//     int rte, rtm;
+
+//     graphInit ();
+//     exNode (p, 0, 0, &rte, &rtm);
+//     graphFinish();
+//     return 0;
+// }
+
+// #define lmax 200
+// #define cmax 200
+
+// char graph[lmax][cmax]; /* array for ASCII-Graphic */
+// int graphNumber = 0;
+
+// Node *root = NULL;
 
 // Node *createNode(char type[], float val, int num_children) {
 //     Node *newNode = (Node *)malloc(sizeof(Node));
@@ -74,7 +114,9 @@ Node *root = NULL;
     char varorarray[2];
     char min_index[5];
     char max_index[5];
-    char operator[3];
+    char labelerator[3];
+    int lineNumber;
+    struct Treenode * nd;
 }t;
 }
 
@@ -95,7 +137,7 @@ Node *root = NULL;
 
 
 %%
-stmt: { if(printLogs) printf("\nParsing started"); } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); }
+stmt: { if(printLogs) printf("\nParsing started");  } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); addNodetoTree($<t.nd>$,$<t.nd>2); addNodetoTree($<t.nd>$,$<t.nd>3); addNodetoTree($<t.nd>$,$<t.nd>4);}
 ;
 
 /* TYPE DECLARATIONS */
@@ -105,12 +147,12 @@ DATATYPE:  { if(printLogs) printf("\nDATATYPE found - INTEGER"); } INTEGER { str
 | { if(printLogs) printf("\nDATATYPE found - CHAR"); } CHAR { strcpy($<t.data_type>$, $<t.data_type>2); }
 ;
 
-RELOP: EQUAL { strcpy($<t.operator>$, "="); }
-| NOTEQUAL { strcpy($<t.operator>$, "<>"); }
-| LESS { strcpy($<t.operator>$, "<"); }
-| LESSEQUAL { strcpy($<t.operator>$, "<="); }
-| GREATER { strcpy($<t.operator>$, ">"); }
-| GREATEREQUAL { strcpy($<t.operator>$, ">="); }
+RELOP: EQUAL { strcpy($<t.labelerator>$, "="); }
+| NOTEQUAL { strcpy($<t.labelerator>$, "<>"); }
+| LESS { strcpy($<t.labelerator>$, "<"); }
+| LESSEQUAL { strcpy($<t.labelerator>$, "<="); }
+| GREATER { strcpy($<t.labelerator>$, ">"); }
+| GREATEREQUAL { strcpy($<t.labelerator>$, ">="); }
 ;
 
 /* ARRAY ADD ON FOR EVERY ID */
@@ -161,12 +203,11 @@ PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON {
         strcpy(symbol_table[symbol_table_index]->varorarray, "0"); 
         symbol_table_index++;
     }
-
 }
 ;
 
 VARIABLE_DECLARATION: VAR DECLARATION_LISTS 
-| VAR
+| VAR 
 ;
 
 DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS
@@ -179,31 +220,22 @@ DECLARATION_LIST: SINGLE_VARIABLE
 ;
 
 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { 
-    addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.     data_type>3, "1");
+    addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.data_type>3, "1");
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     symbol_table_index++;
-SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.     data_type>3, "1");
-symbol_table_index++;
-    // Node *stmt = createNode("SINGLE_VARIABLE", 0, 0);
-    // Node *identifier = createNode("IDENTIFIER", 0, 0);
-    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); // Assuming $<t.id_name>1 contains the identifier name
-    // addChild(stmt, identifier);
-    // addChild(stmt, createNode($<t.data_type>3, 0, 0)); // Assuming $<t.data_type>3 contains the data type
-    // addChild(root, stmt);
 }
 ;
-
+// Node *stmt = createNode("SINGLE_VARIABLE", 0, 0);
+    // Node *identifier = createNode("IDENTIFIER", 0, 0);
+    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); 
+    // addChild(stmt, identifier);
+    // addChild(stmt, createNode($<t.data_type>3, 0, 0));
+    // addChild(root, stmt);
 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { 
     addVarName(symbol_table, symbol_table_index, $<t.id_name>1, "1");
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     symbol_table_index++;
     enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); 
-}
-enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); 
-    // Node *stmt = createNode("MULTIPLE_VARIABLE", 0, 0);
-    // Node *identifier = createNode("IDENTIFIER", 0, 0);
-    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); // Assuming $<t.id_name>1 contains the identifier name
-    // addChild(stmt, identifier);
-    // addChild(stmt, createNode($<t.data_type>4, 0, 0)); // Assuming $<t.data_type>4 contains the data type
-    // addChild(root, stmt);
 }
 ;
 
@@ -539,8 +571,8 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 
 /* EXPRESSION FORMULATION */
 ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); }
-| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("\nCondition - Expr"); } /* Relational operators */
-| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Expr with paren"); } /* Relational operators */
+| EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE { if(printLogs) printf("\nCondition - Expr"); } /* Relational labelerators */
+| LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN { if(printLogs) printf("\nCondition - Expr with paren"); } /* Relational labelerators */
 | BOOLEAN_EXPRESSION_SEQUENCE
 ; 
 
@@ -725,12 +757,12 @@ FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUEN
                 // }
                 }
                 else{
-                    CustomError2($<t.id_name>2, "Invalid data type for for loop initialization");
+                    CustomError2($<t.id_name>2, "Invalid data type for for lolabel initialization");
                 }
             }
         }
         else{
-            CustomError1("Limits of for loop aren't of the same data type");
+            CustomError1("Limits of for lolabel aren't of the same data type");
         }
     }
     else{
@@ -753,12 +785,12 @@ FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSIO
                 // }
                 }
                 else{
-                    CustomError2($<t.id_name>2, "Invalid data type for for loop initialization");
+                    CustomError2($<t.id_name>2, "Invalid data type for for lolabel initialization");
                 }
             }
         }
         else{
-            CustomError1("Limits of for loop aren't of the same data type");
+            CustomError1("Limits of for lolabel aren't of the same data type");
         }
     }
     else{
@@ -932,6 +964,40 @@ void main()
     }
 }
 
+struct Treenode* initNode(char *label)
+{
+	struct Treenode *new = (struct Treenode*)malloc(sizeof(struct Treenode));
+	char *newstr = (char *)malloc(strlen(label)+1);
+	strcpy(newstr,label);
+	new->name=newstr;
+    
+    for(int i=0;i<10;i++)
+    {
+        new->child[i]=NULL;
+    }
+    new->child_index=0;
+	return (new);
+}
+
+void addNodetoTree(struct Treenode *parent, struct Treenode *child)
+{
+    parent->child[parent->child_index]=child;
+    parent->child_index++;
+}
+
+void printTree(struct Treenode *tree)
+{
+	printf("[");
+    for(int i=0;i<tree->child_index;i++)
+    {
+        printf("[");
+        printTree(tree->child[i]);
+        printf("]");
+    }
+    printf("]");
+	
+}
+
 int yyerror(){
     printf("\n\n\nSyntax error found");
     return 0;
@@ -944,3 +1010,65 @@ void CustomError1(char* message){
 void CustomError2(char* id_name, char* message){
     printf("\n\n\n%s::> %s", id_name, message);
 }
+
+/* void graphTest (int l, int c)
+{   int ok;
+    ok = 1;
+    if (l < 0) ok = 0;
+    if (l >= lmax) ok = 0;
+    if (c < 0) ok = 0;
+    if (c >= cmax) ok = 0;
+    if (ok) return;
+    printf ("\n+++error: l=%d, c=%d not in drawing rectangle 0, 0 ... %d, %d", 
+        l, c, lmax, cmax);
+    exit(1);
+}
+
+void graphInit (void) {
+    int i, j;
+    for (i = 0; i < lmax; i++) {
+        for (j = 0; j < cmax; j++) {
+            graph[i][j] = ' ';
+        }
+    }
+} */
+
+/* void graphFinish() {
+    int i, j;
+    for (i = 0; i < lmax; i++) {
+        for (j = cmax-1; j > 0 && graph[i][j] == ' '; j--);
+        graph[i][cmax-1] = 0;
+        if (j < cmax-1) graph[i][j+1] = 0;
+        if (graph[i][j] == ' ') graph[i][j] = 0;
+    }
+    for (i = lmax-1; i > 0 && graph[i][0] == 0; i--);
+    printf ("\n\nGraph %d:\n", graphNumber++);
+    for (j = 0; j <= i; j++) printf ("\n%s", graph[j]);
+    printf("\n");
+}
+
+
+void graphBox (char *s, int *w, int *h) {
+    *w = strlen (s) + del;
+    *h = 1;
+}
+
+void graphDrawBox (char *s, int c, int l) {
+    int i;
+    graphTest (l, c+strlen(s)-1+del);
+    for (i = 0; i < strlen (s); i++) {
+        graph[l][c+i+del] = s[i];
+    }
+}
+
+void graphDrawArrow (int c1, int l1, int c2, int l2) {
+    int m;
+    graphTest (l1, c1);
+    graphTest (l2, c2);
+    m = (l1 + l2) / 2;
+    while (l1 != m) { graph[l1][c1] = '|'; if (l1 < l2) l1++; else l1--; }
+    while (c1 != c2) { graph[l1][c1] = '-'; if (c1 < c2) c1++; else c1--; }
+    while (l1 != l2) { graph[l1][c1] = '|'; if (l1 < l2) l1++; else l1--; }
+    graph[l1][c1] = '|';
+} */
+
