@@ -360,7 +360,7 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    addQuadruple("NA", "NA", $<data>5, $<data>1);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
     char temp[100];

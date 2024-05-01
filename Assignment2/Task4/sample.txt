@@ -14,6 +14,8 @@ begin
   number := 0;
   digit := 0.0;
 
+  numbers[3] := 7;
+
   write("Enter 5 integer values:");
 
   c := 'c';
