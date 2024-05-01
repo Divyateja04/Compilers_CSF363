@@ -8,6 +8,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <fstream>
 
 int yylex(void);
 int yyerror(const char* s);
@@ -87,36 +88,45 @@ template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 void printArray(const ArrayType& arr) {
-    std::cerr << "[";
+    std::cout << "[";
     for (size_t i = 0; i < arr.array.size(); i++) {
         const auto& elem = arr.array[i];
         std::visit(overloaded {
-            [](const int& j) { std::cerr << j; },
-            [](const float& f) { std::cerr << f; },
-            [](const char& c) { std::cerr << c; },
-            [](const bool& b) { std::cerr << std::boolalpha << b; },
+            [](const int& j) { std::cout << j; },
+            [](const float& f) { std::cout << f; },
+            [](const char& c) { std::cout << c; },
+            [](const bool& b) { std::cout << std::boolalpha << b; },
             [](const ArrayType& a) { printArray(a); }
         }, elem);
         if (i != arr.array.size() - 1) {
-            std::cerr << ", ";
+            std::cout << ", ";
         }
     }
-    std::cerr << "]";
+    std::cout << "]";
 }
 
 
 void printIST() {
-    std::cerr << std::endl;
+    int max_length = 0;
     for (auto& it: interpreterSymbolTable) {
-        std::cerr << "Symbol: " << it.first << " Value: ";
+        if (it.first.length() > max_length) {
+            max_length = it.first.length();
+        }
+    }
+
+    std::cout << std::endl;
+    std::cout << "\033[1;37m" << "Symbol" << std::string(max_length - 6, ' ') << "  Value" << "\033[0m\n";
+
+    for (auto& it: interpreterSymbolTable) {
+        std::cout << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
         std::visit(overloaded {
-            [](const int& i) { std::cerr << i; },
-            [](const float& f) { std::cerr << f; },
-            [](const char& c) { std::cerr << c; },
-            [](const bool& b) { std::cerr << std::boolalpha << b; },
+            [](const int& i) { std::cout << i; },
+            [](const float& f) { std::cout << f; },
+            [](const char& c) { std::cout << c; },
+            [](const bool& b) { std::cout << std::boolalpha << b; },
             [](const ArrayType& a) { printArray(a); }
         }, it.second);
-        std::cerr << std::endl;
+        std::cout << " \n";
     }
 }
 
@@ -202,6 +212,7 @@ void interpreter() {
                 [](bool& b) { std::cin >> std::boolalpha >> b; },
                 [](ArrayType& a) { /* handle array input */ }
             }, interpreterSymbolTable[quad[current_line].operand1]);
+            std::cout << std::endl;
             continue;
         }
 
@@ -210,6 +221,7 @@ void interpreter() {
         // simple assignment operation e.g. s = 6
         if (strcmp(quad[current_line].op, "NA") == 0) {
             if (strcmp(quad[current_line].operand1, "NA") == 0 && strcmp(quad[current_line].operand2, "NA") == 0) {
+                // Keywords
                 continue;
             } else if (strcmp(quad[current_line].operand1, "NA") == 0) {
                 char char_result;
@@ -354,7 +366,7 @@ void interpreter() {
         }
         
         // For multicharacter op (op != NA)
-        if (strcmp(quad[current_line].op, "<>") == 0) {
+        if (strcmp(quad[current_line].op, "<>") == 0 || strcmp(quad[current_line].op, "!=") == 0) {
             if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
                 updateIST(quad[current_line].result, std::get<int>(getIST(quad[current_line].operand1)) != std::get<int>(getIST(quad[current_line].operand2)));
             } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
@@ -960,6 +972,10 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 %%
 int main()
 {
+    std::ofstream file("temp.output");
+    auto* oldCerrBuffer = std::cerr.rdbuf();
+    std::cerr.rdbuf(file.rdbuf());
+
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
         if(printLogs) printf("\nFile not found");
@@ -969,6 +985,8 @@ int main()
         if(printLogs) printf("\nInput file found, Parsing....");
         yyparse();
     }
+
+    std::cerr.rdbuf(oldCerrBuffer);
 
     return 0;
 }

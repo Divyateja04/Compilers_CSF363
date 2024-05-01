@@ -1,75 +1,21 @@
-[H[2J[3J=======================================
-Test Case 1
-program ArrayAverage;
-var
-  numbers: array[1..5] of char; // TODO: size matters
-  i, a, b: Integer;
-  average : real;
-  c: char;
-begin
-  i := 4;
-  i := i + 1;
-  average := 0.5;
-  c := 'c';
-
-  numbers[1] := c;
-  numbers[2] := 5;
-
-  writeln("Test output: ", i, " ", i, " ", average, " ", c);
-  writeln(numbers[1], " ", numbers[2]);
-  // writeln("Test output: ", i, " ", i, " ", average, " ", c);
-  // // read(a);
-  // writeln("Input: ", a);
-
-  // a := 0;
-  // b := 0;
-  // for i := 1 to 5 do
-  // begin
-  //   a := a + 1;
-  //   b := b + a;
-  // end;
-  // writeln("Sum: ", b);
-
-  // a := 5;
-
-  // while a > 0 do
-  // begin
-  //   a := a - 1;
-  //   writeln("a: ", a);
-  // end;
-end.Deleting old files
-Compiling yacc program
-Compiling lex program
-Compiling the program in gcc
- TODO: size matters writeln("Test output: ", i, " ", i, " ", average, " ", c); // read(a); writeln("Input: ", a); a := 0; b := 0; for i := 1 to 5 do begin   a := a + 1;   b := b + a; end; writeln("Sum: ", b); a := 5; while a > 0 do begin   a := a - 1;   writeln("a: ", a); end;
-============================
-:000:>  i  =  4 ;
-:001:>  t0  =  i  +  1 ;
-:002:>  i  =  t0 ;
-:003:>  average  =  0.5 ;
-:004:>  c  =  'c' ;
-:005:>  numbers[1]  =  c ;
-:006:>  numbers[2]  =  5 ;
-:007:>  write  =  Test output:  ;
-:008:>  write  =  i ;
-:009:>  write  =    ;
-:010:>  write  =  i ;
-:011:>  write  =    ;
-:012:>  write  =  average ;
-:013:>  write  =    ;
-:014:>  write  =  c ;
-:015:>  writeln  =   ;
-:016:>  write  =  numbers[1] ;
-:017:>  write  =    ;
-:018:>  write  =  numbers[2] ;
-:019:>  writeln  =   ;
-
-============================
-Test output: 5 5 0.5 c
-c 5
-
-============================
-
-
-
-Parsing completed successfully
+Result:i Operand1:NA Operator:NA Operand2:4
+Result:t0 Operand1:i Operator:+ Operand2:1
+Result:i Operand1:NA Operator:NA Operand2:t0
+Result:average Operand1:NA Operator:NA Operand2:0.5
+Result:c Operand1:'c' Operator:NA Operand2:NA
+Result:numbers[1] Operand1:NA Operator:NA Operand2:c
+Result:numbers[2] Operand1:NA Operator:NA Operand2:5
+Result:write Operand1:Test output:  Operator:NA Operand2:NA
+Result:write Operand1:i Operator:NA Operand2:NA
+Result:write Operand1:  Operator:NA Operand2:NA
+Result:write Operand1:i Operator:NA Operand2:NA
+Result:write Operand1:  Operator:NA Operand2:NA
+Result:write Operand1:average Operator:NA Operand2:NA
+Result:write Operand1:  Operator:NA Operand2:NA
+Result:write Operand1:c Operator:NA Operand2:NA
+Result:writeln Operand1: Operator:NA Operand2:NA
+Result:write Operand1:numbers[1] Operator:NA Operand2:NA
+Result:write Operand1:  Operator:NA Operand2:NA
+Result:write Operand1:numbers[2] Operator:NA Operand2:NA
+Result:writeln Operand1: Operator:NA Operand2:NA
+Result: Operand1: Operator: Operand2:
