@@ -7,6 +7,7 @@
 #include <variant>
 #include <vector>
 #include <queue>
+#include <stack>
 
 int yylex(void);
 int yyerror(const char* s);
@@ -139,6 +140,8 @@ T performOperation(char op, T operand1, T operand2) {
 std::queue<std::vector<std::string>> writeQueue;
 std::vector<std::string> writeVector;
 
+std::vector<std::string> temporaryVariablesVector;
+
 void interpreter() {
     int current_line = -1;
     while(current_line++ < quadrupleIndex) {
@@ -147,8 +150,8 @@ void interpreter() {
           << " Operator:" << quad[current_line].op 
           << " Operand2:" << quad[current_line].operand2 
           << std::endl;
-        // printIST();
-
+        printIST();
+        
         if (
             strcmp(quad[current_line].result, "write") == 0 || 
             strcmp(quad[current_line].result, "writeln") == 0
@@ -185,9 +188,9 @@ void interpreter() {
                 [](bool& b) { std::cin >> std::boolalpha >> b; },
                 [](ArrayType& a) { /* handle array input */ }
             }, interpreterSymbolTable[quad[current_line].operand1]);
+            continue;
         }
 
-        continue;
 
         // Operator is NA
         // simple assignment operation e.g. s = 6
@@ -275,13 +278,18 @@ void interpreter() {
                 case '*':
                 case '/':
                     if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                        // Both int
                         int result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
                         updateIST(quad[current_line].result, result);
                     } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) || std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                        // Both float or can be converted to float
                         float operand1 = std::holds_alternative<int>(getIST(quad[current_line].operand1)) ? static_cast<float>(std::get<int>(getIST(quad[current_line].operand1))) : std::get<float>(getIST(quad[current_line].operand1));
                         float operand2 = std::holds_alternative<int>(getIST(quad[current_line].operand2)) ? static_cast<float>(std::get<int>(getIST(quad[current_line].operand2))) : std::get<float>(getIST(quad[current_line].operand2));
                         float result = performOperation(quad[current_line].op[0], operand1, operand2);
                         updateIST(quad[current_line].result, result);
+                    } else {
+                        // address adding
+                        
                     }
                     break;
                 case '%':
@@ -500,9 +508,14 @@ RELOP: EQUAL { strcpy($<data>$, "="); }
 
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
-    char c[100];
-    sprintf(c,"[%s]", $<data>2);
-    strcpy($<data>$, c);
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple($<data>2, "*", popFromStack(), str1);
+    strcpy($<data>$, str1);
+    pushToStack(str1);
+    // printf("Arr: |%s|", topOfStack());
  } 
 ;
 
@@ -533,18 +546,47 @@ SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON {
     } else if (strcmp($<data>3, "real") == 0) {
         updateIST($<data>1, 0.0f);
     } else if (strcmp($<data>3, "char") == 0) {
-        updateIST($<data>1, '@');
+        updateIST($<data>1, '\0');
     } else if (strcmp($<data>3, "bool") == 0) {
         updateIST($<data>1, false);
     }
  }
 ;
 
-MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON
+MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { 
+    if (strcmp($<data>4, "Integer") == 0) {
+        updateIST($<data>1, 0);
+    } else if (strcmp($<data>4, "real") == 0) {
+        updateIST($<data>1, 0.0f);
+    } else if (strcmp($<data>4, "char") == 0) {
+        updateIST($<data>1, '\0');
+    } else if (strcmp($<data>4, "bool") == 0) {
+        updateIST($<data>1, false);
+    }
+
+    for (auto i : temporaryVariablesVector) {
+        if (strcmp($<data>4, "Integer") == 0) {
+            updateIST(i, 0);
+        } else if (strcmp($<data>4, "real") == 0) {
+            updateIST(i, 0.0f);
+        } else if (strcmp($<data>4, "char") == 0) {
+            updateIST(i, '\0');
+        } else if (strcmp($<data>4, "bool") == 0) {
+            updateIST(i, false);
+        }
+    }
+
+    temporaryVariablesVector.clear();
+ }
 ;
 
-MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS 
-| COMMA IDENTIFIER
+// TODO: add to IST these identifiers also
+MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS { 
+    temporaryVariablesVector.push_back($<data>2);
+ }
+| COMMA IDENTIFIER { 
+    temporaryVariablesVector.push_back($<data>2);
+ }
 ;
 
 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
@@ -552,7 +594,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
     array.offset = std::stoi($<data>7) - std::stoi($<data>5); // Storing the size of array
     std::variant<int, float, char, bool, Array<VariantType>> arrayType = array;
     if ($<data>9 == "Integer") {
-        array.array = std::vector<VariantType>(array.offset, VariantType(5));
+        array.array = std::vector<VariantType>(array.offset, VariantType(0));
     } else if ($<data>9 == "real") {
         array.array = std::vector<VariantType>(array.offset, VariantType(0.0f));
     } else if ($<data>9 == "char") {
@@ -614,8 +656,31 @@ WRITE_IDENTIFIER: IDENTIFIER { writeVector.push_back($1); }
 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
-| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    addQuadruple("NA", "NA", $<data>5, $<data>1);
+| IDENTIFIER {
+    // If we just find id, we push it to stack
+    // This is popped out from stack in the ARRAY_ADD_ON_ID
+    char c[100]; 
+    sprintf(c,"%s",$<data>1); 
+    pushToStack(c);
+} ARRAY_ADD_ON_ID {
+    // Create a new temp variable to store the address of the array + the index
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+
+    // First we add a quadruple for the address of the array
+    // we calculate the exact address
+    char storeAddress[100];
+    sprintf(storeAddress, "&%s", $<data>1);
+    addQuadruple(popFromStack(), "+", storeAddress, str1);
+    pushToStack(str1);
+} COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    char temp[100];
+    sprintf(temp, "%s", popFromStack());
+    char temp2[100];
+    sprintf(temp2, "*%s", popFromStack());
+    addQuadruple(temp, "NA", "NA", temp2);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
     char temp[100];
