@@ -1,4 +1,5 @@
-[H[2J[3J=======================================
+
+=======================================
 Test Case 1
 program ArrayAverage;
 var
@@ -16,7 +17,7 @@ begin
   number := 0;
   digit := 0.0;
 
-  numbers[3] := 7;
+  numbers[3] := 4;
 
   write("Enter 5 integer values:");
 
@@ -70,7 +71,7 @@ end.Deleting old files
 Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
-============================
+|t0||d||7||10|============================
 :000:>  i  =  100 ;
 :001:>  t0  =  i  -  i ;
 :002:>  t1  =  i  *  t0 ;
@@ -88,98 +89,1323 @@ Compiling the program in gcc
 :014:>  count  =  0 ;
 :015:>  number  =  0 ;
 :016:>  digit  =  0.0 ;
-:017:>  t10  =  3  * ;
-:018:>  numbers  =  7 ;
-:019:>  c  =  'c' ;
+:017:>  t10  =  3  *  Integer ;
+:018:>  t11  =  t10  +  &numbers ;
+:019:>  *t11  =  4 ;
+:020:>  c  =  'c' ;
 
-:020:>  for_start ;
-:021:>  i  =  1 ;
-:022:>  for_cond_start ;
-:023:>  t11  =  i  <=  5 ;
-:024:>  for_cond_end  =  t11  true: goto 025  false: goto 029 ;
-:025:>  for_body_start ;
-:026:>  t12  =  i  * ;
-:027:>  i  =  i  +  1 ;
-:028:>  for_body_end  =  goto 022 ;
-:029:>  for_end ;
-
-
-:030:>  for_start ;
-:031:>  i  =  1 ;
-:032:>  for_cond_start ;
-:033:>  t13  =  i  <=  5 ;
-:034:>  for_cond_end  =  t13  true: goto 035  false: goto 039 ;
-:035:>  for_body_start ;
-:036:>  t14  =  i  * ;
-:037:>  i  =  i  +  1 ;
-:038:>  for_body_end  =  goto 032 ;
-:039:>  for_end ;
-
-:040:>  sum  =  0 ;
-
-:041:>  for_start ;
-:042:>  i  =  1 ;
-:043:>  for_cond_start ;
-:044:>  t15  =  i  <=  5 ;
-:045:>  for_cond_end  =  t15  true: goto 046  false: goto 056 ;
-:046:>  for_body_start ;
-:047:>  t16  =  6  *  7 ;
-:048:>  t17  =  sum  +  t16 ;
-:049:>  t18  =  i  *  Integer ;
-:050:>  t19  =  t18  +  &numbers ;
-:051:>  t20  =  *t19 ;
-:052:>  t21  =  t17  +  t20 ;
-:053:>  sum  =  t21 ;
-:054:>  i  =  i  +  1 ;
-:055:>  for_body_end  =  goto 043 ;
-:056:>  for_end ;
+:021:>  for_start ;
+:022:>  i  =  1 ;
+:023:>  for_cond_start ;
+:024:>  t12  =  i  <=  5 ;
+:025:>  for_cond_end  =  t12  true: goto 026  false: goto 030 ;
+:026:>  for_body_start ;
+:027:>  t13  =  i  *  Integer ;
+:028:>  i  =  i  +  1 ;
+:029:>  for_body_end  =  goto 023 ;
+:030:>  for_end ;
 
 
-:057:>  if_start ;
-:058:>  if_cond_end  =  x  true: goto 059  false: goto 066 ;
+:031:>  for_start ;
+:032:>  i  =  1 ;
+:033:>  for_cond_start ;
+:034:>  t14  =  i  <=  5 ;
+:035:>  for_cond_end  =  t14  true: goto 036  false: goto 040 ;
+:036:>  for_body_start ;
+:037:>  t15  =  i  * ;
+:038:>  i  =  i  +  1 ;
+:039:>  for_body_end  =  goto 033 ;
+:040:>  for_end ;
+
+:041:>  sum  =  0 ;
+
+:042:>  for_start ;
+:043:>  i  =  1 ;
+:044:>  for_cond_start ;
+:045:>  t16  =  i  <=  5 ;
+:046:>  for_cond_end  =  t16  true: goto 047  false: goto 057 ;
+:047:>  for_body_start ;
+:048:>  t17  =  6  *  7 ;
+:049:>  t18  =  sum  +  t17 ;
+:050:>  t19  =  i  *  Integer ;
+:051:>  t20  =  t19  +  &numbers ;
+:052:>  t21  =  *t20 ;
+:053:>  t22  =  t18  +  t21 ;
+:054:>  sum  =  t22 ;
+:055:>  i  =  i  +  1 ;
+:056:>  for_body_end  =  goto 044 ;
+:057:>  for_end ;
+
+
+:058:>  if_start ;
+:059:>  if_cond_end  =  x  true: goto 060  false: goto 067 ;
+:060:>  ifthen_body_start ;
+:061:>  t23  =  i  *  Integer ;
+:062:>  t24  =  t23  +  &numbers ;
+:063:>  t25  =  *t24 ;
+:064:>  t26  =  t25  +  9 ;
+:065:>  a  =  t26 ;
+:066:>  ifthen_body_end  =  goto 074 ;
+:067:>  else_body_start ;
+:068:>  t27  =  i  *  Integer ;
+:069:>  t28  =  t27  +  &numbers ;
+:070:>  t29  =  *t28 ;
+:071:>  t30  =  t29  -  9 ;
+:072:>  a  =  t30 ;
+:073:>  else_body_end ;
+:074:>  if_end ;
+
+
+:075:>  while_start ;
+:076:>  while_cond_start ;
+:077:>  t31  =  number  <>  0 ;
+:078:>  while_cond_end  =  t31  true: goto 079  false: goto 095 ;
+:079:>  while_body_start ;
+:080:>  t32  =  number  /  10 ;
+:081:>  t33  =  t32  *  10 ;
+:082:>  t34  =  number  -  t33 ;
+:083:>  digit  =  t34 ;
+
+:084:>  if_start ;
+:085:>  t35  =  digit  <>  0 ;
+:086:>  if_cond_end  =  t35  true: goto 087  false: goto 091 ;
+:087:>  ifthen_body_start ;
+:088:>  t36  =  count  +  1 ;
+:089:>  count  =  t36 ;
+:090:>  ifthen_body_end  =  goto 091 ;
+:091:>  if_end ;
+
+:092:>  t37  =  number  /  10 ;
+:093:>  number  =  t37 ;
+:094:>  while_body_end  =  goto 076 ;
+:095:>  while_end ;
+
+:096:>  t38  =  sum  /  5 ;
+:097:>  average  =  t38 ;
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 2
+program MaxValueArray;
+var
+  numbers: array[1..10] of Integer;
+  i, maxValue: Integer;
+begin
+  write("Enter 10 integer values:");
+  for i := 1 to 10 do
+  begin
+    read(numbers[i]);
+  end;
+  maxValue := numbers[1];
+  for i := 2 to 10 do
+  begin
+    if numbers[i] > maxValue then
+    begin
+      maxValue := numbers[i];
+    end;
+  end;
+  write("The maximum value is: ");  
+  write(maxValue);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Stack is empty============================
+
+:000:>  for_start ;
+:001:>  i  =  1 ;
+:002:>  for_cond_start ;
+:003:>  t0  =  i  <=  10 ;
+:004:>  for_cond_end  =  t0  true: goto 005  false: goto 009 ;
+:005:>  for_body_start ;
+:006:>  t1  =  i  *  Integer ;
+:007:>  i  =  i  +  1 ;
+:008:>  for_body_end  =  goto 002 ;
+:009:>  for_end ;
+
+:010:>  t2  =  1  *  Integer ;
+:011:>  t3  =  t2  +  &numbers ;
+:012:>  t4  =  *t3 ;
+:013:>  maxValue  =  t4 ;
+
+:014:>  for_start ;
+:015:>  i  =  2 ;
+:016:>  for_cond_start ;
+:017:>  t5  =  i  <=  10 ;
+:018:>  for_cond_end  =  t5  true: goto 019  false: goto 035 ;
+:019:>  for_body_start ;
+
+:020:>  if_start ;
+:021:>  t6  =  i  *  Integer ;
+:022:>  t7  =  t6  +  &numbers ;
+:023:>  t8  =  *t7 ;
+:024:>  t9  =  t8  >  maxValue ;
+:025:>  if_cond_end  =  t9  true: goto 026  false: goto 032 ;
+:026:>  ifthen_body_start ;
+:027:>  t10  =  i  *  Integer ;
+:028:>  t11  =  t10  +  &numbers ;
+:029:>  t12  =  *t11 ;
+:030:>  maxValue  =  t12 ;
+:031:>  ifthen_body_end  =  goto 032 ;
+:032:>  if_end ;
+
+:033:>  i  =  i  +  1 ;
+:034:>  for_body_end  =  goto 016 ;
+:035:>  for_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 3
+program ReverseNumber;
+var
+  number, reversedNumber, remainder: Integer;
+begin
+  write("Enter a number to reverse:", 3, number);
+  read(number);
+  reversedNumber := 0;
+  while number <> 0 do
+  begin
+    remainder := number % 10;
+    reversedNumber := reversedNumber * 10 + remainder;
+    number := number / 10;
+  end;
+  write("The reversed number is: ");
+  write(reversedNumber);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+|10|============================
+:000:>  reversedNumber  =  0 ;
+
+:001:>  while_start ;
+:002:>  while_cond_start ;
+:003:>  t0  =  number  <>  0 ;
+:004:>  while_cond_end  =  t0  true: goto 005  false: goto 014 ;
+:005:>  while_body_start ;
+:006:>  t1  =  number  %  10 ;
+:007:>  remainder  =  t1 ;
+:008:>  t2  =  reversedNumber  *  10 ;
+:009:>  t3  =  t2  +  remainder ;
+:010:>  reversedNumber  =  t3 ;
+:011:>  t4  =  number  /  10 ;
+:012:>  number  =  t4 ;
+:013:>  while_body_end  =  goto 002 ;
+:014:>  while_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 4
+program NumberOfDigits;
+var
+  number, count, digit: Integer;
+begin
+  write("Enter a number:");
+  read(number);
+  count := 0;
+  while number <> 0 do
+  begin
+    digit := number - (number / 10) * 10;
+    
+    if digit <> 0 then
+      begin
+      count:=count+1;
+      end;
+    number := number / 10;
+  end;
+  write("The number of digits is: ");
+  write(count);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+|10|============================
+:000:>  count  =  0 ;
+
+:001:>  while_start ;
+:002:>  while_cond_start ;
+:003:>  t0  =  number  <>  0 ;
+:004:>  while_cond_end  =  t0  true: goto 005  false: goto 021 ;
+:005:>  while_body_start ;
+:006:>  t1  =  number  /  10 ;
+:007:>  t2  =  t1  *  10 ;
+:008:>  t3  =  number  -  t2 ;
+:009:>  digit  =  t3 ;
+
+:010:>  if_start ;
+:011:>  t4  =  digit  <>  0 ;
+:012:>  if_cond_end  =  t4  true: goto 013  false: goto 017 ;
+:013:>  ifthen_body_start ;
+:014:>  t5  =  count  +  1 ;
+:015:>  count  =  t5 ;
+:016:>  ifthen_body_end  =  goto 017 ;
+:017:>  if_end ;
+
+:018:>  t6  =  number  /  10 ;
+:019:>  number  =  t6 ;
+:020:>  while_body_end  =  goto 002 ;
+:021:>  while_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 5
+program NumberOfDigits;
+var
+  number, count: Integer;
+begin
+  write("Enter a number:");
+  read(number);
+  count := 0;
+  while number <> 0 do
+  begin
+    if number <> 0 then
+    begin
+      count:=count+1;
+    end
+    else 
+    begin
+     count :=count;
+    end; 
+    number := number / 10;
+  end;
+  write("The number of digits is: ");
+  write(count);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+============================
+:000:>  count  =  0 ;
+
+:001:>  while_start ;
+:002:>  while_cond_start ;
+:003:>  t0  =  number  <>  0 ;
+:004:>  while_cond_end  =  t0  true: goto 005  false: goto 020 ;
+:005:>  while_body_start ;
+
+:006:>  if_start ;
+:007:>  t1  =  number  <>  0 ;
+:008:>  if_cond_end  =  t1  true: goto 009  false: goto 013 ;
+:009:>  ifthen_body_start ;
+:010:>  t2  =  count  +  1 ;
+:011:>  count  =  t2 ;
+:012:>  ifthen_body_end  =  goto 016 ;
+:013:>  else_body_start ;
+:014:>  count  =  count ;
+:015:>  else_body_end ;
+:016:>  if_end ;
+
+:017:>  t3  =  number  /  10 ;
+:018:>  number  =  t3 ;
+:019:>  while_body_end  =  goto 002 ;
+:020:>  while_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 6
+program FactorialCalculation;
+var
+  number, factorial, i: Integer;
+begin
+  write("Enter a number to calculate its factorial:");
+  read(number);
+  factorial := 1;
+  for i := number downto 1 do
+  begin
+    factorial := factorial * i;
+  end;
+  write("The factorial is: ");
+  write(factorial);
+end.
+
+
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+|i|============================
+:000:>  factorial  =  1 ;
+
+:001:>  for_start ;
+:002:>  i  =  number ;
+:003:>  for_cond_start ;
+:004:>  t0  =  i  >=  1 ;
+:005:>  for_cond_end  =  t0  true: goto 006  false: goto 010 ;
+:006:>  for_body_start ;
+:007:>  t1  =  factorial  *  i ;
+:008:>  factorial  =  t1 ;
+:009:>  for_body_end  =  goto 003 ;
+:010:>  for_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 7
+program SumOfSquares;
+var
+  number, sum, i: Integer;
+begin
+  write("Enter a number to calculate the sum of squares up to that number:");
+  read(number);
+  sum := 0;
+  for i := 1 to number do
+  begin
+    sum := sum + (i * i);
+  end;
+  write("The sum of squares up is");
+  write(sum);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+|i|============================
+:000:>  sum  =  0 ;
+
+:001:>  for_start ;
+:002:>  i  =  1 ;
+:003:>  for_cond_start ;
+:004:>  t0  =  i  <=  number ;
+:005:>  for_cond_end  =  t0  true: goto 006  false: goto 012 ;
+:006:>  for_body_start ;
+:007:>  t1  =  i  *  i ;
+:008:>  t2  =  sum  +  t1 ;
+:009:>  sum  =  t2 ;
+:010:>  i  =  i  +  1 ;
+:011:>  for_body_end  =  goto 003 ;
+:012:>  for_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 8
+program forif;
+var
+  i, j: Integer;
+begin
+  for i := 1 to 20 do
+   begin
+     if i % 3 = 0 then 
+      begin
+        j := i + 2; 
+        write(j);
+      end;
+    end;
+
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Stack is empty============================
+
+:000:>  for_start ;
+:001:>  i  =  1 ;
+:002:>  for_cond_start ;
+:003:>  t0  =  i  <=  20 ;
+:004:>  for_cond_end  =  t0  true: goto 005  false: goto 017 ;
+:005:>  for_body_start ;
+
+:006:>  if_start ;
+:007:>  t1  =  i  %  3 ;
+:008:>  t2  =  t1  =  0 ;
+:009:>  if_cond_end  =  t2  true: goto 010  false: goto 014 ;
+:010:>  ifthen_body_start ;
+:011:>  t3  =  i  +  2 ;
+:012:>  j  =  t3 ;
+:013:>  ifthen_body_end  =  goto 014 ;
+:014:>  if_end ;
+
+:015:>  i  =  i  +  1 ;
+:016:>  for_body_end  =  goto 002 ;
+:017:>  for_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 9
+program Example9;
+var
+  i: Integer;
+begin
+  i := 10;
+  if i > 10 then
+  begin
+    i := 10;
+    i := i - 1;
+    write(i);
+  end
+  else
+  begin
+    i := 20;
+    write(i);
+  end;
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+============================
+:000:>  i  =  10 ;
+
+:001:>  if_start ;
+:002:>  t0  =  i  >  10 ;
+:003:>  if_cond_end  =  t0  true: goto 004  false: goto 009 ;
+:004:>  ifthen_body_start ;
+:005:>  i  =  10 ;
+:006:>  t1  =  i  -  1 ;
+:007:>  i  =  t1 ;
+:008:>  ifthen_body_end  =  goto 012 ;
+:009:>  else_body_start ;
+:010:>  i  =  20 ;
+:011:>  else_body_end ;
+:012:>  if_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 10
+program forif;
+var
+  i, j, a, b, x: Integer;
+  arr: array[1..20] of Integer;
+begin
+  for i := 1 to 20 do
+  begin
+    if i % 3 = 0 then 
+    begin
+      j := i + 2; 
+      write(j);
+      arr[1] := i;
+      arr[x] := i;
+      arr[1] := i;
+
+      write(a, " ", b, " ", arr[i]);
+    end;
+  end;
+
+  if i % 3 = 0 then
+  begin
+    for i := 3 downto 0 do
+    begin
+      write(i, " ", 5);
+    end;
+  end
+  else
+  begin
+    for i := 3 downto 0 do
+    begin
+      write(i, " ", 5);
+    end;
+  end;
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Stack is empty============================
+
+:000:>  for_start ;
+:001:>  i  =  1 ;
+:002:>  for_cond_start ;
+:003:>  t0  =  i  <=  20 ;
+:004:>  for_cond_end  =  t0  true: goto 005  false: goto 027 ;
+:005:>  for_body_start ;
+
+:006:>  if_start ;
+:007:>  t1  =  i  %  3 ;
+:008:>  t2  =  t1  =  0 ;
+:009:>  if_cond_end  =  t2  true: goto 010  false: goto 024 ;
+:010:>  ifthen_body_start ;
+:011:>  t3  =  i  +  2 ;
+:012:>  j  =  t3 ;
+:013:>  t4  =  1  *  Integer ;
+:014:>  t5  =  t4  +  &arr ;
+:015:>  *t5  =  i ;
+:016:>  t6  =  x  *  Integer ;
+:017:>  t7  =  t6  +  &arr ;
+:018:>  *t7  =  i ;
+:019:>  t8  =  1  *  Integer ;
+:020:>  t9  =  t8  +  &arr ;
+:021:>  *t9  =  i ;
+:022:>  t10  =  i  * ;
+:023:>  ifthen_body_end  =  goto 024 ;
+:024:>  if_end ;
+
+:025:>  i  =  i  +  1 ;
+:026:>  for_body_end  =  goto 002 ;
+:027:>  for_end ;
+
+
+:028:>  if_start ;
+:029:>  t11  =  i  %  3 ;
+:030:>  t12  =  t11  =  0 ;
+:031:>  if_cond_end  =  t12  true: goto 032  false: goto 042 ;
+:032:>  ifthen_body_start ;
+
+:033:>  for_start ;
+:034:>  i  =  3 ;
+:035:>  for_cond_start ;
+:036:>  t13  =  i  >=  0 ;
+:037:>  for_cond_end  =  t13  true: goto 038  false: goto 040 ;
+:038:>  for_body_start ;
+:039:>  for_body_end  =  goto 035 ;
+:040:>  for_end ;
+
+:041:>  ifthen_body_end  =  goto 052 ;
+:042:>  else_body_start ;
+
+:043:>  for_start ;
+:044:>  i  =  3 ;
+:045:>  for_cond_start ;
+:046:>  t14  =  i  >=  0 ;
+:047:>  for_cond_end  =  t14  true: goto 048  false: goto 050 ;
+:048:>  for_body_start ;
+:049:>  for_body_end  =  goto 045 ;
+:050:>  for_end ;
+
+:051:>  else_body_end ;
+:052:>  if_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 11
+Program OneHundredDoors;
+var
+   doors : Array[1..100] of Boolean;
+   i, j	 : Integer;
+begin
+   for i := 1 to 100 do begin
+      j := i;
+	   j := j + i;
+      j:= 'c';
+   end;
+
+   a := 1+---3;
+
+   for i := 1 to 100 do begin
+      write(i, " ",'c');
+   end;
+
+   if a then begin
+	   write("only identifier without brackets");
+   end;
+
+   if (a) then begin
+	   write("only identifier with brackets");
+   end;
+
+   if (1 * 7 = 8) then begin
+	   write("only identifier with brackets");
+   end;
+
+   if arr[i] then begin
+	   write("only array without brackets");
+   end;
+
+   if ((arr[i] - 3) = 4) then begin
+	   write("only array without brackets");
+   end;
+
+   if (arr[i]) then begin
+	   write("only array without brackets");
+   end;
+
+   writeln(a, 3, arr[arr[arr[3]]], "ada", 'a');
+
+   if arr[i] and a then begin
+	   write("array with boolean 1");
+   end;
+
+   if not doors[i] or not doors[i] then begin
+	   write("array with boolean 2");
+   end;
+
+   while i < 3 do begin
+      write("hello");
+   end;
+
+   while (i < 3) do begin
+      write("hello");
+   end;
+
+   if (a + v + x - d = 1) and a = 1 then begin
+	   write("expression");
+   end;
+
+   if (a +( v + x) - d = 1) and a = 1 then begin
+	   write("expression");
+   end;
+
+
+   if (a + v + (x) - d) then begin
+	   write("expression");
+   end;
+
+   if (not doors[i]) or (not doors[i]) then begin
+	   write("array with boolean and bracket");
+   end;
+
+   if id and id > 2 then begin
+	   write("array with boolean and bracket");
+   end;
+
+   if ((not doors[i]) or (not doors[i])) then begin
+	   write("array with boolean and bracket");
+   end;
+
+   if (not doors[i]) or (not doors[i]) and not x then begin
+	   write("array with boolean and bracket");
+   end;
+
+   if (not doors[i] or not doors[i]) then begin
+	   write("array with boolean and bracket");
+   end;
+   write("inside single quore");
+
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Stack is empty|7|============================
+
+:000:>  for_start ;
+:001:>  i  =  1 ;
+:002:>  for_cond_start ;
+:003:>  t0  =  i  <=  100 ;
+:004:>  for_cond_end  =  t0  true: goto 005  false: goto 012 ;
+:005:>  for_body_start ;
+:006:>  j  =  i ;
+:007:>  t1  =  j  +  i ;
+:008:>  j  =  t1 ;
+:009:>  j  =  'c' ;
+:010:>  i  =  i  +  1 ;
+:011:>  for_body_end  =  goto 002 ;
+:012:>  for_end ;
+
+:013:>  t2  =  -  3 ;
+:014:>  t3  =  -  t2 ;
+:015:>  t4  =  -  t3 ;
+:016:>  t5  =  1  +  t4 ;
+:017:>  a  =  t5 ;
+
+:018:>  for_start ;
+:019:>  i  =  1 ;
+:020:>  for_cond_start ;
+:021:>  t6  =  i  <=  100 ;
+:022:>  for_cond_end  =  t6  true: goto 023  false: goto 026 ;
+:023:>  for_body_start ;
+:024:>  i  =  i  +  1 ;
+:025:>  for_body_end  =  goto 020 ;
+:026:>  for_end ;
+
+
+:027:>  if_start ;
+:028:>  if_cond_end  =  a  true: goto 029  false: goto 031 ;
+:029:>  ifthen_body_start ;
+:030:>  ifthen_body_end  =  goto 031 ;
+:031:>  if_end ;
+
+
+:032:>  if_start ;
+:033:>  if_cond_end  =  a  true: goto 034  false: goto 036 ;
+:034:>  ifthen_body_start ;
+:035:>  ifthen_body_end  =  goto 036 ;
+:036:>  if_end ;
+
+
+:037:>  if_start ;
+:038:>  t7  =  1  *  7 ;
+:039:>  t8  =  t7  =  8 ;
+:040:>  if_cond_end  =  t8  true: goto 041  false: goto 043 ;
+:041:>  ifthen_body_start ;
+:042:>  ifthen_body_end  =  goto 043 ;
+:043:>  if_end ;
+
+
+:044:>  if_start ;
+:045:>  t9  =  i  * ;
+:046:>  t10  =  t9  +  &arr ;
+:047:>  t11  =  *t10 ;
+:048:>  if_cond_end  =  t11  true: goto 049  false: goto 051 ;
+:049:>  ifthen_body_start ;
+:050:>  ifthen_body_end  =  goto 051 ;
+:051:>  if_end ;
+
+
+:052:>  if_start ;
+:053:>  t12  =  i  * ;
+:054:>  t13  =  t12  +  &arr ;
+:055:>  t14  =  *t13 ;
+:056:>  t15  =  t14  -  3 ;
+:057:>  t16  =  t15  =  4 ;
+:058:>  if_cond_end  =  t16  true: goto 059  false: goto 061 ;
 :059:>  ifthen_body_start ;
-:060:>  t22  =  i  *  Integer ;
-:061:>  t23  =  t22  +  &numbers ;
-:062:>  t24  =  *t23 ;
-:063:>  t25  =  t24  +  9 ;
-:064:>  a  =  t25 ;
-:065:>  ifthen_body_end  =  goto 073 ;
-:066:>  else_body_start ;
-:067:>  t26  =  i  *  Integer ;
-:068:>  t27  =  t26  +  &numbers ;
-:069:>  t28  =  *t27 ;
-:070:>  t29  =  t28  -  9 ;
-:071:>  a  =  t29 ;
-:072:>  else_body_end ;
-:073:>  if_end ;
+:060:>  ifthen_body_end  =  goto 061 ;
+:061:>  if_end ;
 
 
-:074:>  while_start ;
-:075:>  while_cond_start ;
-:076:>  t30  =  number  <>  0 ;
-:077:>  while_cond_end  =  t30  true: goto 078  false: goto 094 ;
-:078:>  while_body_start ;
-:079:>  t31  =  number  /  10 ;
-:080:>  t32  =  t31  *  10 ;
-:081:>  t33  =  number  -  t32 ;
-:082:>  digit  =  t33 ;
+:062:>  if_start ;
+:063:>  t17  =  i  * ;
+:064:>  t18  =  t17  +  &arr ;
+:065:>  t19  =  *t18 ;
+:066:>  if_cond_end  =  t19  true: goto 067  false: goto 069 ;
+:067:>  ifthen_body_start ;
+:068:>  ifthen_body_end  =  goto 069 ;
+:069:>  if_end ;
 
-:083:>  if_start ;
-:084:>  t34  =  digit  <>  0 ;
-:085:>  if_cond_end  =  t34  true: goto 086  false: goto 090 ;
-:086:>  ifthen_body_start ;
-:087:>  t35  =  count  +  1 ;
-:088:>  count  =  t35 ;
-:089:>  ifthen_body_end  =  goto 090 ;
-:090:>  if_end ;
+:070:>  t20  =  3  * ;
+:071:>  t21  =  arr  * ;
+:072:>  t22  =  arr  * ;
 
-:091:>  t36  =  number  /  10 ;
-:092:>  number  =  t36 ;
-:093:>  while_body_end  =  goto 075 ;
-:094:>  while_end ;
+:073:>  if_start ;
+:074:>  t23  =  i  * ;
+:075:>  t24  =  t23  +  &arr ;
+:076:>  t25  =  *t24 ;
+:077:>  t26  =  t25  &  a ;
+:078:>  if_cond_end  =  t26  true: goto 079  false: goto 081 ;
+:079:>  ifthen_body_start ;
+:080:>  ifthen_body_end  =  goto 081 ;
+:081:>  if_end ;
 
-:095:>  t37  =  sum  /  5 ;
-:096:>  average  =  t37 ;
+
+:082:>  if_start ;
+:083:>  t27  =  i  *  Boolean ;
+:084:>  t28  =  t27  +  &doors ;
+:085:>  t29  =  *t28 ;
+:086:>  t30  =  !  t29 ;
+:087:>  t31  =  i  *  Boolean ;
+:088:>  t32  =  t31  +  &doors ;
+:089:>  t33  =  *t32 ;
+:090:>  t34  =  !  t33 ;
+:091:>  t35  =  t30  |  t34 ;
+:092:>  if_cond_end  =  t35  true: goto 093  false: goto 095 ;
+:093:>  ifthen_body_start ;
+:094:>  ifthen_body_end  =  goto 095 ;
+:095:>  if_end ;
+
+
+:096:>  while_start ;
+:097:>  while_cond_start ;
+:098:>  t36  =  i  <  3 ;
+:099:>  while_cond_end  =  t36  true: goto 100  false: goto 102 ;
+:100:>  while_body_start ;
+:101:>  while_body_end  =  goto 097 ;
+:102:>  while_end ;
+
+
+:103:>  while_start ;
+:104:>  while_cond_start ;
+:105:>  t37  =  i  <  3 ;
+:106:>  while_cond_end  =  t37  true: goto 107  false: goto 109 ;
+:107:>  while_body_start ;
+:108:>  while_body_end  =  goto 104 ;
+:109:>  while_end ;
+
+
+:110:>  if_start ;
+:111:>  t38  =  a  +  v ;
+:112:>  t39  =  t38  +  x ;
+:113:>  t40  =  t39  -  d ;
+:114:>  t41  =  t40  =  1 ;
+:115:>  t42  =  a  =  1 ;
+:116:>  t43  =  t41  &  t42 ;
+:117:>  if_cond_end  =  t43  true: goto 118  false: goto 120 ;
+:118:>  ifthen_body_start ;
+:119:>  ifthen_body_end  =  goto 120 ;
+:120:>  if_end ;
+
+
+:121:>  if_start ;
+:122:>  t44  =  v  +  x ;
+:123:>  t45  =  a  +  t44 ;
+:124:>  t46  =  t45  -  d ;
+:125:>  t47  =  t46  =  1 ;
+:126:>  t48  =  a  =  1 ;
+:127:>  t49  =  t47  &  t48 ;
+:128:>  if_cond_end  =  t49  true: goto 129  false: goto 131 ;
+:129:>  ifthen_body_start ;
+:130:>  ifthen_body_end  =  goto 131 ;
+:131:>  if_end ;
+
+
+:132:>  if_start ;
+:133:>  t50  =  a  +  v ;
+:134:>  t51  =  t50  +  x ;
+:135:>  t52  =  t51  -  d ;
+:136:>  if_cond_end  =  t52  true: goto 137  false: goto 139 ;
+:137:>  ifthen_body_start ;
+:138:>  ifthen_body_end  =  goto 139 ;
+:139:>  if_end ;
+
+
+:140:>  if_start ;
+:141:>  t53  =  i  *  Boolean ;
+:142:>  t54  =  t53  +  &doors ;
+:143:>  t55  =  *t54 ;
+:144:>  t56  =  !  t55 ;
+:145:>  t57  =  i  *  Boolean ;
+:146:>  t58  =  t57  +  &doors ;
+:147:>  t59  =  *t58 ;
+:148:>  t60  =  !  t59 ;
+:149:>  t61  =  t56  |  t60 ;
+:150:>  if_cond_end  =  t61  true: goto 151  false: goto 153 ;
+:151:>  ifthen_body_start ;
+:152:>  ifthen_body_end  =  goto 153 ;
+:153:>  if_end ;
+
+
+:154:>  if_start ;
+:155:>  t62  =  id  >  2 ;
+:156:>  t63  =  id  &  t62 ;
+:157:>  if_cond_end  =  t63  true: goto 158  false: goto 160 ;
+:158:>  ifthen_body_start ;
+:159:>  ifthen_body_end  =  goto 160 ;
+:160:>  if_end ;
+
+
+:161:>  if_start ;
+:162:>  t64  =  i  *  Boolean ;
+:163:>  t65  =  t64  +  &doors ;
+:164:>  t66  =  *t65 ;
+:165:>  t67  =  !  t66 ;
+:166:>  t68  =  i  *  Boolean ;
+:167:>  t69  =  t68  +  &doors ;
+:168:>  t70  =  *t69 ;
+:169:>  t71  =  !  t70 ;
+:170:>  t72  =  t67  |  t71 ;
+:171:>  if_cond_end  =  t72  true: goto 172  false: goto 174 ;
+:172:>  ifthen_body_start ;
+:173:>  ifthen_body_end  =  goto 174 ;
+:174:>  if_end ;
+
+
+:175:>  if_start ;
+:176:>  t73  =  i  *  Boolean ;
+:177:>  t74  =  t73  +  &doors ;
+:178:>  t75  =  *t74 ;
+:179:>  t76  =  !  t75 ;
+:180:>  t77  =  i  *  Boolean ;
+:181:>  t78  =  t77  +  &doors ;
+:182:>  t79  =  *t78 ;
+:183:>  t80  =  !  t79 ;
+:184:>  t81  =  t76  |  t80 ;
+:185:>  t82  =  !  x ;
+:186:>  t83  =  t81  &  t82 ;
+:187:>  if_cond_end  =  t83  true: goto 188  false: goto 190 ;
+:188:>  ifthen_body_start ;
+:189:>  ifthen_body_end  =  goto 190 ;
+:190:>  if_end ;
+
+
+:191:>  if_start ;
+:192:>  t84  =  i  *  Boolean ;
+:193:>  t85  =  t84  +  &doors ;
+:194:>  t86  =  *t85 ;
+:195:>  t87  =  !  t86 ;
+:196:>  t88  =  i  *  Boolean ;
+:197:>  t89  =  t88  +  &doors ;
+:198:>  t90  =  *t89 ;
+:199:>  t91  =  !  t90 ;
+:200:>  t92  =  t87  |  t91 ;
+:201:>  if_cond_end  =  t92  true: goto 202  false: goto 204 ;
+:202:>  ifthen_body_start ;
+:203:>  ifthen_body_end  =  goto 204 ;
+:204:>  if_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 12
+program Mean;
+var
+  i, n, sum: integer;
+  mean: real;
+begin
+  n := -20;
+  sum := 0;
+
+  a := (-12) + 6;
+  
+  for i := 1 to n do
+  begin
+    sum := sum + i;
+  end;
+  
+  mean := sum / n;
+  
+  write("The mean of the numbers from 1 to 20 is ", mean);
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Stack is empty============================
+:000:>  t0  =  -  20 ;
+:001:>  n  =  t0 ;
+:002:>  sum  =  0 ;
+:003:>  t1  =  -  12 ;
+:004:>  t2  =  t1  +  6 ;
+:005:>  a  =  t2 ;
+
+:006:>  for_start ;
+:007:>  i  =  1 ;
+:008:>  for_cond_start ;
+:009:>  t3  =  i  <=  n ;
+:010:>  for_cond_end  =  t3  true: goto 011  false: goto 016 ;
+:011:>  for_body_start ;
+:012:>  t4  =  sum  +  i ;
+:013:>  sum  =  t4 ;
+:014:>  i  =  i  +  1 ;
+:015:>  for_body_end  =  goto 008 ;
+:016:>  for_end ;
+
+:017:>  t5  =  sum  /  n ;
+:018:>  mean  =  t5 ;
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 13
+program NumberOfDigits;
+var
+  number, count: Integer;
+  flag : boolean; 
+begin
+  write("Enter a number:");
+  read(number);
+  count := 0;
+  while number <> 0 do
+  begin
+    if flag  then
+    begin
+      count:=count+1;
+      flag := 1;
+    end
+    else 
+    begin
+     count :=count;
+    end; 
+    number := number / 10;
+  end;
+  write("The number of digits is: ");
+  write(count);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+============================
+:000:>  count  =  0 ;
+
+:001:>  while_start ;
+:002:>  while_cond_start ;
+:003:>  t0  =  number  <>  0 ;
+:004:>  while_cond_end  =  t0  true: goto 005  false: goto 020 ;
+:005:>  while_body_start ;
+
+:006:>  if_start ;
+:007:>  if_cond_end  =  flag  true: goto 008  false: goto 013 ;
+:008:>  ifthen_body_start ;
+:009:>  t1  =  count  +  1 ;
+:010:>  count  =  t1 ;
+:011:>  flag  =  1 ;
+:012:>  ifthen_body_end  =  goto 016 ;
+:013:>  else_body_start ;
+:014:>  count  =  count ;
+:015:>  else_body_end ;
+:016:>  if_end ;
+
+:017:>  t2  =  number  /  10 ;
+:018:>  number  =  t2 ;
+:019:>  while_body_end  =  goto 002 ;
+:020:>  while_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 14
+program NumberOfDigits;
+var
+  number, count: Integer;
+begin
+  write("Enter a number:");
+  read(number);
+  count := 0;
+  while number <> 0 do
+  begin
+    if number <> 0 then
+    begin
+      count:=count+1;
+    end
+    else 
+    begin
+     count :=count;
+    end; 
+    number := number / 10;
+  end;
+  write("The number of digits is: ");
+  write(count);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+============================
+:000:>  count  =  0 ;
+
+:001:>  while_start ;
+:002:>  while_cond_start ;
+:003:>  t0  =  number  <>  0 ;
+:004:>  while_cond_end  =  t0  true: goto 005  false: goto 020 ;
+:005:>  while_body_start ;
+
+:006:>  if_start ;
+:007:>  t1  =  number  <>  0 ;
+:008:>  if_cond_end  =  t1  true: goto 009  false: goto 013 ;
+:009:>  ifthen_body_start ;
+:010:>  t2  =  count  +  1 ;
+:011:>  count  =  t2 ;
+:012:>  ifthen_body_end  =  goto 016 ;
+:013:>  else_body_start ;
+:014:>  count  =  count ;
+:015:>  else_body_end ;
+:016:>  if_end ;
+
+:017:>  t3  =  number  /  10 ;
+:018:>  number  =  t3 ;
+:019:>  while_body_end  =  goto 002 ;
+:020:>  while_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 15
+program MaxValueArray;
+var
+  numbers: array[1..10] of Integer;
+  i, j, maxValue: Integer;
+begin
+  write("Enter 10 integer values:");
+  for i := 1 to 10 do
+  begin
+    read(numbers[i]);
+  end;
+  j := 1; 
+  maxValue := numbers[1];
+  for i := j+2 to j+5 do
+  begin
+    if numbers[i] <> maxValue then
+    begin
+      maxValue := numbers[i];
+    end;
+  end;
+ 
+  write("The value is ");  
+  write(maxValue);
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+Stack is empty============================
+
+:000:>  for_start ;
+:001:>  i  =  1 ;
+:002:>  for_cond_start ;
+:003:>  t0  =  i  <=  10 ;
+:004:>  for_cond_end  =  t0  true: goto 005  false: goto 009 ;
+:005:>  for_body_start ;
+:006:>  t1  =  i  *  Integer ;
+:007:>  i  =  i  +  1 ;
+:008:>  for_body_end  =  goto 002 ;
+:009:>  for_end ;
+
+:010:>  j  =  1 ;
+:011:>  t2  =  1  *  Integer ;
+:012:>  t3  =  t2  +  &numbers ;
+:013:>  t4  =  *t3 ;
+:014:>  maxValue  =  t4 ;
+
+:015:>  for_start ;
+:016:>  t5  =  j  +  2 ;
+:017:>  i  =  t5 ;
+:018:>  for_cond_start ;
+:019:>  t6  =  j  +  5 ;
+:020:>  t7  =  i  <=  t6 ;
+:021:>  for_cond_end  =  t7  true: goto 022  false: goto 038 ;
+:022:>  for_body_start ;
+
+:023:>  if_start ;
+:024:>  t8  =  i  *  Integer ;
+:025:>  t9  =  t8  +  &numbers ;
+:026:>  t10  =  *t9 ;
+:027:>  t11  =  t10  <>  maxValue ;
+:028:>  if_cond_end  =  t11  true: goto 029  false: goto 035 ;
+:029:>  ifthen_body_start ;
+:030:>  t12  =  i  *  Integer ;
+:031:>  t13  =  t12  +  &numbers ;
+:032:>  t14  =  *t13 ;
+:033:>  maxValue  =  t14 ;
+:034:>  ifthen_body_end  =  goto 035 ;
+:035:>  if_end ;
+
+:036:>  i  =  i  +  1 ;
+:037:>  for_body_end  =  goto 018 ;
+:038:>  for_end ;
+
+============================
+
+
+
+Parsing completed successfully
+=======================================
+Test Case 16
+program ArrayAverage;
+var
+  grade : char ;
+  isready : boolean ;
+  numbers : array [1..10] of Integer ;
+  number, i, sum : Integer;
+  maxValue : real;
+  // the programs starts here
+begin
+  write("Enter a number:");
+  read(number);
+  while number <> 0 do
+  begin
+    if number > 0 then
+    begin
+      count:=count+1;
+    end
+    else
+    begin
+     count :=count;
+    end;
+    number := number - (number / 10) * 10;
+    number := number %  10;
+  end;
+  for i := 2 to 10 do
+  begin
+    if numbers[i] <= maxValue then
+    begin
+      maxValue := numbers[i] + 10;
+    end;
+  end;
+  average := sum / 5;
+  write(sum, maxValue);
+  // the program ends here
+end.
+Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+ the programs starts hereStack is emptyStack is emptyStack is emptyStack is emptyStack is empty|10| the program ends here============================
+
+:000:>  while_start ;
+:001:>  while_cond_start ;
+:002:>  t0  =  number  <>  0 ;
+:003:>  while_cond_end  =  t0  true: goto 004  false: goto 023 ;
+:004:>  while_body_start ;
+
+:005:>  if_start ;
+:006:>  t1  =  number  >  0 ;
+:007:>  if_cond_end  =  t1  true: goto 008  false: goto 012 ;
+:008:>  ifthen_body_start ;
+:009:>  t2  =  count  +  1 ;
+:010:>  count  =  t2 ;
+:011:>  ifthen_body_end  =  goto 015 ;
+:012:>  else_body_start ;
+:013:>  count  =  count ;
+:014:>  else_body_end ;
+:015:>  if_end ;
+
+:016:>  t3  =  number  /  10 ;
+:017:>  t4  =  t3  *  10 ;
+:018:>  t5  =  number  -  t4 ;
+:019:>  number  =  t5 ;
+:020:>  t6  =  number  %  10 ;
+:021:>  number  =  t6 ;
+:022:>  while_body_end  =  goto 001 ;
+:023:>  while_end ;
+
+
+:024:>  for_start ;
+:025:>  i  =  2 ;
+:026:>  for_cond_start ;
+:027:>  t7  =  i  <=  10 ;
+:028:>  for_cond_end  =  t7  true: goto 029  false: goto 046 ;
+:029:>  for_body_start ;
+
+:030:>  if_start ;
+:031:>  t8  =  i  *  Integer ;
+:032:>  t9  =  t8  +  &numbers ;
+:033:>  t10  =  *t9 ;
+:034:>  t11  =  t10  <=  maxValue ;
+:035:>  if_cond_end  =  t11  true: goto 036  false: goto 043 ;
+:036:>  ifthen_body_start ;
+:037:>  t12  =  i  *  Integer ;
+:038:>  t13  =  t12  +  &numbers ;
+:039:>  t14  =  *t13 ;
+:040:>  t15  =  t14  +  10 ;
+:041:>  maxValue  =  t15 ;
+:042:>  ifthen_body_end  =  goto 043 ;
+:043:>  if_end ;
+
+:044:>  i  =  i  +  1 ;
+:045:>  for_body_end  =  goto 026 ;
+:046:>  for_end ;
+
+:047:>  t16  =  sum  /  5 ;
+:048:>  average  =  t16 ;
 ============================
 
 
