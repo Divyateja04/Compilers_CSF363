@@ -46,6 +46,10 @@ void updateIST(std::string symbol, std::variant<int, float, char, bool, std::vec
 }
 
 std::variant<int, float, char, bool, std::vector<int>> getIST(std::string symbol) {
+    if (symbol == "NA") {
+        return 0; // TODO: deal with float case
+    }
+
     // Check if symbol can be converted to an integer
     char* end;
     long int_value = std::strtol(symbol.c_str(), &end, 10);
@@ -60,18 +64,37 @@ std::variant<int, float, char, bool, std::vector<int>> getIST(std::string symbol
         return static_cast<float>(float_value);
     }
 
-    // If symbol is not a number, look it up in the symbol table
     if (interpreterSymbolTable.find(symbol) != interpreterSymbolTable.end()) {
         return interpreterSymbolTable[symbol];
     } else {
-        yyerror("Symbol not found in symbol table");
+        std::string error_message = "Symbol '" + symbol + "' not found in symbol table";
+        yyerror(error_message.c_str());
         return 0;
     }
 }
 
 void printIST() {
     for (auto& it: interpreterSymbolTable) {
-        std::cout << "Symbol: " << it.first << " Value: " << std::get<int>(it.second) << std::endl;
+        std::cout << "Symbol: " << it.first << " Value: ";
+        std::visit([](auto&& arg) {
+            using T = std::decay_t<decltype(arg)>;
+            if constexpr (std::is_same_v<T, int>)
+                std::cout << arg;
+            else if constexpr (std::is_same_v<T, float>)
+                std::cout << arg;
+            else if constexpr (std::is_same_v<T, char>)
+                std::cout << arg;
+            else if constexpr (std::is_same_v<T, bool>)
+                std::cout << std::boolalpha << arg;
+            else if constexpr (std::is_same_v<T, std::vector<int>>) {
+                std::cout << "[";
+                for (const auto& elem : arg) {
+                    std::cout << elem << " ";
+                }
+                std::cout << "]";
+            }
+        }, it.second);
+        std::cout << std::endl;
     }
 }
 
@@ -177,8 +200,10 @@ void interpreter() {
                     if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
                         int result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
                         updateIST(quad[current_line].result, result);
-                    } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
-                        float result = performOperation(quad[current_line].op[0], std::get<float>(getIST(quad[current_line].operand1)), std::get<float>(getIST(quad[current_line].operand2)));
+                    } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) || std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                        float operand1 = std::holds_alternative<int>(getIST(quad[current_line].operand1)) ? static_cast<float>(std::get<int>(getIST(quad[current_line].operand1))) : std::get<float>(getIST(quad[current_line].operand1));
+                        float operand2 = std::holds_alternative<int>(getIST(quad[current_line].operand2)) ? static_cast<float>(std::get<int>(getIST(quad[current_line].operand2))) : std::get<float>(getIST(quad[current_line].operand2));
+                        float result = performOperation(quad[current_line].op[0], operand1, operand2);
                         updateIST(quad[current_line].result, result);
                     }
                     break;
@@ -219,7 +244,6 @@ void interpreter() {
             continue;
         }
     }
-
     printIST();
 }
 
@@ -237,6 +261,12 @@ void displayQuadruple()
             }
             sprintf(quad[i].op, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to if_end when you reach ifthen_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "if_end") != 0 && k > 0){
+                k++;
+            }
+            sprintf(quad[j].op, "goto %03d", k);
         }
         // Check if the current quadruple starts a while condition
         if(strcmp(quad[i].result, "while_cond_end") == 0){
@@ -288,18 +318,21 @@ void displayQuadruple()
             }
             // we just found the for_var actual name
             // now we need to replace it with the actual name
-            int m = i;
+            int m = k;
             char actual_name[100];
             sscanf(quad[l].result, "for_var_%s", actual_name);
             strcpy(quad[l].result, actual_name);
-            while(l < m){
+            while(m <= j){
                 if(strcmp(quad[m].operand1, "for_var") == 0){
                     strcpy(quad[m].operand1, actual_name);
+                }
+                if(strcmp(quad[m].result, "for_var") == 0){
+                    strcpy(quad[m].result, actual_name);
                 }
                 if(strcmp(quad[m].operand2, "for_var") == 0){
                     strcpy(quad[m].operand2, actual_name);
                 }
-                m--;
+                m++;
             }
         }
     }
@@ -433,7 +466,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
     printf("============================\n");
     displayQuadruple();
-    // interpreter();
+    interpreter();
     printf("============================\n");
 }
 ;
@@ -715,6 +748,7 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
+    addQuadruple("for_var", "+", "1", "for_var");
     addQuadruple("NA", "NA", "NA", "for_body_end");
 } SEMICOLON {
     addQuadruple("NA", "NA", "NA", "for_end");

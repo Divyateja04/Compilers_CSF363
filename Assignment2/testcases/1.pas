@@ -7,8 +7,6 @@ var
   c: char;
 begin
   i := 100;
-  i := i + i * (i - i) + (i - i) * d;
-  x := (7 < 5) and (6 > 5);
   a := -3;
   count := 0;
   number := 0;

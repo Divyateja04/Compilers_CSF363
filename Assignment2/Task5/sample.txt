@@ -6,17 +6,31 @@ var
   c: char;
 begin
   i := 100;
-  i := i + i * (i - i) + (i - i) * d;
-  x := (7 < 5) and (6 > 5);
   a := -3;
+  average := 0.5;
 
   write("Enter 5 integer values:");
 
-  c := 'c';
-  write(c);
+  if i > 0 then
+  begin
+    a := 0;
+  end;
 
   for i := 1 to 5 do
   begin
-    read(numbers[i]);
+    a := a + i;
+    average := average / 2;
+  end;
+
+  while a > 0 do
+  begin
+    a := a - 1;
+    average := average * 2;
+  end;
+
+  a := -1;
+  if a < 0 then
+  begin
+    a := 0;
   end;
 end.
