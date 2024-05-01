@@ -1150,11 +1150,7 @@ LOOPING_STATEMENT: WHILE_LOOP {
     $<t.nd>$ = initNode("LoopingStatement");
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
-| FOR_LOOP_TO {
-    $<t.nd>$ = initNode("LoopingStatement");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-}
-| FOR_LOOP_DOWNTO {
+| FOR_LOOP {
     $<t.nd>$ = initNode("LoopingStatement");
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
@@ -1177,7 +1173,64 @@ WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON {
 }
 ;
 
-FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
+FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
+    $<t.lineNumber>$ = $<t.lineNumber>2;
+    if(symbol != NULL){
+        symbol->isVarSet = 1;
+        printf("%s--------- %s", $<t.data_type>5, $<t.data_type>2);
+        if((strcmp($<t.data_type>5, "int") != 0) || (strcmp($<t.data_type>2, "int") != 0)){
+            CustomError1($<t.lineNumber>2, "Invalid data type for forloop initialization");
+        }
+    }
+    else{
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
+    }
+} AFTER_FOR_CONDITION {
+    $<t.nd>$ = initNode("ForLoop");
+    $<t.nd>1 = initNode("FOR");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("EQUAL");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+    addNodetoTree($<t.nd>$,$<t.nd>7);
+}
+;
+
+AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
+    if($<t.data_type>2 != "int" ){
+        CustomError1($<t.lineNumber>2, "Invalid data type for forloop limit");
+    }
+    $<t.nd>$ = initNode("ForLoopTo");
+    $<t.nd>1 = initNode("TO");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("DO");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+}
+| DOWNTO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
+    if((strcmp($<t.data_type>2, "int") != 0)){
+        CustomError1($<t.lineNumber>2, "Invalid data type for forloop limit");
+    }
+    $<t.nd>$ = initNode("ForLoopDownTo");
+    $<t.nd>1 = initNode("DOWNTO");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("DO");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+}
+
+/* FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
@@ -1261,7 +1314,7 @@ FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSIO
     $<t.nd>10 = initNode("SEMICOLON");
     addNodetoTree($<t.nd>$,$<t.nd>10);
 }
-;
+; */
 
 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END {
     $<t.nd>$ = initNode("BodyOfLoop");
@@ -1381,59 +1434,22 @@ bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int sym
 
 void printSymbolTable(){
     printf("\n========\nSymbol Table:\n========");
+    printf("\n    ID Name    | Data Type |   Value   \n");
     for(int i = 0; i < symbol_table_index; i++){
         if(strcmp(symbol_table[i]->varorarray, "1") == 0){
-        printf("\nID Name: %s", symbol_table[i]->id_name);
-        printf(", Data Type: %s", symbol_table[i]->data_type);
-        printf(", Value: %s", symbol_table[i]->val);
+            printf("\n%15s|%11s|%11s", symbol_table[i]->id_name, symbol_table[i]->data_type, symbol_table[i]->val);
+            /* printf("\nID Name: %s ", symbol_table[i]->id_name);
+            printf("| Data Type: %s ", symbol_table[i]->data_type);
+            printf("| Value: %s ", symbol_table[i]->val); */
         }
         else if(strcmp(symbol_table[i]->varorarray, "2") == 0){
-            printf("\nArray Name: %s", symbol_table[i]->id_name); 
-            printf(", Data Type: %s", symbol_table[i]->data_type);
-            printf(", Min Index: %s", symbol_table[i]->min_index);
-            printf(", Max Index: %s", symbol_table[i]->max_index);
+            /* printf("\nArray Name: %s ", symbol_table[i]->id_name); 
+            printf("| Data Type: %s ", symbol_table[i]->data_type);
+            printf("| Min Index: %s ", symbol_table[i]->min_index);
+            printf("| Max Index: %s ", symbol_table[i]->max_index); */
+            printf("\n%15s|%10s|%10s", symbol_table[i]->id_name, symbol_table[i]->data_type, symbol_table[i]->val);
         }
     }
-}
-
-void main()
-{
-    for(int i = 0; i < 100; i++){
-        symbol_table[i] = (Symbol *)malloc(sizeof(Symbol));
-        strcpy(symbol_table[i]->id_name, "");
-        strcpy(symbol_table[i]->data_type, "null");
-        strcpy(symbol_table[i]->val, "0");
-        strcpy(symbol_table[i]->varorarray, "0");
-        strcpy(symbol_table[i]->min_index, "null");
-        strcpy(symbol_table[i]->max_index, "null");
-        symbol_table[i]->isVarSet = 0;
-        memset(symbol_table[i]->isArraySet, 0, 100*sizeof(int));
-        for(int j = 0; j < 100; j++){
-            strcpy(symbol_table[i]->array[j], "null");
-        }
-        
-    }
-
-    yyin = fopen("sample.txt", "r");
-    if(yyin == NULL){
-        /* if(printLogs) printf("\nFile not found"); */
-        exit(1);
-    }
-    else{
-        /* if(printLogs) printf("\nInput file found, Parsing...."); */
-        yyparse();
-    }
-    printSymbolTable();
-    printTree(head);
-
-    FILE *file_ptr;
-    file_ptr = fopen("syntaxtree.txt", "w");
-    if (file_ptr == NULL) {
-        printf("Error opening the file.\n");
-    }
-    fprintf(file_ptr, "%s", TreeInString);
-    fclose(file_ptr);
-    printf("\n\n\n%s", TreeInString);
 }
 
 struct Treenode* initNode(char *label)
@@ -1482,6 +1498,46 @@ void printTree(struct Treenode *tree)
     TreeInStringIndex++;
 }
 
+void main()
+{
+    for(int i = 0; i < 100; i++){
+        symbol_table[i] = (Symbol *)malloc(sizeof(Symbol));
+        strcpy(symbol_table[i]->id_name, "");
+        strcpy(symbol_table[i]->data_type, "null");
+        strcpy(symbol_table[i]->val, "0");
+        strcpy(symbol_table[i]->varorarray, "0");
+        strcpy(symbol_table[i]->min_index, "null");
+        strcpy(symbol_table[i]->max_index, "null");
+        symbol_table[i]->isVarSet = 0;
+        memset(symbol_table[i]->isArraySet, 0, 100*sizeof(int));
+        for(int j = 0; j < 100; j++){
+            strcpy(symbol_table[i]->array[j], "null");
+        }
+        
+    }
+
+    yyin = fopen("sample.txt", "r");
+    if(yyin == NULL){
+        /* if(printLogs) printf("\nFile not found"); */
+        exit(1);
+    }
+    else{
+        /* if(printLogs) printf("\nInput file found, Parsing...."); */
+        yyparse();
+    }
+    printSymbolTable();
+    printTree(head);
+
+    FILE *file_ptr;
+    file_ptr = fopen("syntaxtree.txt", "w");
+    if (file_ptr == NULL) {
+        printf("Error opening the file.\n");
+    }
+    fprintf(file_ptr, "%s", TreeInString);
+    fclose(file_ptr);
+    printf("\n\n\n%s", TreeInString);
+}
+
 int yyerror(){
     printf("\n\n\nSyntax error found");
     return 0;
@@ -1489,15 +1545,12 @@ int yyerror(){
 
 void CustomError1(int lineNumber, char* message){
     printf("\n\nLine: %d ::> %s", lineNumber, message);
-    /* printSymbolTable(); */
 }
 
 void CustomError2(int lineNumber, char* id_name, char* message){
     printf("\n\nLine: %d ::> %s -> %s", lineNumber, id_name, message);
-    /* printSymbolTable(); */
 }
 
 void CustomError3(int lineNumber, char* id_name, char* index, char* message){
     printf("\n\nLine: %d ::> %s[%s] -> %s", lineNumber, id_name, index, message);
-    /* printSymbolTable(); */
 }
