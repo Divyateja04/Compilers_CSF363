@@ -36,8 +36,7 @@ struct Array {
     int offset;
 };
 
-void addQuadruple(char op1[], char op[], char op2[], char result[])
-{
+void addQuadruple(char op1[], char op[], char op2[], char result[]) {
     strcpy(quad[quadrupleIndex].op, op);
     strcpy(quad[quadrupleIndex].operand1, op1);
     strcpy(quad[quadrupleIndex].operand2, op2);
@@ -84,31 +83,33 @@ std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
 
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+void printArray(const ArrayType& arr) {
+    std::cout << "[";
+    for (size_t i = 0; i < arr.array.size(); i++) {
+        const auto& elem = arr.array[i];
+        std::visit(overloaded {
+            [](const int& i) { std::cout << i << ", "; },
+            [](const float& f) { std::cout << f << ", "; },
+            [](const char& c) { std::cout << c << ", "; },
+            [](const bool& b) { std::cout << std::boolalpha << b << ", "; },
+            [](const ArrayType& a) { printArray(a); }
+        }, elem);
+    }
+    std::cout << "]";
+}
+
+
 void printIST() {
+    std::cout << std::endl;
     for (auto& it: interpreterSymbolTable) {
         std::cout << "Symbol: " << it.first << " Value: ";
-        std::visit([](auto&& arg) {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, int>)
-                std::cout << arg;
-            else if constexpr (std::is_same_v<T, float>)
-                std::cout << arg;
-            else if constexpr (std::is_same_v<T, char>)
-                std::cout << arg;
-            else if constexpr (std::is_same_v<T, bool>)
-                std::cout << std::boolalpha << arg;
-            else if constexpr (std::is_same_v<T, ArrayType>) {
-                std::cout << "[";
-                for (const auto& elem : arg.array) {
-                    std::visit(overloaded {
-                        [](const int& i) { std::cout << i << " "; },
-                        [](const float& f) { std::cout << f << " "; },
-                        [](const char& c) { std::cout << c << " "; },
-                        [](const bool& b) { std::cout << std::boolalpha << b << " "; }
-                    }, elem);
-                }
-                std::cout << "]";
-            }
+        std::visit(overloaded {
+            [](const int& i) { std::cout << i; },
+            [](const float& f) { std::cout << f; },
+            [](const char& c) { std::cout << c; },
+            [](const bool& b) { std::cout << std::boolalpha << b; },
+            [](const ArrayType& a) { printArray(a); }
         }, it.second);
         std::cout << std::endl;
     }
@@ -484,6 +485,8 @@ SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON {
         updateIST($<data>1, 0.0f);
     } else if (strcmp($<data>3, "char") == 0) {
         updateIST($<data>1, '@');
+    } else if (strcmp($<data>3, "bool") == 0) {
+        updateIST($<data>1, false);
     }
  }
 ;
@@ -500,14 +503,14 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
     array.offset = std::stoi($<data>7) - std::stoi($<data>5); // Storing the size of array
     std::variant<int, float, char, bool, Array<VariantType>> arrayType = array;
     if ($<data>9 == "Integer") {
-        array.array = std::vector<VariantType>(array.offset, 0);
+        array.array = std::vector<VariantType>(array.offset, VariantType(5));
     } else if ($<data>9 == "real") {
-        array.array = std::vector<VariantType>(array.offset, 0.0f);
+        array.array = std::vector<VariantType>(array.offset, VariantType(0.0f));
     } else if ($<data>9 == "char") {
-        array.array = std::vector<VariantType>(array.offset, '\0');
+        array.array = std::vector<VariantType>(array.offset, VariantType('\0'));
     } else if ($<data>9 == "bool") {
-        array.array = std::vector<VariantType>(array.offset, false);
-    }
+        array.array = std::vector<VariantType>(array.offset, VariantType(false));
+    } // TODO: Add vector as sub case N x N vectors
     array.offset = std::stoi($<data>7);
     updateIST($<data>1, arrayType);
 }

@@ -9,6 +9,8 @@ begin
   average := 0.5;
   c := 'c';
 
+  // numbers[2] := 5;
+
   write("Enter 5 integer values:");
 
   if i > 0 then
