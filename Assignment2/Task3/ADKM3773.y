@@ -81,12 +81,12 @@ DATATYPE: INTEGER { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ =
 | CHAR { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
 ;
 
-RELOP: EQUAL { strcpy($<t.operator>$, "="); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| NOTEQUAL { strcpy($<t.operator>$, "<>"); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| LESS { strcpy($<t.operator>$, "<"); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| LESSEQUAL { strcpy($<t.operator>$, "<="); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| GREATER { strcpy($<t.operator>$, ">"); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| GREATEREQUAL { strcpy($<t.operator>$, ">="); $<t.lineNumber>$ = $<t.lineNumber>1; }
+RELOP: EQUAL { strcpy($<t.operator>$, "="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
+| NOTEQUAL { strcpy($<t.operator>$, "<>"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
+| LESS { strcpy($<t.operator>$, "<"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
+| LESSEQUAL { strcpy($<t.operator>$, "<="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
+| GREATER { strcpy($<t.operator>$, ">"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
+| GREATEREQUAL { strcpy($<t.operator>$, ">="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
 ;
 
 /* ARRAY ADD ON FOR EVERY ID */
@@ -535,15 +535,31 @@ ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); 
 | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     strcpy($<t.data_type>$, "boolean");
-    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+    if(((strcmp($<t.data_type>1, "int") == 0) || (strcmp($<t.data_type>1, "real") == 0)) && 
+    ((strcmp($<t.data_type>3, "int") == 0) || (strcmp($<t.data_type>3, "real") == 0))){}
+    else if((($<t.data_type>1 == "char") || ($<t.data_type>1 == "string")) && 
+    (($<t.data_type>3 == "char") || ($<t.data_type>3 == "string"))){}       
+    else{
         CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+        printf("\n%s %s", $<t.data_type>1, $<t.data_type>3);
     }
  }
 | LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     strcpy($<t.data_type>$, "boolean");
-    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+    if(((strcmp($<t.data_type>2, "int") == 0) || 
+        (strcmp($<t.data_type>2, "real") == 0)) 
+        && 
+        ((strcmp($<t.data_type>4, "int") == 0) || 
+        (strcmp($<t.data_type>4, "real") == 0))){}
+    else if((($<t.data_type>2 == "char") || 
+        ($<t.data_type>2 == "string")) 
+        && 
+        (($<t.data_type>4 == "char") || 
+        ($<t.data_type>4 == "string"))){}       
+    else{
         CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
+        printf("\n%s %s", $<t.data_type>1, $<t.data_type>3);
     }
  }
 | BOOLEAN_EXPRESSION_SEQUENCE { $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, $<t.data_type>1); }
@@ -677,28 +693,28 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
 BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION { 
     $<t.lineNumber>$ = $<t.lineNumber>2;
     strcpy($<t.data_type>$, "boolean");
-    if($<t.data_type>2 != "boolean"){
+    if(strcmp($<t.data_type>2, "boolean") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
     }
 }
 | ANY_EXPRESSION AND ANY_EXPRESSION {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     strcpy($<t.data_type>$, "boolean");
-    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+    if((strcmp($<t.data_type>1, "boolean") != 0) || (strcmp($<t.data_type>3, "boolean") != 0)){
         CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
     }
 }
 | ANY_EXPRESSION OR ANY_EXPRESSION {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     strcpy($<t.data_type>$, "boolean");
-    if(($<t.data_type>1 != "boolean") || ($<t.data_type>3 != "boolean")){
+    if((strcmp($<t.data_type>1, "boolean") != 0) || (strcmp($<t.data_type>3, "boolean") != 0)){
         CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
     }
 }
 | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     strcpy($<t.data_type>$, "boolean");
-    if($<t.data_type>2 != "boolean"){
+    if(strcmp($<t.data_type>2, "boolean") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for conditional statement");
     }
 }
