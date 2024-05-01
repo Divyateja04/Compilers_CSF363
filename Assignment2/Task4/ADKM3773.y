@@ -346,7 +346,13 @@ WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER
 ;
 
 WRITE_IDENTIFIER: IDENTIFIER
-| IDENTIFIER ARRAY_ADD_ON_ID
+| IDENTIFIER {
+    // If we just find id, we push it to stack
+    // This is popped out from stack in the ARRAY_ADD_ON_ID
+    char c[100]; 
+    sprintf(c,"%s",$<data>1); 
+    pushToStack(c);
+} ARRAY_ADD_ON_ID
 | STRING
 | INT_NUMBER
 | DECIMAL_NUMBER
