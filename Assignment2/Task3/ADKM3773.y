@@ -256,24 +256,15 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
 }
 ;
 
-/* WRITE STATEMENT */
 WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
 | WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
 ;
 
-WRITE_IDENTIFIER_LIST: IDENTIFIER {
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
-    }
-}
-| IDENTIFIER WRITE_MORE_IDENTIFIERS {
+WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER { $<t.lineNumber>$ = $<t.lineNumber>3; }
+| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST { $<t.lineNumber>$ = $<t.lineNumber>3; }
+;
+
+WRITE_IDENTIFIER: IDENTIFIER {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
@@ -305,33 +296,7 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
 }
-| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { 
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
-            }
-            else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
-            }
-        }
-        else if(strcmp(symbol->varorarray, "1") == 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
-    }
-}
 | STRING {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "string") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for string");
-    }    
-}
-| STRING WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "string") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for string");
@@ -343,145 +308,16 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
         CustomError1($<t.lineNumber>1, "Invalid data type for integer");
     }    
 }
-| INT_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "int") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for integer");
-    }    
-}
 | DECIMAL_NUMBER {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "real") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for real number");
-    }    
-}
-| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "real") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for real number");
+    $<t.lineNumber>$ = $<t.lineNumber>2;
+    if(strcmp($<t.data_type>2, "real") != 0){
+        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
     }    
 }
 | CHARACTER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "char") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for character");
-    }    
-}
-| CHARACTER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "char") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for character");
-    }    
-}
-;
-
-WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER { 
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
-    }
-}
-| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
-    }
-}
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>2, atoi($<t.val>3), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
-            }
-            else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>2, $<t.val>3, "Array index not set");
-            }
-        }
-        else if(strcmp(symbol->varorarray, "1") == 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>2, "Identifier not an array");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
-    }
-}
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>2, atoi($<t.val>3), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
-            }
-            else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>2, $<t.val>3, "Array index not set");
-            }
-        }
-        else if(strcmp(symbol->varorarray, "1") == 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>2, "Identifier not an array");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
-    }
-}
-| COMMA STRING {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "string") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for string");
-    }    
-}
-| COMMA STRING WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "string") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for string");
-    }    
-}
-| COMMA INT_NUMBER {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "int") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for integer");
-    }    
-}
-| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "int") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for integer");
-    }    
-}
-| COMMA DECIMAL_NUMBER {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "real") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
-    }    
-}
-| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "real") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
-    }    
-}
-| COMMA CHARACTER {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "char") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for character");
-    }    
-}
-| COMMA CHARACTER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "char") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for character");
     }    
 }
 ;
