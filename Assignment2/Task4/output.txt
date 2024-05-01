@@ -115,54 +115,55 @@ Compiling the program in gcc
 :040:>  i  =  1 ;
 :041:>  for_cond_start ;
 :042:>  t14  =  i  <=  5 ;
-:043:>  for_cond_end  =  t14  true: goto 044  false: goto 053 ;
+:043:>  for_cond_end  =  t14  true: goto 044  false: goto 054 ;
 :044:>  for_body_start ;
 :045:>  t15  =  6  *  7 ;
 :046:>  t16  =  sum  +  t15 ;
 :047:>  t17  =  i  *  Integer ;
 :048:>  t18  =  t17  +  &numbers ;
-:049:>  t19  =  t16  +  t18 ;
-:050:>  sum  =  t19 ;
-:051:>  i  =  i  +  1 ;
-:052:>  for_body_end  =  goto 041 ;
-:053:>  for_end ;
+:049:>  t19  =  *t18 ;
+:050:>  t20  =  t16  +  t19 ;
+:051:>  sum  =  t20 ;
+:052:>  i  =  i  +  1 ;
+:053:>  for_body_end  =  goto 041 ;
+:054:>  for_end ;
 
 
-:054:>  if_start ;
-:055:>  if_cond_end  =  x  true: goto 056  false: goto 058 ;
-:056:>  ifthen_body_start ;
-:057:>  ifthen_body_end  =  goto 060 ;
-:058:>  else_body_start ;
-:059:>  else_body_end ;
-:060:>  if_end ;
+:055:>  if_start ;
+:056:>  if_cond_end  =  x  true: goto 057  false: goto 059 ;
+:057:>  ifthen_body_start ;
+:058:>  ifthen_body_end  =  goto 061 ;
+:059:>  else_body_start ;
+:060:>  else_body_end ;
+:061:>  if_end ;
 
 
-:061:>  while_start ;
-:062:>  while_cond_start ;
-:063:>  t20  =  number  <>  0 ;
-:064:>  while_cond_end  =  t20  true: goto 065  false: goto 081 ;
-:065:>  while_body_start ;
-:066:>  t21  =  number  /  10 ;
-:067:>  t22  =  t21  *  10 ;
-:068:>  t23  =  number  -  t22 ;
-:069:>  digit  =  t23 ;
+:062:>  while_start ;
+:063:>  while_cond_start ;
+:064:>  t21  =  number  <>  0 ;
+:065:>  while_cond_end  =  t21  true: goto 066  false: goto 082 ;
+:066:>  while_body_start ;
+:067:>  t22  =  number  /  10 ;
+:068:>  t23  =  t22  *  10 ;
+:069:>  t24  =  number  -  t23 ;
+:070:>  digit  =  t24 ;
 
-:070:>  if_start ;
-:071:>  t24  =  digit  <>  0 ;
-:072:>  if_cond_end  =  t24  true: goto 073  false: goto 077 ;
-:073:>  ifthen_body_start ;
-:074:>  t25  =  count  +  1 ;
-:075:>  count  =  t25 ;
-:076:>  ifthen_body_end  =  goto 077 ;
-:077:>  if_end ;
+:071:>  if_start ;
+:072:>  t25  =  digit  <>  0 ;
+:073:>  if_cond_end  =  t25  true: goto 074  false: goto 078 ;
+:074:>  ifthen_body_start ;
+:075:>  t26  =  count  +  1 ;
+:076:>  count  =  t26 ;
+:077:>  ifthen_body_end  =  goto 078 ;
+:078:>  if_end ;
 
-:078:>  t26  =  number  /  10 ;
-:079:>  number  =  t26 ;
-:080:>  while_body_end  =  goto 062 ;
-:081:>  while_end ;
+:079:>  t27  =  number  /  10 ;
+:080:>  number  =  t27 ;
+:081:>  while_body_end  =  goto 063 ;
+:082:>  while_end ;
 
-:082:>  t27  =  sum  /  5 ;
-:083:>  average  =  t27 ;
+:083:>  t28  =  sum  /  5 ;
+:084:>  average  =  t28 ;
 ============================
 
 
