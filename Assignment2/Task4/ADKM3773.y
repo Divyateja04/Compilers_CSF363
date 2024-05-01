@@ -363,7 +363,9 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    char temp[100];
+    sprintf(temp, "'%s'", $<data>4);
+    addQuadruple(temp, "NA", "NA", $<data>1);
 }
 ;
 

@@ -84,7 +84,7 @@ Compiling the program in gcc
 :014:>  count  =  0 ;
 :015:>  number  =  0 ;
 :016:>  digit  =  0.0 ;
-:017:>  c  =  c ;
+:017:>  c  =  'c' ;
 
 :018:>  for_start ;
 :019:>  i  =  1 ;
