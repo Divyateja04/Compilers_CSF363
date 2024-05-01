@@ -46,6 +46,24 @@ bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int sym
 void CustomError1(char* message);
 void CustomError2(char* id_name, char* message);
 
+Node *root = NULL;
+
+// Node *createNode(char type[], float val, int num_children) {
+//     Node *newNode = (Node *)malloc(sizeof(Node));
+//     strcpy(newNode->type, type);
+//     newNode->val = val;
+//     newNode->num_children = num_children;
+//     for (int i = 0; i < 10; i++) {
+//         newNode->child[i] = NULL;
+//     }
+//     return newNode;
+// }
+
+// Node *addChild(Node *parent, Node *child) {
+//     parent->child[parent->num_children++] = child;
+//     return parent;
+// }
+
 %}
 
 %union {
@@ -163,6 +181,14 @@ DECLARATION_LIST: SINGLE_VARIABLE
 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { 
     addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.     data_type>3, "1");
     symbol_table_index++;
+SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.     data_type>3, "1");
+symbol_table_index++;
+    // Node *stmt = createNode("SINGLE_VARIABLE", 0, 0);
+    // Node *identifier = createNode("IDENTIFIER", 0, 0);
+    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); // Assuming $<t.id_name>1 contains the identifier name
+    // addChild(stmt, identifier);
+    // addChild(stmt, createNode($<t.data_type>3, 0, 0)); // Assuming $<t.data_type>3 contains the data type
+    // addChild(root, stmt);
 }
 ;
 
@@ -171,12 +197,19 @@ MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON {
     symbol_table_index++;
     enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); 
 }
+enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); 
+    // Node *stmt = createNode("MULTIPLE_VARIABLE", 0, 0);
+    // Node *identifier = createNode("IDENTIFIER", 0, 0);
+    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); // Assuming $<t.id_name>1 contains the identifier name
+    // addChild(stmt, identifier);
+    // addChild(stmt, createNode($<t.data_type>4, 0, 0)); // Assuming $<t.data_type>4 contains the data type
+    // addChild(root, stmt);
+}
 ;
 
 MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {     
     addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
     symbol_table_index++;
-    
 }
 | COMMA IDENTIFIER { 
     addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
@@ -194,6 +227,12 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
         strcpy(symbol_table[symbol_table_index]->max_index, $<t.val>7); 
         symbol_table_index++;
     }
+    // Node *stmt = createNode("ARRAY_DECLARATION", 0, 0);
+    // Node *identifier = createNode("IDENTIFIER", 0, 0);
+    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); // Assuming $<t.id_name>1 contains the identifier name
+    // addChild(stmt, identifier);
+    // addChild(stmt, createNode($<t.data_type>10, 0, 0)); // Assuming $<t.data_type>10 contains the data type
+    // addChild(root, stmt);
 }
 ; 
 
@@ -819,6 +858,33 @@ bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int sym
     }
     return false;
 }
+/* void drawNode(Node *p, int c, int l, int *ce, int *cm) {
+    int w, h;
+    char s[20]; 
+    if (!p) return;
+    snprintf(s, sizeof(s), "%s", p->type); 
+    graphBox(s, &w, &h);
+    graphDrawBox(s, c, l);
+    *ce = c + w;
+    *cm = c + w / 2;
+    int cs = c;
+    for (int k = 0; k < p->num_children; k++) {
+        drawNode(p->child[k], cs, l + h + 1, ce, cm); 
+        graphDrawArrow(*cm, l + h, *cm, l + h + 1);
+        cs = *ce;
+    }
+} */
+
+/* void drawSyntaxTree(Node *root, int c, int l, int *ce, int *cm) {
+    graphInit(); 
+    drawNode(root, c, l, ce, cm); 
+    graphFinish(); 
+}
+
+void drawSyntaxTreeWrapper(Node *root) {
+    int ce = 0, cm = 0; 
+    drawSyntaxTree(root, 0, 0, &ce, &cm);
+} */
 
 void main()
 {
@@ -845,6 +911,8 @@ void main()
     }
     else{
         if(printLogs) printf("\nInput file found, Parsing....");
+            /* Node *root = malloc(sizeof(Node));
+            drawSyntaxTreeWrapper(root); */
         yyparse();
     }
 
