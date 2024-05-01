@@ -91,12 +91,15 @@ void printArray(const ArrayType& arr) {
     for (size_t i = 0; i < arr.array.size(); i++) {
         const auto& elem = arr.array[i];
         std::visit(overloaded {
-            [](const int& j) { std::cerr << j << ", "; },
-            [](const float& f) { std::cerr << f << ", "; },
-            [](const char& c) { std::cerr << c << ", "; },
-            [](const bool& b) { std::cerr << std::boolalpha << b << ", "; },
+            [](const int& j) { std::cerr << j; },
+            [](const float& f) { std::cerr << f; },
+            [](const char& c) { std::cerr << c; },
+            [](const bool& b) { std::cerr << std::boolalpha << b; },
             [](const ArrayType& a) { printArray(a); }
         }, elem);
+        if (i != arr.array.size() - 1) {
+            std::cerr << ", ";
+        }
     }
     std::cerr << "]";
 }
@@ -137,9 +140,6 @@ T performOperation(char op, T operand1, T operand2) {
     return T();
 }
 
-std::queue<std::vector<std::string>> writeQueue;
-std::vector<std::string> writeVector;
-
 std::vector<std::string> temporaryVariablesVector;
 
 void interpreter() {
@@ -156,22 +156,17 @@ void interpreter() {
             strcmp(quad[current_line].result, "write") == 0 || 
             strcmp(quad[current_line].result, "writeln") == 0
             ) {
-            auto stack = writeQueue.front();
-            writeQueue.pop();
-
-            for(auto it = stack.begin(); it != stack.end(); ++it) {
-                if (interpreterSymbolTable.find(*it) != interpreterSymbolTable.end()) {
+                if (interpreterSymbolTable.find(quad[current_line].operand1) != interpreterSymbolTable.end()) {
                     std::visit(overloaded {
-                        [](const int& i) { std::cout << i; },
-                        [](const float& f) { std::cout << f; },
-                        [](const char& c) { std::cout << c; },
-                        [](const bool& b) { std::cout << std::boolalpha << b; },
-                        [](const ArrayType& a) { printArray(a); }
-                    }, interpreterSymbolTable[*it]);
+                        [](int i) { std::cout << i; },
+                        [](float f) { std::cout << f; },
+                        [](char c) { std::cout << c; },
+                        [](bool b) { std::cout << std::boolalpha << b; },
+                        [](ArrayType a) { printArray(a); }
+                    }, interpreterSymbolTable[quad[current_line].operand1]);
                 } else {
-                    std::cout << *it;
+                    std::cout << quad[current_line].operand1;
                 }
-            }
 
             if (strcmp(quad[current_line].result, "writeln") == 0) {
                 std::cout << std::endl;
@@ -208,30 +203,43 @@ void interpreter() {
 
                     int index = 0;
                     if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
-                        int index = std::get<int>(interpreterSymbolTable[array_index]);
+                        std::cerr << "Found index in IST" << std::endl;
+                        index = std::get<int>(interpreterSymbolTable[array_index]);
                     } else {
-                        int index = std::stoi(array_index);
+                        std::cerr << "Didnt find index in IST" << std::endl;
+                        index = std::stoi(array_index);
                     }
 
-                    auto temp = getIST(quad[current_line].operand2);
+                    std::cerr << "Index: " << index << std::endl;
 
-                    std::variant<int, float, char, bool> downcasted_temp;
-                    if (std::holds_alternative<int>(temp)) {
-                        downcasted_temp = std::get<int>(temp);
-                    } else if (std::holds_alternative<float>(temp)) {
-                        downcasted_temp = std::get<float>(temp);
-                    } else if (std::holds_alternative<char>(temp)) {
-                        downcasted_temp = std::get<char>(temp);
-                    } else if (std::holds_alternative<bool>(temp)) {
-                        downcasted_temp = std::get<bool>(temp);
+                    if (interpreterSymbolTable.find(quad[current_line].operand2) != interpreterSymbolTable.end()) {
+                        std::cerr << "Found in IST" << std::endl;
+                        auto temp = interpreterSymbolTable[quad[current_line].operand2];
+
+                        std::variant<int, float, char, bool> downcasted_temp;
+                        if (std::holds_alternative<int>(temp)) {
+                            downcasted_temp = std::get<int>(temp);
+                        } else if (std::holds_alternative<float>(temp)) {
+                            downcasted_temp = std::get<float>(temp);
+                        } else if (std::holds_alternative<char>(temp)) {
+                            downcasted_temp = std::get<char>(temp);
+                        } else if (std::holds_alternative<bool>(temp)) {
+                            downcasted_temp = std::get<bool>(temp);
+                        } else {
+                            std::cerr << "Error: Cannot assign array type to array element" << std::endl;
+                            continue;
+                        }
+
+                        array.array[index - array.offset] = downcasted_temp;
                     } else {
-                        downcasted_temp = VariantType(std::stoi(quad[current_line].operand2));
-                        continue;
+                        std::cerr << "Not found in IST" << std::endl;
+                        std::cerr << "Value: " << std::stoi(quad[current_line].operand2) << std::endl;
+                        array.array[index - array.offset] = std::stoi(quad[current_line].operand2);
+                        std::cerr << index - array.offset << std::endl;
                     }
+                    std::cerr << "Value has been set" << std::endl;
 
-                    array.array[index - array.offset] = downcasted_temp;
                     updateIST(array_name, array);
-                    continue;
                 } else if (sscanf(quad[current_line].operand2, "'%c'", &char_result) == 1) {
                     updateIST(quad[current_line].result, char_result);
                 } else {
@@ -617,14 +625,14 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {
 
 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
     Array<VariantType> newArray;
-    newArray.offset = std::stoi($<data>7) - std::stoi($<data>5); // Storing the size of array
-    if ($<data>10 == "Integer") {
+    newArray.offset = std::stoi($<data>7) - std::stoi($<data>5) + 1; // Storing the size of array
+    if (strcmp($<data>10, "Integer") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0));
-    } else if ($<data>10 == "real") {
+    } else if (strcmp($<data>10, "real") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0.0f));
-    } else if ($<data>10 == "char") {
+    } else if (strcmp($<data>10, "char") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType('\0'));
-    } else if ($<data>10 == "bool") {
+    } else if (strcmp($<data>10, "bool") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType(false));
     }
     newArray.offset = std::stoi($<data>5); // Setting actual offset
@@ -661,20 +669,20 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON { addQuadruple($3, "NA",
 ;
 
 /* WRITE STATEMENT */
-WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push(writeVector); writeVector.clear(); addQuadruple("NA", "NA", "NA", "write"); }
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push(writeVector); writeVector.clear(); addQuadruple("NA", "NA", "NA", "writeln"); }
+WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { addQuadruple("", "NA", "NA", "writeln"); }
 ;
 
 WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER
 | WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST
 ;
 
-WRITE_IDENTIFIER: IDENTIFIER { writeVector.push_back($1); }
-| IDENTIFIER ARRAY_ADD_ON_ID { writeVector.push_back($1); }
-| STRING { writeVector.push_back($1); }
-| INT_NUMBER { writeVector.push_back($1); }
-| DECIMAL_NUMBER { writeVector.push_back($1); }
-| CHARACTER { writeVector.push_back($1); }
+WRITE_IDENTIFIER: IDENTIFIER { addQuadruple($<data>1, "NA", "NA", "write"); }
+| IDENTIFIER ARRAY_ADD_ON_ID { addQuadruple($<data>1, "NA", "NA", "write"); }
+| STRING { addQuadruple($<data>1, "NA", "NA", "write"); }
+| INT_NUMBER { addQuadruple($<data>1, "NA", "NA", "write"); }
+| DECIMAL_NUMBER { addQuadruple($<data>1, "NA", "NA", "write"); }
+| CHARACTER { addQuadruple($<data>1, "NA", "NA", "write"); }
 ;
 
 /* ASSIGNMENT */
