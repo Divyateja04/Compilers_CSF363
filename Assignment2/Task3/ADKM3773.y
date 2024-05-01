@@ -15,7 +15,7 @@ int yydebug = 1;
 struct Treenode
 {
   	char *name;
-    struct Treenode * child[10];
+    struct Treenode * child[30];
     int child_index;
 }; 
 
@@ -47,9 +47,8 @@ typedef struct Symbol{
 }Symbol;
 
 
-// int del = 1; /* distance of graph columns */
-// int eps = 3; /* distance of graph lines */
-
+char TreeInString[4000];
+int TreeInStringIndex = 0;
 
 Symbol* symbol_table[100];
 void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_data_type[], char new_varorarray[]);
@@ -97,22 +96,35 @@ void CustomError3(int lineNumber, char* id_name, char* index,char* message);
 
 
 %%
-stmt: { if(printLogs) printf("\nParsing started");  } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); addNodetoTree($<t.nd>$,$<t.nd>2); addNodetoTree($<t.nd>$,$<t.nd>3); addNodetoTree($<t.nd>$,$<t.nd>4);}
+stmt: { if(printLogs) printf("\nParsing started");  } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); 
+$<t.nd>$= initNode("root"); 
+addNodetoTree($<t.nd>$,$<t.nd>2); 
+addNodetoTree($<t.nd>$,$<t.nd>3); addNodetoTree($<t.nd>$,$<t.nd>4); head=$<t.nd>$; }
 ;
 
 /* TYPE DECLARATIONS */
-DATATYPE: INTEGER { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| REAL { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| BOOLEAN { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
-| CHAR { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+DATATYPE: INTEGER { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; 
+$<t.nd>$ =initNode("Datatype"); $<t.nd>1 = initNode("Integer"); addNodetoTree($<t.nd>$,$<t.nd>1);}
+| REAL { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1;
+$<t.nd>$ = initNode("Datatype"); $<t.nd>1 = initNode("Real"); addNodetoTree($<t.nd>$,$<t.nd>1);}
+| BOOLEAN { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; 
+$<t.nd>$ =initNode("Datatype"); $<t.nd>1 =  initNode("Boolean");addNodetoTree($<t.nd>$,$<t.nd>1);}
+| CHAR { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1;
+$<t.nd>$ =initNode("Datatype"); $<t.nd>1 = initNode("Char"); addNodetoTree($<t.nd>$,$<t.nd>1);} 
 ;
 
-RELOP: EQUAL { strcpy($<t.operator>$, "="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
-| NOTEQUAL { strcpy($<t.operator>$, "<>"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
-| LESS { strcpy($<t.operator>$, "<"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
-| LESSEQUAL { strcpy($<t.operator>$, "<="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
-| GREATER { strcpy($<t.operator>$, ">"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
-| GREATEREQUAL { strcpy($<t.operator>$, ">="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); }
+RELOP: EQUAL { strcpy($<t.operator>$, "="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); 
+$<t.nd>$ =initNode("Relop"); $<t.nd>1 = initNode("EQUALS"); addNodetoTree($<t.nd>$,$<t.nd>1);}
+| NOTEQUAL { strcpy($<t.operator>$, "<>"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); 
+$<t.nd>$ =initNode("Relop"); $<t.nd>1 =  initNode("NOTEQUALS"); addNodetoTree($<t.nd>$,$<t.nd>1);}
+| LESS { strcpy($<t.operator>$, "<"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); 
+$<t.nd>$ =initNode("Relop");  $<t.nd>1 = initNode("LESS"); addNodetoTree($<t.nd>$,$<t.nd>1);}
+| LESSEQUAL { strcpy($<t.operator>$, "<="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); 
+$<t.nd>$ =initNode("Relop"); $<t.nd>1 =  initNode("LESSEQUAL"); addNodetoTree($<t.nd>$,$<t.nd>1);}
+| GREATER { strcpy($<t.operator>$, ">"); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); 
+$<t.nd>$ =initNode("Relop"); $<t.nd>1 = initNode("GREATER"); addNodetoTree($<t.nd>$,$<t.nd>1);}
+| GREATEREQUAL { strcpy($<t.operator>$, ">="); $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, "boolean"); 
+$<t.nd>$ =initNode("Relop"); $<t.nd>1 = initNode("GREATEREQUAL"); addNodetoTree($<t.nd>$,$<t.nd>1);}
 ;
 
 /* ARRAY ADD ON FOR EVERY ID */
@@ -124,6 +136,12 @@ ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET {
     else{
         CustomError1($<t.lineNumber>1, "Array index must be integer");
     } 
+    $<t.nd>$ = initNode("ArrayAddOn");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>1 = initNode("[");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("]");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 ;
 
@@ -134,7 +152,10 @@ BETWEEN_BRACKETS: INT_NUMBER {
     } 
     else{
         CustomError1($<t.lineNumber>1, "Array index must be integer");
-    }     
+    }
+    $<t.nd>$ = initNode("BetweenBrackets");
+    $<t.nd>1 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 | IDENTIFIER { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
@@ -148,7 +169,10 @@ BETWEEN_BRACKETS: INT_NUMBER {
     }
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
-    }     
+    }    
+    $<t.nd>$ = initNode("BetweenBrackets");
+    $<t.nd>1 = initNode("IDENTIFIER"); 
+    addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
@@ -168,6 +192,10 @@ BETWEEN_BRACKETS: INT_NUMBER {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");    
     }
+    $<t.nd>$ = initNode("BetweenBrackets");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 
 /* HEAD OF THE PROGRAM - PARSING */
@@ -180,39 +208,83 @@ PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON {
         $<t.lineNumber>$ = $<t.lineNumber>2;
         symbol_table_index++;
     }
+    $<t.nd>$ = initNode("ProgramDeclaration");
+    $<t.nd>1 = initNode("PROGRAM");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 ;
 
-VARIABLE_DECLARATION: VAR DECLARATION_LISTS 
-| VAR 
+VARIABLE_DECLARATION: VAR DECLARATION_LISTS {
+    $<t.nd>$ = initNode("VariableDeclaration");
+    $<t.nd>1 = initNode("VAR");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+}
+| VAR {
+    $<t.nd>$ = initNode("VariableDeclaration");
+    $<t.nd>1 = initNode("VAR");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
-DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS
-| DECLARATION_LIST
+DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS {
+    $<t.nd>$=initNode("DeclarationLists");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+}
+| DECLARATION_LIST {
+    $<t.nd>$=initNode("DeclarationLists");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
-DECLARATION_LIST: SINGLE_VARIABLE
-| MULTIPLE_VARIABLE
-| ARRAY_DECLARATION
+DECLARATION_LIST: SINGLE_VARIABLE {
+    $<t.nd>$=initNode("DeclarationList");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| MULTIPLE_VARIABLE {
+    $<t.nd>$=initNode("DeclarationList");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| ARRAY_DECLARATION{
+    $<t.nd>$=initNode("DeclarationList");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { 
     addVar(symbol_table, symbol_table_index, $<t.id_name>1, $<t.data_type>3, "1");
     $<t.lineNumber>$ = $<t.lineNumber>1;
     symbol_table_index++;
+    $<t.nd>$ = initNode("SingleVariable");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
 }
 ;
-// Node *stmt = createNode("SINGLE_VARIABLE", 0, 0);
-    // Node *identifier = createNode("IDENTIFIER", 0, 0);
-    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); 
-    // addChild(stmt, identifier);
-    // addChild(stmt, createNode($<t.data_type>3, 0, 0));
-    // addChild(root, stmt);
+
 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { 
     addVarName(symbol_table, symbol_table_index, $<t.id_name>1, "1");
     $<t.lineNumber>$ = $<t.lineNumber>1;
     symbol_table_index++;
     enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); 
+    $<t.nd>$ = initNode("MultipleVariable");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
 }
 ;
 
@@ -220,11 +292,22 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {
     addVarName(symbol_table, symbol_table_index,  $<t.id_name>2, "1");
     $<t.lineNumber>$ = $<t.lineNumber>2;
     symbol_table_index++;
+    $<t.nd>$ = initNode("MoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | COMMA IDENTIFIER { 
     addVarName(symbol_table, symbol_table_index, $<t.id_name>2, "1");
     $<t.lineNumber>$ = $<t.lineNumber>2;
     symbol_table_index++;
+    $<t.nd>$ = initNode("MoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 ;
 
@@ -239,30 +322,78 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
         $<t.lineNumber>$ = $<t.lineNumber>1;
         symbol_table_index++;
     }
-    // Node *stmt = createNode("ARRAY_DECLARATION", 0, 0);
-    // Node *identifier = createNode("IDENTIFIER", 0, 0);
-    // addChild(identifier, createNode($<t.id_name>1, 0, 0)); // Assuming $<t.id_name>1 contains the identifier name
-    // addChild(stmt, identifier);
-    // addChild(stmt, createNode($<t.data_type>10, 0, 0)); // Assuming $<t.data_type>10 contains the data type
-    // addChild(root, stmt);
+
+    $<t.nd>$ = initNode("ArrayDeclaration");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("ARRAY");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("[");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+    $<t.nd>6 = initNode("DOTDOT");
+    addNodetoTree($<t.nd>$,$<t.nd>6);
+    $<t.nd>7 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>7);
+    $<t.nd>8 = initNode("]");
+    addNodetoTree($<t.nd>$,$<t.nd>8);
+    $<t.nd>9 = initNode("OF");
+    addNodetoTree($<t.nd>$,$<t.nd>9);
+    addNodetoTree($<t.nd>$,$<t.nd>10);
+    $<t.nd>11 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>11);
 }
 ; 
 
 /* MAIN BODY OF THE PROGRAM */
-BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT
+BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
+    $<t.nd>$ = initNode("BodyOfProgram");
+    $<t.nd>1 = initNode("BEGIN");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("END");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("DOT");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+}
 ;
 
 /* ANY STATEMENTS INSIDE THE PROGRAM */
-STATEMENTS: STATEMENT STATEMENTS
-| STATEMENT
+STATEMENTS: STATEMENT STATEMENTS {
+    $<t.nd>$ = initNode("Statements");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+}
+| STATEMENT {
+    $<t.nd>$ = initNode("Statements");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
 /* STATEMENT THAT CAN BE READ, WRITE, ASSIGNMENT, CONDITIONAL AND LOOPING */
-STATEMENT: READ_STATEMENT 
-| WRITE_STATEMENT 
-| ASSIGNMENT_STATEMENT 
-| CONDITIONAL_STATEMENT 
-| LOOPING_STATEMENT
+STATEMENT: READ_STATEMENT {
+    $<t.nd>$ = initNode("Statement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| WRITE_STATEMENT {
+    $<t.nd>$ = initNode("Statement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| ASSIGNMENT_STATEMENT {
+    $<t.nd>$ = initNode("Statement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| CONDITIONAL_STATEMENT {
+    $<t.nd>$ = initNode("Statement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| LOOPING_STATEMENT {
+    $<t.nd>$ = initNode("Statement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
 /* READ STATEMENT */
@@ -277,6 +408,17 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     else{
         CustomError2($<t.lineNumber>3, $<t.id_name>3, "Variable not declared");
     }
+    $<t.nd>$ = initNode("ReadStatement");
+    $<t.nd>1 = initNode("READ");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
 }
 | READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
@@ -289,12 +431,46 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     else{
         CustomError2($<t.lineNumber>3, $<t.id_name>3, "Array not declared");
     }
+    $<t.nd>$ = initNode("ReadStatement");
+    $<t.nd>1 = initNode("READ");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+    $<t.nd>6 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>6);
 }
 ;
 
 /* WRITE STATEMENT */
-WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
+WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; 
+    $<t.nd>$ = initNode("WriteStatement");
+    $<t.nd>1 = initNode("WRITE");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+}
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; 
+    $<t.nd>$ = initNode("WriteStatement");
+    $<t.nd>1 = initNode("WRITE_LN");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+}
 ;
 
 WRITE_IDENTIFIER_LIST: IDENTIFIER {
@@ -308,6 +484,9 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 | IDENTIFIER WRITE_MORE_IDENTIFIERS {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
@@ -320,6 +499,10 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
@@ -340,6 +523,10 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
@@ -360,54 +547,86 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | STRING {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "string") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for string");
     }    
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("STRING");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 | STRING WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "string") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for string");
-    }    
+    } 
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("STRING");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);   
 }
 | INT_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "int") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for integer");
-    }    
+    }  
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);  
 }
 | INT_NUMBER WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "int") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for integer");
     }    
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | DECIMAL_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "real") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for real number");
-    }    
+    }  
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("DECIMAL_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);  
 }
 | DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "real") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for real number");
-    }    
+    } 
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("DECIMAL_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);   
 }
 | CHARACTER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "char") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for character");
-    }    
+    } 
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("CHARACTER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);   
 }
 | CHARACTER WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "char") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for character");
-    }    
+    }  
+    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>1 = initNode("CHARACTER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);  
 }
 ;
 
@@ -422,6 +641,11 @@ WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
     }
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>2;
@@ -433,6 +657,12 @@ WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
     }
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | COMMA IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>2;
@@ -452,6 +682,12 @@ WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
     }
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>2;
@@ -471,54 +707,105 @@ WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
     }
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
 }
 | COMMA STRING {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "string") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for string");
-    }    
+    }   
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("STRING");
+    addNodetoTree($<t.nd>$,$<t.nd>2); 
 }
 | COMMA STRING WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "string") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for string");
-    }    
+    }   
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("STRING"); 
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | COMMA INT_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "int") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for integer");
-    }    
+    }  
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "int") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for integer");
-    }    
+    }   
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3); 
 }
 | COMMA DECIMAL_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "real") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for real number");
-    }    
+    }  
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("DECIMAL_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);  
 }
 | COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "real") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for real number");
-    }    
+    } 
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("DECIMAL_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);   
 }
 | COMMA CHARACTER {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "char") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for character");
-    }    
+    }  
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("CHARACTER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);  
 }
 | COMMA CHARACTER WRITE_MORE_IDENTIFIERS {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "char") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for character");
-    }    
+    }  
+    $<t.nd>$ = initNode("WriteMoreIdentifiers");
+    $<t.nd>1 = initNode("COMMA");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("CHARACTER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);  
 }
 ;
 
@@ -543,6 +830,16 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
+    $<t.nd>$ = initNode("AssignmentStatement");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("EQUAL");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("ANY_EXPRESSION");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
 }
 | IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
@@ -568,6 +865,17 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
+    $<t.nd>$ = initNode("AssignmentStatement");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("EQUAL");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+    $<t.nd>6 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>6);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>1;
@@ -588,6 +896,17 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
+    $<t.nd>$ = initNode("AssignmentStatement");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("EQUAL");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("CHARACTER");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
 }
 ;
 
@@ -597,24 +916,59 @@ CONDITIONAL_STATEMENT: IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL ELSE BODY_OF_C
     if(strcmp($<t.data_type>2, "boolean") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for if-else condition");
     }
+    $<t.nd>$ = initNode("ConditionalStatement");
+    $<t.nd>1 = initNode("IF");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("THEN");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("ELSE");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+    addNodetoTree($<t.nd>$,$<t.nd>6);
+    $<t.nd>7 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>7);
 }
 | IF ANY_EXPRESSION THEN BODY_OF_CONDITIONAL SEMICOLON {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(strcmp($<t.data_type>2, "boolean") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for if condition");
     }
+    $<t.nd>$ = initNode("ConditionalStatement");
+    $<t.nd>1 = initNode("IF");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("THEN");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
 }
 ;
 
-BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END
+BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END {
+    $<t.nd>$ = initNode("BodyOfConditional");
+    $<t.nd>1 = initNode("BEGINK");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("END");
+}
 ;
 
-STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CONDITIONAL
-| STATEMENT_INSIDE_CONDITIONAL
+STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CONDITIONAL {
+    $<t.nd>$ = initNode("StatementsInsideConditional");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+}
+| STATEMENT_INSIDE_CONDITIONAL {
+    $<t.nd>$ = initNode("StatementsInsideConditional");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
 /* EXPRESSION FORMULATION */
-ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; 
+$<t.nd>$ = initNode("AnyExpression"); addNodetoTree($<t.nd>$,$<t.nd>1); }
 | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     strcpy($<t.data_type>$, "boolean");
@@ -626,6 +980,10 @@ ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); 
         CustomError1($<t.lineNumber>1, "Invalid data type for relational expressions");
         printf("\n%s %s", $<t.data_type>1, $<t.data_type>3);
     }
+    $<t.nd>$ = initNode("AnyExpression");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
  }
 | LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN {
     $<t.lineNumber>$ = $<t.lineNumber>1;
@@ -644,11 +1002,24 @@ ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); 
         CustomError1($<t.lineNumber>1, "Invalid data type for relational expressions");
         printf("\n%s %s", $<t.data_type>1, $<t.data_type>3);
     }
+    $<t.nd>$ = initNode("AnyExpression");
+    $<t.nd>1 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
  }
-| BOOLEAN_EXPRESSION_SEQUENCE { $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, $<t.data_type>1); }
+| BOOLEAN_EXPRESSION_SEQUENCE { $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, $<t.data_type>1);
+$<t.nd>$ = initNode("AnyExpression"); addNodetoTree($<t.nd>$,$<t.nd>1); }
 ; 
 
-EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; }
+EXPRESSION_SEQUENCE: TERM { 
+    strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; 
+    $<t.nd>$ = initNode("ExpressionSequence"); 
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    }
 | EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE { 
     // printf("\n%s + %s", $<t.data_type>1, $<t.data_type>3);
     $<t.lineNumber>$ = $<t.lineNumber>1;
@@ -671,6 +1042,11 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for addition");
     }
+    $<t.nd>$ = initNode("ExpressionSequence");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("PLUS");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE { 
     // printf("\n%s - %s", $<t.data_type>1, $<t.data_type>3);
@@ -695,6 +1071,11 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for subtraction");
     }
+    $<t.nd>$ = initNode("ExpressionSequence");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("MINUS");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE { 
     // printf("\n%s * %s", $<t.data_type>1, $<t.data_type>3);
@@ -717,6 +1098,11 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for multiplication");
     }
+    $<t.nd>$ = initNode("ExpressionSequence");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("MULTIPLY");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE { 
     // printf("\n%s / %s", $<t.data_type>1, $<t.data_type>3);
@@ -739,6 +1125,11 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for division");
     }
+    $<t.nd>$ = initNode("ExpressionSequence");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("DIVIDE");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE { 
     // printf("\n%s %s", $<t.data_type>1, $<t.data_type>3);
@@ -761,6 +1152,11 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for mod");
     }
+    $<t.nd>$ = initNode("ExpressionSequence");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("MOD");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | MINUS EXPRESSION_SEQUENCE { 
     // printf("\n- %s", $<t.data_type>2);
@@ -769,10 +1165,20 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
         CustomError1($<t.lineNumber>2, "Invalid data type for -ve expression");
     }
     strcpy($<t.data_type>$, $<t.data_type>2); 
+    $<t.nd>$ = initNode("ExpressionSequence");
+    $<t.nd>1 = initNode("MINUS");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | LPAREN EXPRESSION_SEQUENCE RPAREN { 
     strcpy($<t.data_type>$, $<t.data_type>2); 
     $<t.lineNumber>$ = $<t.lineNumber>2; 
+    $<t.nd>$ = initNode("ExpressionSequence");
+    $<t.nd>1 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 ;
 
@@ -782,6 +1188,10 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION {
     if(strcmp($<t.data_type>2, "boolean") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for boolean expressions");
     }
+    $<t.nd>$ = initNode("BooleanExpressionSequence");
+    $<t.nd>1 = initNode("NOT");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | ANY_EXPRESSION AND ANY_EXPRESSION {
     $<t.lineNumber>$ = $<t.lineNumber>1;
@@ -789,6 +1199,11 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION {
     if((strcmp($<t.data_type>1, "boolean") != 0) || (strcmp($<t.data_type>3, "boolean") != 0)){
         CustomError1($<t.lineNumber>1, "Invalid data type for boolean expressions");
     }
+    $<t.nd>$ = initNode("BooleanExpressionSequence");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("AND");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | ANY_EXPRESSION OR ANY_EXPRESSION {
     $<t.lineNumber>$ = $<t.lineNumber>2;
@@ -796,6 +1211,10 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION {
     if((strcmp($<t.data_type>1, "boolean") != 0) || (strcmp($<t.data_type>3, "boolean") != 0)){
         CustomError1($<t.lineNumber>1, "Invalid data type for boolean expressions");
     }
+    $<t.nd>$ = initNode("BooleanExpressionSequence");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("OR");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN {
     $<t.lineNumber>$ = $<t.lineNumber>2;
@@ -803,6 +1222,12 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION {
     if(strcmp($<t.data_type>2, "boolean") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for boolean expressions");
     }
+    $<t.nd>$ = initNode("BooleanExpressionSequence");
+    $<t.nd>1 = initNode("LPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("RPAREN");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 ;
 
@@ -832,6 +1257,9 @@ TERM: IDENTIFIER {
         // printf("\nIdentifier < %s > not found", $<t.id_name>1);
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
+    $<t.nd>$ = initNode("Term");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 
 | IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
@@ -858,29 +1286,60 @@ TERM: IDENTIFIER {
         CustomError1($<t.lineNumber>1, "Array not declared");
     
     }
+    $<t.nd>$ = initNode("Term");
+    $<t.nd>1 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | INT_NUMBER { 
     strcpy($<t.val>$, $<t.val>1); 
     strcpy($<t.data_type>$, $<t.data_type>1); 
     $<t.lineNumber>$ = $<t.lineNumber>1; 
+    $<t.nd>$ = initNode("Term");
+    $<t.nd>1 = initNode("INT_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 | DECIMAL_NUMBER { 
     strcpy($<t.val>$, $<t.val>1);
     strcpy($<t.data_type>$, $<t.data_type>1); 
     $<t.lineNumber>$ = $<t.lineNumber>1; 
+    $<t.nd>$ = initNode("Term");
+    $<t.nd>1 = initNode("DECIMAL_NUMBER");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 ;
 
-STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
-| WRITE_STATEMENT
-| ASSIGNMENT_STATEMENT
-| LOOPING_STATEMENT
+STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideConditional");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| WRITE_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideConditional");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| ASSIGNMENT_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideConditional");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| LOOPING_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideConditional");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
 /* LOOPING STATEMENT */
-LOOPING_STATEMENT: WHILE_LOOP
-| FOR_LOOP_TO
-| FOR_LOOP_DOWNTO
+LOOPING_STATEMENT: WHILE_LOOP {
+    $<t.nd>$ = initNode("LoopingStatement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| FOR_LOOP_TO {
+    $<t.nd>$ = initNode("LoopingStatement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| FOR_LOOP_DOWNTO {
+    $<t.nd>$ = initNode("LoopingStatement");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
 WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON { 
@@ -888,6 +1347,15 @@ WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON {
     if(strcmp($<t.data_type>2, "boolean") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for while condition");
     }
+    $<t.nd>$ = initNode("WhileLoop");
+    $<t.nd>1 = initNode("WHILE");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("DO");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
 }
 ;
 
@@ -913,6 +1381,24 @@ FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUEN
     else{
         CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
     }
+    $<t.nd>$ = initNode("ForLoopTo");
+    $<t.nd>1 = initNode("FOR");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("EQUAL");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+    $<t.nd>6 = initNode("TO");
+    addNodetoTree($<t.nd>$,$<t.nd>6);
+    addNodetoTree($<t.nd>$,$<t.nd>7);
+    $<t.nd>8 = initNode("DO");
+    addNodetoTree($<t.nd>$,$<t.nd>8);
+    addNodetoTree($<t.nd>$,$<t.nd>9);
+    $<t.nd>10 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>10);
 }
 ;
 
@@ -938,20 +1424,64 @@ FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSIO
     else{
         CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
     }
+    $<t.nd>$ = initNode("ForLoopDownTo");
+    $<t.nd>1 = initNode("FOR");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    $<t.nd>2 = initNode("IDENTIFIER");
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("COLON");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+    $<t.nd>4 = initNode("EQUAL");
+    addNodetoTree($<t.nd>$,$<t.nd>4);
+    addNodetoTree($<t.nd>$,$<t.nd>5);
+    $<t.nd>6 = initNode("DOWNTO");
+    addNodetoTree($<t.nd>$,$<t.nd>6);
+    addNodetoTree($<t.nd>$,$<t.nd>7);
+    $<t.nd>8 = initNode("DO");
+    addNodetoTree($<t.nd>$,$<t.nd>8);
+    addNodetoTree($<t.nd>$,$<t.nd>9);
+    $<t.nd>10 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>10);
 }
 ;
 
-BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END
+BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END {
+    $<t.nd>$ = initNode("BodyOfLoop");
+    $<t.nd>1 = initNode("BEGINK");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+    $<t.nd>3 = initNode("END");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
+}
 ;
 
-STATEMENTS_INSIDE_LOOP: STATEMENT_INSIDE_LOOP STATEMENTS_INSIDE_LOOP
-| STATEMENT_INSIDE_LOOP
+STATEMENTS_INSIDE_LOOP: STATEMENT_INSIDE_LOOP STATEMENTS_INSIDE_LOOP {
+    $<t.nd>$ = initNode("StatementsInsideLoop");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+    addNodetoTree($<t.nd>$,$<t.nd>2);
+}
+| STATEMENT_INSIDE_LOOP {
+    $<t.nd>$ = initNode("StatementsInsideLoop");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
-STATEMENT_INSIDE_LOOP: READ_STATEMENT
-| WRITE_STATEMENT
-| ASSIGNMENT_STATEMENT
-| CONDITIONAL_STATEMENT
+STATEMENT_INSIDE_LOOP: READ_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideLoop");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| WRITE_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideLoop");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| ASSIGNMENT_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideLoop");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
+| CONDITIONAL_STATEMENT {
+    $<t.nd>$ = initNode("StatementInsideLoop");
+    addNodetoTree($<t.nd>$,$<t.nd>1);
+}
 ;
 
 %%
@@ -1076,6 +1606,8 @@ void main()
         yyparse();
     }
     printSymbolTable();
+    printTree(head);
+    printf("\n\n\n%s", TreeInString);
 }
 
 struct Treenode* initNode(char *label)
@@ -1085,7 +1617,7 @@ struct Treenode* initNode(char *label)
 	strcpy(newstr,label);
 	new->name=newstr;
     
-    for(int i=0;i<10;i++)
+    for(int i=0;i<30;i++)
     {
         new->child[i]=NULL;
     }
@@ -1101,49 +1633,27 @@ void addNodetoTree(struct Treenode *parent, struct Treenode *child)
 
 void printTree(struct Treenode *tree)
 {
-	printf("[");
+	if(tree==NULL)
+    {
+        return;
+    }
+
+    TreeInString[TreeInStringIndex] = '[';
+    TreeInStringIndex++;
+
+    for(int i=TreeInStringIndex; i<TreeInStringIndex+strlen(tree->name); i++)
+    {
+        TreeInString[i] = tree->name[i-TreeInStringIndex];
+    }
+    TreeInStringIndex += strlen(tree->name);
+
     for(int i=0;i<tree->child_index;i++)
     {
-        printf("[");
         printTree(tree->child[i]);
-        printf("]");
     }
-    printf("]");
-	
-}
 
-struct Treenode* initNode(char *label)
-{
-	struct Treenode *new = (struct Treenode*)malloc(sizeof(struct Treenode));
-	char *newstr = (char *)malloc(strlen(label)+1);
-	strcpy(newstr,label);
-	new->name=newstr;
-    
-    for(int i=0;i<10;i++)
-    {
-        new->child[i]=NULL;
-    }
-    new->child_index=0;
-	return (new);
-}
-
-void addNodetoTree(struct Treenode *parent, struct Treenode *child)
-{
-    parent->child[parent->child_index]=child;
-    parent->child_index++;
-}
-
-void printTree(struct Treenode *tree)
-{
-	printf("[");
-    for(int i=0;i<tree->child_index;i++)
-    {
-        printf("[");
-        printTree(tree->child[i]);
-        printf("]");
-    }
-    printf("]");
-	
+    TreeInString[TreeInStringIndex] = ']';
+    TreeInStringIndex++;
 }
 
 int yyerror(){
@@ -1156,6 +1666,12 @@ void CustomError1(int lineNumber, char* message){
     /* printSymbolTable(); */
 }
 
-void CustomError2(char* id_name, char* message){
-    printf("\n\n\n%s::> %s", id_name, message);
+void CustomError2(int lineNumber, char* id_name, char* message){
+    printf("\n\nLine: %d ::> %s -> %s", lineNumber, id_name, message);
+    /* printSymbolTable(); */
+}
+
+void CustomError3(int lineNumber, char* id_name, char* index, char* message){
+    printf("\n\nLine: %d ::> %s[%s] -> %s", lineNumber, id_name, index, message);
+    /* printSymbolTable(); */
 }
