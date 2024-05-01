@@ -12,8 +12,6 @@ begin
   average := 0.5;
   c := 'c';
 
-  numbers[1] := 1;
-
   writeln("Test output: ", i, " ", i, " ", average, " ", c);
   writeln("Test output: ", i, " ", i, " ", average, " ", c);
   // read(a);
@@ -29,12 +27,9 @@ Compiling the program in gcc
 :002:>  i  =  t0 ;
 :003:>  average  =  0.5 ;
 :004:>  c  =  'c' ;
-:005:>  t1  =  1  *  numbers ;
-:006:>  t2  =  t1  +  &numbers ;
-:007:>  *t2  =  1 ;
-:008:>  writeln ;
-:009:>  writeln ;
-:010:>  writeln ;
+:005:>  writeln ;
+:006:>  writeln ;
+:007:>  writeln ;
 
 ============================
 Test output: 5 5 0.5 c

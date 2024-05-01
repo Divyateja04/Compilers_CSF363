@@ -10,8 +10,6 @@ begin
   average := 0.5;
   c := 'c';
 
-  numbers[1] := 1;
-
   writeln("Test output: ", i, " ", i, " ", average, " ", c);
   writeln("Test output: ", i, " ", i, " ", average, " ", c);
   // read(a);

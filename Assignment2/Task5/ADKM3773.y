@@ -91,7 +91,7 @@ void printArray(const ArrayType& arr) {
     for (size_t i = 0; i < arr.array.size(); i++) {
         const auto& elem = arr.array[i];
         std::visit(overloaded {
-            [](const int& i) { std::cerr << i << ", "; },
+            [](const int& j) { std::cerr << j << ", "; },
             [](const float& f) { std::cerr << f << ", "; },
             [](const char& c) { std::cerr << c << ", "; },
             [](const bool& b) { std::cerr << std::boolalpha << b << ", "; },
@@ -127,7 +127,7 @@ T performOperation(char op, T operand1, T operand2) {
         case '%': 
             if constexpr (std::is_same_v<T, int>) {
                 return operand1 % operand2;
-            } // Is fmod needed here?
+            } // TODO: Is fmod needed here?
             break;
         case '<': return operand1 < operand2;
         case '>': return operand1 > operand2;
@@ -150,7 +150,7 @@ void interpreter() {
           << " Operator:" << quad[current_line].op 
           << " Operand2:" << quad[current_line].operand2 
           << std::endl;
-        printIST();
+        // printIST();
         
         if (
             strcmp(quad[current_line].result, "write") == 0 || 
@@ -196,11 +196,43 @@ void interpreter() {
         // simple assignment operation e.g. s = 6
         if (strcmp(quad[current_line].op, "NA") == 0) {
             if (strcmp(quad[current_line].operand1, "NA") == 0 && strcmp(quad[current_line].operand2, "NA") == 0) {
-                // Keywords
                 continue;
             } else if (strcmp(quad[current_line].operand1, "NA") == 0) {
                 char char_result;
-                if (sscanf(quad[current_line].operand2, "'%c'", &char_result) == 1) {
+                char array_name[100];
+                char array_index[100];
+                if (sscanf(quad[current_line].result, "%[^[][%[^]]]", array_name, array_index) == 2) {
+                    std::cerr << array_name << " " << array_index << std::endl;
+                    std::cerr << "Array assignment" << std::endl;
+                    ArrayType array = std::get<ArrayType>(getIST(array_name));
+
+                    int index = 0;
+                    if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
+                        int index = std::get<int>(interpreterSymbolTable[array_index]);
+                    } else {
+                        int index = std::stoi(array_index);
+                    }
+
+                    auto temp = getIST(quad[current_line].operand2);
+
+                    std::variant<int, float, char, bool> downcasted_temp;
+                    if (std::holds_alternative<int>(temp)) {
+                        downcasted_temp = std::get<int>(temp);
+                    } else if (std::holds_alternative<float>(temp)) {
+                        downcasted_temp = std::get<float>(temp);
+                    } else if (std::holds_alternative<char>(temp)) {
+                        downcasted_temp = std::get<char>(temp);
+                    } else if (std::holds_alternative<bool>(temp)) {
+                        downcasted_temp = std::get<bool>(temp);
+                    } else {
+                        downcasted_temp = VariantType(std::stoi(quad[current_line].operand2));
+                        continue;
+                    }
+
+                    array.array[index - array.offset] = downcasted_temp;
+                    updateIST(array_name, array);
+                    continue;
+                } else if (sscanf(quad[current_line].operand2, "'%c'", &char_result) == 1) {
                     updateIST(quad[current_line].result, char_result);
                 } else {
                     updateIST(quad[current_line].result, getIST(quad[current_line].operand2));
@@ -508,14 +540,9 @@ RELOP: EQUAL { strcpy($<data>$, "="); }
 
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
-    char str[5];
-    char str1[5]="t"; 
-    sprintf(str,"%d", temp_char++);
-    strcat(str1, str); 
-    addQuadruple($<data>2, "*", popFromStack(), str1);
-    strcpy($<data>$, str1);
-    pushToStack(str1);
-    // printf("Arr: |%s|", topOfStack());
+    char c[100];
+    sprintf(c, "[%s]", $<data>2);
+    strcpy($<data>$, c);
  } 
 ;
 
@@ -580,7 +607,6 @@ MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON {
  }
 ;
 
-// TODO: add to IST these identifiers also
 MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS { 
     temporaryVariablesVector.push_back($<data>2);
  }
@@ -590,20 +616,19 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {
 ;
 
 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
-    Array<VariantType> array;
-    array.offset = std::stoi($<data>7) - std::stoi($<data>5); // Storing the size of array
-    std::variant<int, float, char, bool, Array<VariantType>> arrayType = array;
-    if ($<data>9 == "Integer") {
-        array.array = std::vector<VariantType>(array.offset, VariantType(0));
-    } else if ($<data>9 == "real") {
-        array.array = std::vector<VariantType>(array.offset, VariantType(0.0f));
-    } else if ($<data>9 == "char") {
-        array.array = std::vector<VariantType>(array.offset, VariantType('\0'));
-    } else if ($<data>9 == "bool") {
-        array.array = std::vector<VariantType>(array.offset, VariantType(false));
-    } // TODO: Add vector as sub case N x N vectors
-    array.offset = std::stoi($<data>7);
-    updateIST($<data>1, arrayType);
+    Array<VariantType> newArray;
+    newArray.offset = std::stoi($<data>7) - std::stoi($<data>5); // Storing the size of array
+    if ($<data>10 == "Integer") {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0));
+    } else if ($<data>10 == "real") {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0.0f));
+    } else if ($<data>10 == "char") {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType('\0'));
+    } else if ($<data>10 == "bool") {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType(false));
+    }
+    newArray.offset = std::stoi($<data>5); // Setting actual offset
+    updateIST($<data>1, newArray);
 }
 ;
 
@@ -656,31 +681,10 @@ WRITE_IDENTIFIER: IDENTIFIER { writeVector.push_back($1); }
 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
-| IDENTIFIER {
-    // If we just find id, we push it to stack
-    // This is popped out from stack in the ARRAY_ADD_ON_ID
-    char c[100]; 
-    sprintf(c,"%s",$<data>1); 
-    pushToStack(c);
-} ARRAY_ADD_ON_ID {
-    // Create a new temp variable to store the address of the array + the index
-    char str[5];
-    char str1[5]="t"; 
-    sprintf(str,"%d", temp_char++);
-    strcat(str1, str); 
-
-    // First we add a quadruple for the address of the array
-    // we calculate the exact address
-    char storeAddress[100];
-    sprintf(storeAddress, "&%s", $<data>1);
-    addQuadruple(popFromStack(), "+", storeAddress, str1);
-    pushToStack(str1);
-} COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    char temp[100];
-    sprintf(temp, "%s", popFromStack());
-    char temp2[100];
-    sprintf(temp2, "*%s", popFromStack());
-    addQuadruple(temp, "NA", "NA", temp2);
+| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    char c[100];
+    sprintf(c,"%s%s",$<data>1, $<data>2); 
+    addQuadruple("NA", "NA", $<data>5, c);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
     char temp[100];
