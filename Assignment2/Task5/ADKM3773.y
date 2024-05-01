@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
+#include <queue>
 
 int yylex(void);
 int yyerror(const char* s);
@@ -85,33 +86,33 @@ template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 void printArray(const ArrayType& arr) {
-    std::cout << "[";
+    std::cerr << "[";
     for (size_t i = 0; i < arr.array.size(); i++) {
         const auto& elem = arr.array[i];
         std::visit(overloaded {
-            [](const int& i) { std::cout << i << ", "; },
-            [](const float& f) { std::cout << f << ", "; },
-            [](const char& c) { std::cout << c << ", "; },
-            [](const bool& b) { std::cout << std::boolalpha << b << ", "; },
+            [](const int& i) { std::cerr << i << ", "; },
+            [](const float& f) { std::cerr << f << ", "; },
+            [](const char& c) { std::cerr << c << ", "; },
+            [](const bool& b) { std::cerr << std::boolalpha << b << ", "; },
             [](const ArrayType& a) { printArray(a); }
         }, elem);
     }
-    std::cout << "]";
+    std::cerr << "]";
 }
 
 
 void printIST() {
-    std::cout << std::endl;
+    std::cerr << std::endl;
     for (auto& it: interpreterSymbolTable) {
-        std::cout << "Symbol: " << it.first << " Value: ";
+        std::cerr << "Symbol: " << it.first << " Value: ";
         std::visit(overloaded {
-            [](const int& i) { std::cout << i; },
-            [](const float& f) { std::cout << f; },
-            [](const char& c) { std::cout << c; },
-            [](const bool& b) { std::cout << std::boolalpha << b; },
+            [](const int& i) { std::cerr << i; },
+            [](const float& f) { std::cerr << f; },
+            [](const char& c) { std::cerr << c; },
+            [](const bool& b) { std::cerr << std::boolalpha << b; },
             [](const ArrayType& a) { printArray(a); }
         }, it.second);
-        std::cout << std::endl;
+        std::cerr << std::endl;
     }
 }
 
@@ -135,11 +136,39 @@ T performOperation(char op, T operand1, T operand2) {
     return T();
 }
 
+std::queue<std::string> writeQueue;
+
 void interpreter() {
     int current_line = -1;
     while(current_line++ < quadrupleIndex) {
-        printf("Result:%s Operand1:%s Operator:%s Operand2:%s\n", quad[current_line].result, quad[current_line].operand1, quad[current_line].op, quad[current_line].operand2);
+        std::cerr << "Result:" << quad[current_line].result 
+          << " Operand1:" << quad[current_line].operand1 
+          << " Operator:" << quad[current_line].op 
+          << " Operand2:" << quad[current_line].operand2 
+          << std::endl;
         // printIST();
+
+        if (strcmp(quad[current_line].result, "write") == 0) {
+            std::cerr << writeQueue.size() << ", " << writeQueue.front() << std::endl;
+            while (!writeQueue.empty() && strcmp(writeQueue.front().c_str(), "\x1D") != 0) {
+                if (interpreterSymbolTable.find(writeQueue.front()) != interpreterSymbolTable.end()) {
+                    std::visit(overloaded {
+                        [](const int& i) { std::cout << i; },
+                        [](const float& f) { std::cout << f; },
+                        [](const char& c) { std::cout << c; },
+                        [](const bool& b) { std::cout << std::boolalpha << b; },
+                        [](const ArrayType& a) { printArray(a); }
+                    }, interpreterSymbolTable[writeQueue.front()]);
+                } else {
+                    std::cout << writeQueue.front();
+                }
+                writeQueue.pop();
+            }
+            if (!writeQueue.empty()) {
+                writeQueue.pop();
+            }
+            continue;
+        }
 
         // Operator is NA
         // simple assignment operation e.g. s = 6
@@ -176,10 +205,10 @@ void interpreter() {
                 if (std::holds_alternative<bool>(getIST(quad[current_line].operand1))) {
                     if (std::get<bool>(getIST(quad[current_line].operand1))) {
                         current_line = true_line - 1;
-                        printf("Going to line %d\n", current_line + 1);
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
                     } else {
                         current_line = false_line - 1;
-                        printf("Going to line %d\n", current_line + 1);
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
                     }
                 }
             }
@@ -196,10 +225,10 @@ void interpreter() {
                 if (std::holds_alternative<bool>(getIST(quad[current_line].operand1))) {
                     if (std::get<bool>(getIST(quad[current_line].operand1))) {
                         current_line = true_line - 1;
-                        printf("Going to line %d\n", current_line + 1);
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
                     } else {
                         current_line = false_line - 1;
-                        printf("Going to line %d\n", current_line + 1);
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
                     }
                 }
             }
@@ -214,7 +243,7 @@ void interpreter() {
             int end_line;
             if (sscanf(quad[current_line].op, "goto %d", &end_line) == 1) {
                 current_line = end_line - 1;
-                printf("Going to line %d\n", current_line + 1);
+                std::cerr << "Going to line " << current_line + 1 << std::endl;
             }
             continue;
         }
@@ -519,10 +548,11 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
 
 /* MAIN BODY OF THE PROGRAM */
 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
-    printf("============================\n");
+    printf("\n============================\n");
     displayQuadruple();
+    printf("\n============================\n");
     interpreter();
-    printf("============================\n");
+    printf("\n============================\n");
 }
 ;
 
@@ -545,36 +575,36 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
 ;
 
 /* WRITE STATEMENT */
-WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { std::cout << std::endl; }
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { std::cout << std::endl; }
+WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push("\x1D"); addQuadruple("NA", "NA", "NA", "write"); }
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { writeQueue.push("\x1D"); addQuadruple("NA", "NA", "NA", "writeln"); }
 ;
-
+// char op1[], char op[], char op2[], char result[]
 WRITE_IDENTIFIER_LIST: IDENTIFIER
-| IDENTIFIER WRITE_MORE_IDENTIFIERS { std::cout << $1; }
-| IDENTIFIER ARRAY_ADD_ON_ID { std::cout << $1; }
-| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { std::cout << $1; }
-| STRING { std::cout << $1; }
-| STRING WRITE_MORE_IDENTIFIERS { std::cout << $1; }
-| INT_NUMBER { std::cout << $1; }
-| INT_NUMBER WRITE_MORE_IDENTIFIERS { std::cout << $1; }
-| DECIMAL_NUMBER { std::cout << $1; }
-| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { std::cout << $1; }
-| CHARACTER { std::cout << $1; }
-| CHARACTER WRITE_MORE_IDENTIFIERS { std::cout << $1; }
+| IDENTIFIER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
+| IDENTIFIER ARRAY_ADD_ON_ID { writeQueue.push($1); }
+| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
+| STRING { writeQueue.push($1); }
+| STRING WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
+| INT_NUMBER { writeQueue.push($1); }
+| INT_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
+| DECIMAL_NUMBER { writeQueue.push($1); }
+| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
+| CHARACTER { writeQueue.push($1); }
+| CHARACTER WRITE_MORE_IDENTIFIERS { writeQueue.push($1); }
 ;
 
 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
-| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { std::cout << $2; }
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID { std::cout << $2; }
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS  { std::cout << $2; }
-| COMMA STRING { std::cout << $2; }
-| COMMA STRING WRITE_MORE_IDENTIFIERS { std::cout << $2; }
-| COMMA INT_NUMBER { std::cout << $2; }
-| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS { std::cout << $2; }
-| COMMA DECIMAL_NUMBER { std::cout << $2; }
-| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { std::cout << $2; }
-| COMMA CHARACTER { std::cout << $2; }
-| COMMA CHARACTER WRITE_MORE_IDENTIFIERS { std::cout << $2; }
+| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
+| COMMA IDENTIFIER ARRAY_ADD_ON_ID { writeQueue.push($2); }
+| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS  { writeQueue.push($2); }
+| COMMA STRING { writeQueue.push($2); }
+| COMMA STRING WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
+| COMMA INT_NUMBER { writeQueue.push($2); }
+| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
+| COMMA DECIMAL_NUMBER { writeQueue.push($2); }
+| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
+| COMMA CHARACTER { writeQueue.push($2); }
+| COMMA CHARACTER WRITE_MORE_IDENTIFIERS { writeQueue.push($2); }
 ;
 
 /* ASSIGNMENT */
@@ -582,7 +612,7 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    addQuadruple("NA", "NA", $<data>5, $<data>1);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
     char temp[100];
@@ -856,6 +886,6 @@ int main()
 }
 
 int yyerror(const char* s){
-    printf("Error: %s\n", s);
+    std::cerr << "Error: " << s << std::endl;
     return 0;
 }

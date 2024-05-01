@@ -1,0 +1,103 @@
+[H[2J[3J=======================================
+Test Case 1
+program ArrayAverage;
+var
+  numbers: array[1..5] of Integer;
+  i, a, b: Integer;
+  average : real;
+  c: char;
+begin
+  i := 100;
+  average := 0.5;
+  c := 'c';
+
+  write("Enter 5 integer values:", i, i);
+
+  if i > 0 then
+  begin
+    a := 0;
+  end;
+
+  for i := 1 to 5 do
+  begin
+    a := a + i;
+    average := average / 2;
+  end;
+
+  while a > 0 do
+  begin
+    a := a - 1;
+    average := average * 2;
+  end;
+
+  a := -1;
+  if a < 0 then
+  begin
+    a := 0;
+  end;
+end.Deleting old files
+Compiling yacc program
+Compiling lex program
+Compiling the program in gcc
+
+============================
+:000:>  i  =  100 ;
+:001:>  average  =  0.5 ;
+:002:>  c  =  'c' ;
+:003:>  write ;
+
+:004:>  if_start ;
+:005:>  t0  =  i  >  0 ;
+:006:>  if_cond_end  =  t0  true: goto 007  false: goto 010 ;
+:007:>  ifthen_body_start ;
+:008:>  a  =  0 ;
+:009:>  ifthen_body_end  =  goto 010 ;
+:010:>  if_end ;
+
+
+:011:>  for_start ;
+:012:>  i  =  1 ;
+:013:>  for_cond_start ;
+:014:>  t1  =  i  <=  5 ;
+:015:>  for_cond_end  =  t1  true: goto 016  false: goto 023 ;
+:016:>  for_body_start ;
+:017:>  t2  =  a  +  i ;
+:018:>  a  =  t2 ;
+:019:>  t3  =  average  /  2 ;
+:020:>  average  =  t3 ;
+:021:>  i  =  i  +  1 ;
+:022:>  for_body_end  =  goto 013 ;
+:023:>  for_end ;
+
+
+:024:>  while_start ;
+:025:>  while_cond_start ;
+:026:>  t4  =  a  >  0 ;
+:027:>  while_cond_end  =  t4  true: goto 028  false: goto 034 ;
+:028:>  while_body_start ;
+:029:>  t5  =  a  -  1 ;
+:030:>  a  =  t5 ;
+:031:>  t6  =  average  *  2 ;
+:032:>  average  =  t6 ;
+:033:>  while_body_end  =  goto 025 ;
+:034:>  while_end ;
+
+:035:>  t7  =  -  1 ;
+:036:>  a  =  t7 ;
+
+:037:>  if_start ;
+:038:>  t8  =  a  <  0 ;
+:039:>  if_cond_end  =  t8  true: goto 040  false: goto 043 ;
+:040:>  ifthen_body_start ;
+:041:>  a  =  0 ;
+:042:>  ifthen_body_end  =  goto 043 ;
+:043:>  if_end ;
+
+
+============================
+100Enter 5 integer values:
+============================
+
+
+
+Parsing completed successfully
