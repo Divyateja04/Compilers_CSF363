@@ -1,9 +1,11 @@
 %{
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdbool.h>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#include <iostream>
+#include <unordered_map>
+#include <variant>
+#include <vector>
 
 int yylex(void);
 int yyerror(const char* s);
@@ -18,7 +20,7 @@ int tos=-1;
 int temp_char=0;
 
 struct quadruple{
-    char operator[100];
+    char op[100];
     char operand1[100];
     char operand2[100];
     char result[100];
@@ -30,95 +32,83 @@ struct stack {
 
 void addQuadruple(char op1[], char op[], char op2[], char result[])
 {
-    strcpy(quad[quadrupleIndex].operator, op);
+    strcpy(quad[quadrupleIndex].op, op);
     strcpy(quad[quadrupleIndex].operand1, op1);
     strcpy(quad[quadrupleIndex].operand2, op2);
     strcpy(quad[quadrupleIndex].result, result);
     quadrupleIndex++;
 }
 
-struct interpreterSymbolTable{
-    char name[1000][100]; // 1000 variables with each having length of 100
-    int value[1000];
-    size_t currentSize;
-} interpreterSymbolTable[1000];
+std::unordered_map<std::string, std::variant<int, float, char, bool, std::vector<int>>> interpreterSymbolTable;
 
-void initializeInterpreterSymbolTable() {
-    for(int i = 0; i < 1000; i++) {
-        interpreterSymbolTable[i].currentSize = 0;
-    }
+void updateIST(std::string symbol, std::variant<int, float, char, bool, std::vector<int>> value) {
+    interpreterSymbolTable[symbol] = value;
 }
 
-void insertIntoInterpreterSymbolTable(char name[], int value) {
-    strcpy(interpreterSymbolTable[0].name[interpreterSymbolTable[0].currentSize], name);
-    interpreterSymbolTable[0].value[interpreterSymbolTable[0].currentSize] = value;
-    interpreterSymbolTable[0].currentSize++;
-}
-
-void updateInterpreterSymbolTable(char name[], int value) {
-    for(int i = 0; i < interpreterSymbolTable[0].currentSize; i++) {
-        if(strcmp(interpreterSymbolTable[0].name[i], name) == 0) {
-            interpreterSymbolTable[0].value[i] = value;
-            return;
-        }
-    }
-    insertIntoInterpreterSymbolTable(name, value);
-}
-
-void printInterpreterSymbolTable() {
-    for(int i = 0; i < interpreterSymbolTable[0].currentSize; i++) {
-        printf("%s = %d\n", interpreterSymbolTable[0].name[i], interpreterSymbolTable[0].value[i]);
-    }
-}
-
-bool isNumber(char name[]) {
-    for(int i = 0; i < strlen(name); i++) {
-        if (!isdigit(name[i])) {
-            return false;
-        }
-    }
-    return true;
-
-}
-
-int getSymbolValueFromInterpreterSymbolTable(char name[]) {
-    if (isNumber(name)) {
-        return atoi(name);
+std::variant<int, float, char, bool, std::vector<int>> getIST(std::string symbol) {
+    // Check if symbol can be converted to an integer
+    char* end;
+    long int_value = std::strtol(symbol.c_str(), &end, 10);
+    if (end != symbol.c_str() && *end == '\0') {
+        return static_cast<int>(int_value);
     }
 
-    if (strcmp(name, "NA") == 0) {
+    // Check if symbol can be converted to a float
+    char* end2;
+    float float_value = std::strtof(symbol.c_str(), &end2);
+    if (end2 != symbol.c_str() && *end2 == '\0') {
+        return static_cast<float>(float_value);
+    }
+
+    // If symbol is not a number, look it up in the symbol table
+    if (interpreterSymbolTable.find(symbol) != interpreterSymbolTable.end()) {
+        return interpreterSymbolTable[symbol];
+    } else {
+        yyerror("Symbol not found in symbol table");
         return 0;
     }
+}
 
-    for(int i = 0; i < interpreterSymbolTable[0].currentSize; i++) {
-        if(strcmp(interpreterSymbolTable[0].name[i], name) == 0) {
-            return interpreterSymbolTable[0].value[i];
-        }
+void printIST() {
+    for (auto& it: interpreterSymbolTable) {
+        std::cout << "Symbol: " << it.first << " Value: " << std::get<int>(it.second) << std::endl;
     }
-    
-    // If name is not found, add a new field with default value 0
-    strcpy(interpreterSymbolTable[0].name[interpreterSymbolTable[0].currentSize], name);
-    interpreterSymbolTable[0].value[interpreterSymbolTable[0].currentSize] = 0;
-    interpreterSymbolTable[0].currentSize++;
-    return 0;
+}
+
+template <typename T>
+T performOperation(char op, T operand1, T operand2) {
+    switch (op) {
+        case '+': return operand1 + operand2;
+        case '-': return operand1 - operand2;
+        case '*': return operand1 * operand2;
+        case '/': return operand1 / operand2;
+        case '%': 
+            if constexpr (std::is_same_v<T, int>) {
+                return operand1 % operand2;
+            } // Is fmod needed here?
+            break;
+        case '<': return operand1 < operand2;
+        case '>': return operand1 > operand2;
+        case '=': return operand1 == operand2;
+    }
 }
 
 void interpreter() {
     int current_line = -1;
     while(current_line++ < quadrupleIndex) {
-        printf("Result:%s Operand1:%s Operator:%s Operand2:%s\n", quad[current_line].result, quad[current_line].operand1, quad[current_line].operator, quad[current_line].operand2);
-        // printInterpreterSymbolTable();
+        printf("Result:%s Operand1:%s Operator:%s Operand2:%s\n", quad[current_line].result, quad[current_line].operand1, quad[current_line].op, quad[current_line].operand2);
+        // printIST();
 
         // Operator is NA
         // simple assignment operation e.g. s = 6
-        if (strcmp(quad[current_line].operator, "NA") == 0) {
+        if (strcmp(quad[current_line].op, "NA") == 0) {
             if (strcmp(quad[current_line].operand1, "NA") == 0 && strcmp(quad[current_line].operand2, "NA") == 0) {
                 // Keywords
                 continue;
             } else if (strcmp(quad[current_line].operand1, "NA") == 0) {
-                updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                updateIST(quad[current_line].result, getIST(quad[current_line].operand2));
             } else if (strcmp(quad[current_line].operand2, "NA") == 0) {
-                updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1));
+                updateIST(quad[current_line].result, getIST(quad[current_line].operand1));
             }
             continue;
         }
@@ -129,14 +119,16 @@ void interpreter() {
             strcmp(quad[current_line].result, "while_cond_end") == 0
             ) {
             int true_line, false_line;
-            if (sscanf(quad[current_line].operator, "true: goto %d", &true_line) == 1 &&
+            if (sscanf(quad[current_line].op, "true: goto %d", &true_line) == 1 &&
                 sscanf(quad[current_line].operand2, "false: goto %d", &false_line) == 1) {
-                if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
-                    current_line = true_line - 1;
-                    printf("Going to line %d\n", current_line + 1);
-                } else {
-                    current_line = false_line - 1;
-                    printf("Going to line %d\n", current_line + 1);
+                if (std::holds_alternative<bool>(getIST(quad[current_line].operand1))) {
+                    if (std::get<bool>(getIST(quad[current_line].operand1))) {
+                        current_line = true_line - 1;
+                        printf("Going to line %d\n", current_line + 1);
+                    } else {
+                        current_line = false_line - 1;
+                        printf("Going to line %d\n", current_line + 1);
+                    }
                 }
             }
             continue;
@@ -147,14 +139,16 @@ void interpreter() {
             strcmp(quad[current_line].result, "if_cond_end") == 0
             ) {
             int true_line, false_line;
-            if (sscanf(quad[current_line].operator, "true: goto %d", &true_line) == 1 &&
-                sscanf(quad[current_line].operator, "false: goto %d", &false_line) == 1) {
-                if (getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1)) {
-                    current_line = true_line - 1;
-                    printf("Going to line %d\n", current_line + 1);
-                } else {
-                    current_line = false_line - 1;
-                    printf("Going to line %d\n", current_line + 1);
+            if (sscanf(quad[current_line].op, "true: goto %d", &true_line) == 1 &&
+                sscanf(quad[current_line].op, "false: goto %d", &false_line) == 1) {
+                if (std::holds_alternative<bool>(getIST(quad[current_line].operand1))) {
+                    if (std::get<bool>(getIST(quad[current_line].operand1))) {
+                        current_line = true_line - 1;
+                        printf("Going to line %d\n", current_line + 1);
+                    } else {
+                        current_line = false_line - 1;
+                        printf("Going to line %d\n", current_line + 1);
+                    }
                 }
             }
             continue;
@@ -166,60 +160,67 @@ void interpreter() {
             strcmp(quad[current_line].result, "ifthen_body_end") == 0
             ) {
             int end_line;
-            if (sscanf(quad[current_line].operator, "goto %d", &end_line) == 1) {
+            if (sscanf(quad[current_line].op, "goto %d", &end_line) == 1) {
                 current_line = end_line - 1;
                 printf("Going to line %d\n", current_line + 1);
             }
             continue;
         }
 
-        // For single character trivial operators (operator != NA)
-        if (strlen(quad[current_line].operator) == 1) {
-            switch (quad[current_line].operator[0]) {
+        // For single character trivial operators (op != NA)
+        if (strlen(quad[current_line].op) == 1) {
+            switch (quad[current_line].op[0]) {
                 case '+':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) + getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
-                    break;
                 case '-':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) - getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
-                    break;
                 case '*':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) * getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
-                    break;
                 case '/':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) / getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                        int result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
+                        updateIST(quad[current_line].result, result);
+                    } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                        float result = performOperation(quad[current_line].op[0], std::get<float>(getIST(quad[current_line].operand1)), std::get<float>(getIST(quad[current_line].operand2)));
+                        updateIST(quad[current_line].result, result);
+                    }
                     break;
                 case '%':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) % getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
-                    break;
                 case '<':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) < getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
-                    break;
                 case '>':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) > getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
-                    break;
                 case '=':
-                    updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) == getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+                    if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                        bool result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
+                        updateIST(quad[current_line].result, result);
+                    }
                     break;
             }
             continue;
         }
         
-        // For multicharacter operator (operator != NA)
-        if (strcmp(quad[current_line].operator, "<>") == 0) {
-            updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) != getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+        // For multicharacter op (op != NA)
+        if (strcmp(quad[current_line].op, "<>") == 0) {
+            if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<int>(getIST(quad[current_line].operand1)) != std::get<int>(getIST(quad[current_line].operand2)));
+            } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<float>(getIST(quad[current_line].operand1)) != std::get<float>(getIST(quad[current_line].operand2)));
+            }
             continue;
-        }
-        else if (strcmp(quad[current_line].operator, "<=") == 0) {
-            updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) <= getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+        } else if (strcmp(quad[current_line].op, "<=") == 0) {
+            if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<int>(getIST(quad[current_line].operand1)) <= std::get<int>(getIST(quad[current_line].operand2)));
+            } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<float>(getIST(quad[current_line].operand1)) <= std::get<float>(getIST(quad[current_line].operand2)));
+            }
             continue;
-        }
-        else if (strcmp(quad[current_line].operator, ">=") == 0) {
-            updateInterpreterSymbolTable(quad[current_line].result, getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand1) >= getSymbolValueFromInterpreterSymbolTable(quad[current_line].operand2));
+        } else if (strcmp(quad[current_line].op, ">=") == 0) {
+            if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<int>(getIST(quad[current_line].operand1)) >= std::get<int>(getIST(quad[current_line].operand2)));
+            } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<float>(getIST(quad[current_line].operand1)) >= std::get<float>(getIST(quad[current_line].operand2)));
+            }
             continue;
         }
     }
 
-    printInterpreterSymbolTable();
+    printIST();
 }
 
 void displayQuadruple()
@@ -234,7 +235,7 @@ void displayQuadruple()
                 // replace the goto with the actual line number
                 j++;
             }
-            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].op, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
         }
         // Check if the current quadruple starts a while condition
@@ -245,14 +246,14 @@ void displayQuadruple()
                 // replace the goto with the actual line number
                 j++;
             }
-            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].op, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
             // Add go to while_cond_start when you reach while_body_end
             int k = j;
             while(strcmp(quad[k].result, "while_cond_start") != 0 && k > 0){
                 k--;
             }
-            sprintf(quad[j].operator, "goto %03d", k);
+            sprintf(quad[j].op, "goto %03d", k);
         }
         // Check if the current quadruple starts a for condition
         if(strcmp(quad[i].result, "for_cond_end") == 0){
@@ -260,7 +261,7 @@ void displayQuadruple()
             int j = i-1;
             strcpy(quad[j].operand1, quad[i].operand1);
             strcpy(quad[j].operand2, quad[i].operand2);
-            strcpy(quad[j].operator, quad[i].operator);
+            strcpy(quad[j].op, quad[i].op);
             
             // Then we put the condition in the next line
             strcpy(quad[i].operand1, quad[j].result);
@@ -271,14 +272,14 @@ void displayQuadruple()
                 // replace the goto with the actual line number
                 j++;
             }
-            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].op, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
             // Add go to for_cond_start when you reach for_body_end
             int k = j;
             while(strcmp(quad[k].result, "for_cond_start") != 0 && k > 0){
                 k--;
             }
-            sprintf(quad[j].operator, "goto %03d", k);
+            sprintf(quad[j].op, "goto %03d", k);
             // Also replace the for_var with the actual name 
             // of the variable in the for loop
             int l = i-1;
@@ -317,12 +318,12 @@ void displayQuadruple()
 
         // Print = only if there's something after that
         if(strcmp(quad[i].operand1, "NA") != 0
-        || strcmp(quad[i].operator, "NA") != 0
+        || strcmp(quad[i].op, "NA") != 0
         || strcmp(quad[i].operand2, "NA") != 0
         ) printf(" = ");
 
         if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
-        if(strcmp(quad[i].operator, "NA") != 0) printf(" %s ", quad[i].operator);
+        if(strcmp(quad[i].op, "NA") != 0) printf(" %s ", quad[i].op);
         if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
         printf(";\n");
 
@@ -432,7 +433,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
     printf("============================\n");
     displayQuadruple();
-    interpreter();
+    // interpreter();
     printf("============================\n");
 }
 ;
@@ -748,7 +749,7 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 
 
 %%
-void main()
+int main()
 {
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
@@ -759,6 +760,8 @@ void main()
         if(printLogs) printf("\nInput file found, Parsing....");
         yyparse();
     }
+
+    return 0;
 }
 
 int yyerror(const char* s){

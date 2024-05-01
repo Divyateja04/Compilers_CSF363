@@ -1,0 +1,2654 @@
+Terminals unused in grammar
+
+    NL
+    INVALID_TOKEN
+
+
+Grammar
+
+    0 $accept: stmt $end
+
+    1 stmt: PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM
+
+    2 DATATYPE: INTEGER
+    3         | REAL
+    4         | BOOLEAN
+    5         | CHAR
+
+    6 RELOP: EQUAL
+    7      | NOTEQUAL
+    8      | LESS
+    9      | LESSEQUAL
+   10      | GREATER
+   11      | GREATEREQUAL
+
+   12 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET
+
+   13 BETWEEN_BRACKETS: INT_NUMBER
+   14                 | IDENTIFIER
+   15                 | IDENTIFIER ARRAY_ADD_ON_ID
+
+   16 PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON
+
+   17 VARIABLE_DECLARATION: VAR DECLARATION_LISTS
+   18                     | VAR
+
+   19 DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS
+   20                  | DECLARATION_LIST
+
+   21 DECLARATION_LIST: SINGLE_VARIABLE
+   22                 | MULTIPLE_VARIABLE
+   23                 | ARRAY_DECLARATION
+
+   24 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON
+
+   25 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON
+
+   26 MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS
+   27                 | COMMA IDENTIFIER
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+
+   29 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT
+
+   30 STATEMENTS: STATEMENT STATEMENTS
+   31           | STATEMENT
+
+   32 STATEMENT: READ_STATEMENT
+   33          | WRITE_STATEMENT
+   34          | ASSIGNMENT_STATEMENT
+   35          | CONDITIONAL_STATEMENT
+   36          | LOOPING_STATEMENT
+
+   37 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
+   38               | READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
+
+   39 WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+   40                | WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+
+   41 WRITE_IDENTIFIER_LIST: IDENTIFIER
+   42                      | IDENTIFIER WRITE_MORE_IDENTIFIERS
+   43                      | IDENTIFIER ARRAY_ADD_ON_ID
+   44                      | IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
+   45                      | STRING
+   46                      | STRING WRITE_MORE_IDENTIFIERS
+   47                      | INT_NUMBER
+   48                      | INT_NUMBER WRITE_MORE_IDENTIFIERS
+   49                      | DECIMAL_NUMBER
+   50                      | DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
+   51                      | CHARACTER
+   52                      | CHARACTER WRITE_MORE_IDENTIFIERS
+
+   53 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
+   54                       | COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS
+   55                       | COMMA IDENTIFIER ARRAY_ADD_ON_ID
+   56                       | COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
+   57                       | COMMA STRING
+   58                       | COMMA STRING WRITE_MORE_IDENTIFIERS
+   59                       | COMMA INT_NUMBER
+   60                       | COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS
+   61                       | COMMA DECIMAL_NUMBER
+   62                       | COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
+   63                       | COMMA CHARACTER
+   64                       | COMMA CHARACTER WRITE_MORE_IDENTIFIERS
+
+   65 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON
+   66                     | IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON
+   67                     | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON
+
+   68 $@1: ε
+
+   69 $@2: ε
+
+   70 CONDITIONAL_STATEMENT: IF $@1 ANY_EXPRESSION $@2 AFTER_IF_ANY_EXPR
+
+   71 $@3: ε
+
+   72 $@4: ε
+
+   73 AFTER_IF_ANY_EXPR: THEN $@3 BODY_OF_CONDITIONAL $@4 AFTER_IF_THEN_BODY
+
+   74 $@5: ε
+
+   75 $@6: ε
+
+   76 AFTER_IF_THEN_BODY: ELSE $@5 BODY_OF_CONDITIONAL $@6 SEMICOLON
+   77                   | SEMICOLON
+
+   78 BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END
+
+   79 STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CONDITIONAL
+   80                              | STATEMENT_INSIDE_CONDITIONAL
+
+   81 ANY_EXPRESSION: EXPRESSION_SEQUENCE
+   82               | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE
+   83               | LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN
+   84               | BOOLEAN_EXPRESSION_SEQUENCE
+
+   85 EXPRESSION_SEQUENCE: TERM
+   86                    | EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE
+   91                    | MINUS EXPRESSION_SEQUENCE
+   92                    | LPAREN EXPRESSION_SEQUENCE RPAREN
+
+   93 BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION
+   94                            | ANY_EXPRESSION AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION OR ANY_EXPRESSION
+   96                            | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN
+
+   97 TERM: IDENTIFIER
+   98     | IDENTIFIER ARRAY_ADD_ON_ID
+   99     | INT_NUMBER
+  100     | DECIMAL_NUMBER
+
+  101 STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT
+  102                             | WRITE_STATEMENT
+  103                             | ASSIGNMENT_STATEMENT
+  104                             | LOOPING_STATEMENT
+
+  105 LOOPING_STATEMENT: WHILE_LOOP
+  106                  | FOR_LOOP
+
+  107 $@7: ε
+
+  108 $@8: ε
+
+  109 $@9: ε
+
+  110 WHILE_LOOP: WHILE $@7 ANY_EXPRESSION DO $@8 BODY_OF_LOOP $@9 SEMICOLON
+
+  111 $@10: ε
+
+  112 $@11: ε
+
+  113 FOR_LOOP: FOR $@10 IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE $@11 AFTER_FOR_CONDITION
+
+  114 $@12: ε
+
+  115 $@13: ε
+
+  116 $@14: ε
+
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE $@12 DO $@13 BODY_OF_LOOP $@14 SEMICOLON
+
+  118 $@15: ε
+
+  119 $@16: ε
+
+  120 $@17: ε
+
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE $@15 DO $@16 BODY_OF_LOOP $@17 SEMICOLON
+
+  122 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END
+
+  123 STATEMENTS_INSIDE_LOOP: STATEMENT_INSIDE_LOOP STATEMENTS_INSIDE_LOOP
+  124                       | STATEMENT_INSIDE_LOOP
+
+  125 STATEMENT_INSIDE_LOOP: READ_STATEMENT
+  126                      | WRITE_STATEMENT
+  127                      | ASSIGNMENT_STATEMENT
+  128                      | CONDITIONAL_STATEMENT
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    NL (258)
+    PROGRAM (259) 16
+    INTEGER (260) 2
+    REAL (261) 3
+    BEGINK (262) 29 78 122
+    END (263) 29 78 122
+    BOOLEAN (264) 4
+    CHAR (265) 5
+    IF (266) 70
+    ELSE (267) 76
+    TO (268) 117
+    DOWNTO (269) 121
+    VAR (270) 17 18
+    ARRAY (271) 28
+    FOR (272) 113
+    WHILE (273) 110
+    DO (274) 110 117 121
+    NOT (275) 93
+    AND (276) 94
+    OR (277) 95
+    READ (278) 37 38
+    WRITE (279) 39
+    WRITE_LN (280) 40
+    ARRAY_DOT (281) 28
+    PLUS (282) 86
+    MINUS (283) 87 91
+    MULTIPLY (284) 88
+    DIVIDE (285) 89
+    MOD (286) 90
+    EQUAL (287) 6 65 66 67 113
+    LESS (288) 8
+    GREATER (289) 10
+    LESSEQUAL (290) 9
+    GREATEREQUAL (291) 11
+    NOTEQUAL (292) 7
+    INT_NUMBER (293) 13 28 47 48 59 60 99
+    DECIMAL_NUMBER (294) 49 50 61 62 100
+    IDENTIFIER (295) 14 15 16 24 25 26 27 28 37 38 41 42 43 44 53 54 55 56 65 66 67 97 98 113
+    SEMICOLON (296) 16 24 25 28 37 38 39 40 65 66 67 76 77 110 117 121
+    COMMA (297) 26 27 53 54 55 56 57 58 59 60 61 62 63 64
+    COLON (298) 24 25 28 65 66 67 113
+    DOT (299) 29
+    LPAREN (300) 37 38 39 40 83 92 96
+    RPAREN (301) 37 38 39 40 83 92 96
+    LBRACKET (302) 12 28
+    RBRACKET (303) 12 28
+    STRING (304) 45 46 57 58
+    THEN (305) 73
+    OF (306) 28
+    INVALID_TOKEN (307)
+    CHARACTER (308) 51 52 63 64 67
+
+
+Nonterminals, with rules where they appear
+
+    $accept (54)
+        on left: 0
+    stmt (55)
+        on left: 1
+        on right: 0
+    DATATYPE (56)
+        on left: 2 3 4 5
+        on right: 24 25 28
+    RELOP (57)
+        on left: 6 7 8 9 10 11
+        on right: 82 83
+    ARRAY_ADD_ON_ID (58)
+        on left: 12
+        on right: 15 38 43 44 55 56 66 98
+    BETWEEN_BRACKETS (59)
+        on left: 13 14 15
+        on right: 12
+    PROGRAM_DECLARATION (60)
+        on left: 16
+        on right: 1
+    VARIABLE_DECLARATION (61)
+        on left: 17 18
+        on right: 1
+    DECLARATION_LISTS (62)
+        on left: 19 20
+        on right: 17 19
+    DECLARATION_LIST (63)
+        on left: 21 22 23
+        on right: 19 20
+    SINGLE_VARIABLE (64)
+        on left: 24
+        on right: 21
+    MULTIPLE_VARIABLE (65)
+        on left: 25
+        on right: 22
+    MORE_IDENTIFIERS (66)
+        on left: 26 27
+        on right: 25 26
+    ARRAY_DECLARATION (67)
+        on left: 28
+        on right: 23
+    BODY_OF_PROGRAM (68)
+        on left: 29
+        on right: 1
+    STATEMENTS (69)
+        on left: 30 31
+        on right: 29 30
+    STATEMENT (70)
+        on left: 32 33 34 35 36
+        on right: 30 31
+    READ_STATEMENT (71)
+        on left: 37 38
+        on right: 32 101 125
+    WRITE_STATEMENT (72)
+        on left: 39 40
+        on right: 33 102 126
+    WRITE_IDENTIFIER_LIST (73)
+        on left: 41 42 43 44 45 46 47 48 49 50 51 52
+        on right: 39 40
+    WRITE_MORE_IDENTIFIERS (74)
+        on left: 53 54 55 56 57 58 59 60 61 62 63 64
+        on right: 42 44 46 48 50 52 54 56 58 60 62 64
+    ASSIGNMENT_STATEMENT (75)
+        on left: 65 66 67
+        on right: 34 103 127
+    CONDITIONAL_STATEMENT (76)
+        on left: 70
+        on right: 35 128
+    $@1 (77)
+        on left: 68
+        on right: 70
+    $@2 (78)
+        on left: 69
+        on right: 70
+    AFTER_IF_ANY_EXPR (79)
+        on left: 73
+        on right: 70
+    $@3 (80)
+        on left: 71
+        on right: 73
+    $@4 (81)
+        on left: 72
+        on right: 73
+    AFTER_IF_THEN_BODY (82)
+        on left: 76 77
+        on right: 73
+    $@5 (83)
+        on left: 74
+        on right: 76
+    $@6 (84)
+        on left: 75
+        on right: 76
+    BODY_OF_CONDITIONAL (85)
+        on left: 78
+        on right: 73 76
+    STATEMENTS_INSIDE_CONDITIONAL (86)
+        on left: 79 80
+        on right: 78 79
+    ANY_EXPRESSION (87)
+        on left: 81 82 83 84
+        on right: 65 66 70 93 94 95 110
+    EXPRESSION_SEQUENCE (88)
+        on left: 85 86 87 88 89 90 91 92
+        on right: 81 82 83 86 87 88 89 90 91 92 113 117 121
+    BOOLEAN_EXPRESSION_SEQUENCE (89)
+        on left: 93 94 95 96
+        on right: 84 96
+    TERM (90)
+        on left: 97 98 99 100
+        on right: 85
+    STATEMENT_INSIDE_CONDITIONAL (91)
+        on left: 101 102 103 104
+        on right: 79 80
+    LOOPING_STATEMENT (92)
+        on left: 105 106
+        on right: 36 104
+    WHILE_LOOP (93)
+        on left: 110
+        on right: 105
+    $@7 (94)
+        on left: 107
+        on right: 110
+    $@8 (95)
+        on left: 108
+        on right: 110
+    $@9 (96)
+        on left: 109
+        on right: 110
+    FOR_LOOP (97)
+        on left: 113
+        on right: 106
+    $@10 (98)
+        on left: 111
+        on right: 113
+    $@11 (99)
+        on left: 112
+        on right: 113
+    AFTER_FOR_CONDITION (100)
+        on left: 117 121
+        on right: 113
+    $@12 (101)
+        on left: 114
+        on right: 117
+    $@13 (102)
+        on left: 115
+        on right: 117
+    $@14 (103)
+        on left: 116
+        on right: 117
+    $@15 (104)
+        on left: 118
+        on right: 121
+    $@16 (105)
+        on left: 119
+        on right: 121
+    $@17 (106)
+        on left: 120
+        on right: 121
+    BODY_OF_LOOP (107)
+        on left: 122
+        on right: 110 117 121
+    STATEMENTS_INSIDE_LOOP (108)
+        on left: 123 124
+        on right: 122 123
+    STATEMENT_INSIDE_LOOP (109)
+        on left: 125 126 127 128
+        on right: 123 124
+
+
+State 0
+
+    0 $accept: • stmt $end
+
+    PROGRAM  shift, and go to state 1
+
+    stmt                 go to state 2
+    PROGRAM_DECLARATION  go to state 3
+
+
+State 1
+
+   16 PROGRAM_DECLARATION: PROGRAM • IDENTIFIER SEMICOLON
+
+    IDENTIFIER  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: stmt • $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 stmt: PROGRAM_DECLARATION • VARIABLE_DECLARATION BODY_OF_PROGRAM
+
+    VAR  shift, and go to state 6
+
+    VARIABLE_DECLARATION  go to state 7
+
+
+State 4
+
+   16 PROGRAM_DECLARATION: PROGRAM IDENTIFIER • SEMICOLON
+
+    SEMICOLON  shift, and go to state 8
+
+
+State 5
+
+    0 $accept: stmt $end •
+
+    $default  accept
+
+
+State 6
+
+   17 VARIABLE_DECLARATION: VAR • DECLARATION_LISTS
+   18                     | VAR •
+
+    IDENTIFIER  shift, and go to state 9
+
+    $default  reduce using rule 18 (VARIABLE_DECLARATION)
+
+    DECLARATION_LISTS  go to state 10
+    DECLARATION_LIST   go to state 11
+    SINGLE_VARIABLE    go to state 12
+    MULTIPLE_VARIABLE  go to state 13
+    ARRAY_DECLARATION  go to state 14
+
+
+State 7
+
+    1 stmt: PROGRAM_DECLARATION VARIABLE_DECLARATION • BODY_OF_PROGRAM
+
+    BEGINK  shift, and go to state 15
+
+    BODY_OF_PROGRAM  go to state 16
+
+
+State 8
+
+   16 PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON •
+
+    $default  reduce using rule 16 (PROGRAM_DECLARATION)
+
+
+State 9
+
+   24 SINGLE_VARIABLE: IDENTIFIER • COLON DATATYPE SEMICOLON
+   25 MULTIPLE_VARIABLE: IDENTIFIER • MORE_IDENTIFIERS COLON DATATYPE SEMICOLON
+   28 ARRAY_DECLARATION: IDENTIFIER • COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+
+    COMMA  shift, and go to state 17
+    COLON  shift, and go to state 18
+
+    MORE_IDENTIFIERS  go to state 19
+
+
+State 10
+
+   17 VARIABLE_DECLARATION: VAR DECLARATION_LISTS •
+
+    $default  reduce using rule 17 (VARIABLE_DECLARATION)
+
+
+State 11
+
+   19 DECLARATION_LISTS: DECLARATION_LIST • DECLARATION_LISTS
+   20                  | DECLARATION_LIST •
+
+    IDENTIFIER  shift, and go to state 9
+
+    $default  reduce using rule 20 (DECLARATION_LISTS)
+
+    DECLARATION_LISTS  go to state 20
+    DECLARATION_LIST   go to state 11
+    SINGLE_VARIABLE    go to state 12
+    MULTIPLE_VARIABLE  go to state 13
+    ARRAY_DECLARATION  go to state 14
+
+
+State 12
+
+   21 DECLARATION_LIST: SINGLE_VARIABLE •
+
+    $default  reduce using rule 21 (DECLARATION_LIST)
+
+
+State 13
+
+   22 DECLARATION_LIST: MULTIPLE_VARIABLE •
+
+    $default  reduce using rule 22 (DECLARATION_LIST)
+
+
+State 14
+
+   23 DECLARATION_LIST: ARRAY_DECLARATION •
+
+    $default  reduce using rule 23 (DECLARATION_LIST)
+
+
+State 15
+
+   29 BODY_OF_PROGRAM: BEGINK • STATEMENTS END DOT
+
+    IF          shift, and go to state 21
+    FOR         shift, and go to state 22
+    WHILE       shift, and go to state 23
+    READ        shift, and go to state 24
+    WRITE       shift, and go to state 25
+    WRITE_LN    shift, and go to state 26
+    IDENTIFIER  shift, and go to state 27
+
+    STATEMENTS             go to state 28
+    STATEMENT              go to state 29
+    READ_STATEMENT         go to state 30
+    WRITE_STATEMENT        go to state 31
+    ASSIGNMENT_STATEMENT   go to state 32
+    CONDITIONAL_STATEMENT  go to state 33
+    LOOPING_STATEMENT      go to state 34
+    WHILE_LOOP             go to state 35
+    FOR_LOOP               go to state 36
+
+
+State 16
+
+    1 stmt: PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM •
+
+    $default  reduce using rule 1 (stmt)
+
+
+State 17
+
+   26 MORE_IDENTIFIERS: COMMA • IDENTIFIER MORE_IDENTIFIERS
+   27                 | COMMA • IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 37
+
+
+State 18
+
+   24 SINGLE_VARIABLE: IDENTIFIER COLON • DATATYPE SEMICOLON
+   28 ARRAY_DECLARATION: IDENTIFIER COLON • ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+
+    INTEGER  shift, and go to state 38
+    REAL     shift, and go to state 39
+    BOOLEAN  shift, and go to state 40
+    CHAR     shift, and go to state 41
+    ARRAY    shift, and go to state 42
+
+    DATATYPE  go to state 43
+
+
+State 19
+
+   25 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS • COLON DATATYPE SEMICOLON
+
+    COLON  shift, and go to state 44
+
+
+State 20
+
+   19 DECLARATION_LISTS: DECLARATION_LIST DECLARATION_LISTS •
+
+    $default  reduce using rule 19 (DECLARATION_LISTS)
+
+
+State 21
+
+   70 CONDITIONAL_STATEMENT: IF • $@1 ANY_EXPRESSION $@2 AFTER_IF_ANY_EXPR
+
+    $default  reduce using rule 68 ($@1)
+
+    $@1  go to state 45
+
+
+State 22
+
+  113 FOR_LOOP: FOR • $@10 IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE $@11 AFTER_FOR_CONDITION
+
+    $default  reduce using rule 111 ($@10)
+
+    $@10  go to state 46
+
+
+State 23
+
+  110 WHILE_LOOP: WHILE • $@7 ANY_EXPRESSION DO $@8 BODY_OF_LOOP $@9 SEMICOLON
+
+    $default  reduce using rule 107 ($@7)
+
+    $@7  go to state 47
+
+
+State 24
+
+   37 READ_STATEMENT: READ • LPAREN IDENTIFIER RPAREN SEMICOLON
+   38               | READ • LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
+
+    LPAREN  shift, and go to state 48
+
+
+State 25
+
+   39 WRITE_STATEMENT: WRITE • LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+
+    LPAREN  shift, and go to state 49
+
+
+State 26
+
+   40 WRITE_STATEMENT: WRITE_LN • LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+
+    LPAREN  shift, and go to state 50
+
+
+State 27
+
+   65 ASSIGNMENT_STATEMENT: IDENTIFIER • COLON EQUAL ANY_EXPRESSION SEMICOLON
+   66                     | IDENTIFIER • ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON
+   67                     | IDENTIFIER • COLON EQUAL CHARACTER SEMICOLON
+
+    COLON     shift, and go to state 51
+    LBRACKET  shift, and go to state 52
+
+    ARRAY_ADD_ON_ID  go to state 53
+
+
+State 28
+
+   29 BODY_OF_PROGRAM: BEGINK STATEMENTS • END DOT
+
+    END  shift, and go to state 54
+
+
+State 29
+
+   30 STATEMENTS: STATEMENT • STATEMENTS
+   31           | STATEMENT •
+
+    IF          shift, and go to state 21
+    FOR         shift, and go to state 22
+    WHILE       shift, and go to state 23
+    READ        shift, and go to state 24
+    WRITE       shift, and go to state 25
+    WRITE_LN    shift, and go to state 26
+    IDENTIFIER  shift, and go to state 27
+
+    $default  reduce using rule 31 (STATEMENTS)
+
+    STATEMENTS             go to state 55
+    STATEMENT              go to state 29
+    READ_STATEMENT         go to state 30
+    WRITE_STATEMENT        go to state 31
+    ASSIGNMENT_STATEMENT   go to state 32
+    CONDITIONAL_STATEMENT  go to state 33
+    LOOPING_STATEMENT      go to state 34
+    WHILE_LOOP             go to state 35
+    FOR_LOOP               go to state 36
+
+
+State 30
+
+   32 STATEMENT: READ_STATEMENT •
+
+    $default  reduce using rule 32 (STATEMENT)
+
+
+State 31
+
+   33 STATEMENT: WRITE_STATEMENT •
+
+    $default  reduce using rule 33 (STATEMENT)
+
+
+State 32
+
+   34 STATEMENT: ASSIGNMENT_STATEMENT •
+
+    $default  reduce using rule 34 (STATEMENT)
+
+
+State 33
+
+   35 STATEMENT: CONDITIONAL_STATEMENT •
+
+    $default  reduce using rule 35 (STATEMENT)
+
+
+State 34
+
+   36 STATEMENT: LOOPING_STATEMENT •
+
+    $default  reduce using rule 36 (STATEMENT)
+
+
+State 35
+
+  105 LOOPING_STATEMENT: WHILE_LOOP •
+
+    $default  reduce using rule 105 (LOOPING_STATEMENT)
+
+
+State 36
+
+  106 LOOPING_STATEMENT: FOR_LOOP •
+
+    $default  reduce using rule 106 (LOOPING_STATEMENT)
+
+
+State 37
+
+   26 MORE_IDENTIFIERS: COMMA IDENTIFIER • MORE_IDENTIFIERS
+   27                 | COMMA IDENTIFIER •
+
+    COMMA  shift, and go to state 17
+
+    $default  reduce using rule 27 (MORE_IDENTIFIERS)
+
+    MORE_IDENTIFIERS  go to state 56
+
+
+State 38
+
+    2 DATATYPE: INTEGER •
+
+    $default  reduce using rule 2 (DATATYPE)
+
+
+State 39
+
+    3 DATATYPE: REAL •
+
+    $default  reduce using rule 3 (DATATYPE)
+
+
+State 40
+
+    4 DATATYPE: BOOLEAN •
+
+    $default  reduce using rule 4 (DATATYPE)
+
+
+State 41
+
+    5 DATATYPE: CHAR •
+
+    $default  reduce using rule 5 (DATATYPE)
+
+
+State 42
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY • LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+
+    LBRACKET  shift, and go to state 57
+
+
+State 43
+
+   24 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE • SEMICOLON
+
+    SEMICOLON  shift, and go to state 58
+
+
+State 44
+
+   25 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON • DATATYPE SEMICOLON
+
+    INTEGER  shift, and go to state 38
+    REAL     shift, and go to state 39
+    BOOLEAN  shift, and go to state 40
+    CHAR     shift, and go to state 41
+
+    DATATYPE  go to state 59
+
+
+State 45
+
+   70 CONDITIONAL_STATEMENT: IF $@1 • ANY_EXPRESSION $@2 AFTER_IF_ANY_EXPR
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+
+    ANY_EXPRESSION               go to state 66
+    EXPRESSION_SEQUENCE          go to state 67
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 68
+    TERM                         go to state 69
+
+
+State 46
+
+  113 FOR_LOOP: FOR $@10 • IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE $@11 AFTER_FOR_CONDITION
+
+    IDENTIFIER  shift, and go to state 70
+
+
+State 47
+
+  110 WHILE_LOOP: WHILE $@7 • ANY_EXPRESSION DO $@8 BODY_OF_LOOP $@9 SEMICOLON
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+
+    ANY_EXPRESSION               go to state 71
+    EXPRESSION_SEQUENCE          go to state 67
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 68
+    TERM                         go to state 69
+
+
+State 48
+
+   37 READ_STATEMENT: READ LPAREN • IDENTIFIER RPAREN SEMICOLON
+   38               | READ LPAREN • IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
+
+    IDENTIFIER  shift, and go to state 72
+
+
+State 49
+
+   39 WRITE_STATEMENT: WRITE LPAREN • WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+
+    INT_NUMBER      shift, and go to state 73
+    DECIMAL_NUMBER  shift, and go to state 74
+    IDENTIFIER      shift, and go to state 75
+    STRING          shift, and go to state 76
+    CHARACTER       shift, and go to state 77
+
+    WRITE_IDENTIFIER_LIST  go to state 78
+
+
+State 50
+
+   40 WRITE_STATEMENT: WRITE_LN LPAREN • WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+
+    INT_NUMBER      shift, and go to state 73
+    DECIMAL_NUMBER  shift, and go to state 74
+    IDENTIFIER      shift, and go to state 75
+    STRING          shift, and go to state 76
+    CHARACTER       shift, and go to state 77
+
+    WRITE_IDENTIFIER_LIST  go to state 79
+
+
+State 51
+
+   65 ASSIGNMENT_STATEMENT: IDENTIFIER COLON • EQUAL ANY_EXPRESSION SEMICOLON
+   67                     | IDENTIFIER COLON • EQUAL CHARACTER SEMICOLON
+
+    EQUAL  shift, and go to state 80
+
+
+State 52
+
+   12 ARRAY_ADD_ON_ID: LBRACKET • BETWEEN_BRACKETS RBRACKET
+
+    INT_NUMBER  shift, and go to state 81
+    IDENTIFIER  shift, and go to state 82
+
+    BETWEEN_BRACKETS  go to state 83
+
+
+State 53
+
+   66 ASSIGNMENT_STATEMENT: IDENTIFIER ARRAY_ADD_ON_ID • COLON EQUAL ANY_EXPRESSION SEMICOLON
+
+    COLON  shift, and go to state 84
+
+
+State 54
+
+   29 BODY_OF_PROGRAM: BEGINK STATEMENTS END • DOT
+
+    DOT  shift, and go to state 85
+
+
+State 55
+
+   30 STATEMENTS: STATEMENT STATEMENTS •
+
+    $default  reduce using rule 30 (STATEMENTS)
+
+
+State 56
+
+   26 MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS •
+
+    $default  reduce using rule 26 (MORE_IDENTIFIERS)
+
+
+State 57
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET • INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+
+    INT_NUMBER  shift, and go to state 86
+
+
+State 58
+
+   24 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON •
+
+    $default  reduce using rule 24 (SINGLE_VARIABLE)
+
+
+State 59
+
+   25 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE • SEMICOLON
+
+    SEMICOLON  shift, and go to state 87
+
+
+State 60
+
+   93 BOOLEAN_EXPRESSION_SEQUENCE: NOT • ANY_EXPRESSION
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+
+    ANY_EXPRESSION               go to state 88
+    EXPRESSION_SEQUENCE          go to state 67
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 68
+    TERM                         go to state 69
+
+
+State 61
+
+   91 EXPRESSION_SEQUENCE: MINUS • EXPRESSION_SEQUENCE
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 90
+    TERM                 go to state 69
+
+
+State 62
+
+   99 TERM: INT_NUMBER •
+
+    $default  reduce using rule 99 (TERM)
+
+
+State 63
+
+  100 TERM: DECIMAL_NUMBER •
+
+    $default  reduce using rule 100 (TERM)
+
+
+State 64
+
+   97 TERM: IDENTIFIER •
+   98     | IDENTIFIER • ARRAY_ADD_ON_ID
+
+    LBRACKET  shift, and go to state 52
+
+    $default  reduce using rule 97 (TERM)
+
+    ARRAY_ADD_ON_ID  go to state 91
+
+
+State 65
+
+   83 ANY_EXPRESSION: LPAREN • EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN
+   92 EXPRESSION_SEQUENCE: LPAREN • EXPRESSION_SEQUENCE RPAREN
+   96 BOOLEAN_EXPRESSION_SEQUENCE: LPAREN • BOOLEAN_EXPRESSION_SEQUENCE RPAREN
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+
+    ANY_EXPRESSION               go to state 92
+    EXPRESSION_SEQUENCE          go to state 93
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 94
+    TERM                         go to state 69
+
+
+State 66
+
+   70 CONDITIONAL_STATEMENT: IF $@1 ANY_EXPRESSION • $@2 AFTER_IF_ANY_EXPR
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION • AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+
+    AND  shift, and go to state 95
+    OR   shift, and go to state 96
+
+    $default  reduce using rule 69 ($@2)
+
+    $@2  go to state 97
+
+
+State 67
+
+   81 ANY_EXPRESSION: EXPRESSION_SEQUENCE •
+   82               | EXPRESSION_SEQUENCE • RELOP EXPRESSION_SEQUENCE
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+
+    PLUS          shift, and go to state 98
+    MINUS         shift, and go to state 99
+    MULTIPLY      shift, and go to state 100
+    DIVIDE        shift, and go to state 101
+    MOD           shift, and go to state 102
+    EQUAL         shift, and go to state 103
+    LESS          shift, and go to state 104
+    GREATER       shift, and go to state 105
+    LESSEQUAL     shift, and go to state 106
+    GREATEREQUAL  shift, and go to state 107
+    NOTEQUAL      shift, and go to state 108
+
+    $default  reduce using rule 81 (ANY_EXPRESSION)
+
+    RELOP  go to state 109
+
+
+State 68
+
+   84 ANY_EXPRESSION: BOOLEAN_EXPRESSION_SEQUENCE •
+
+    $default  reduce using rule 84 (ANY_EXPRESSION)
+
+
+State 69
+
+   85 EXPRESSION_SEQUENCE: TERM •
+
+    $default  reduce using rule 85 (EXPRESSION_SEQUENCE)
+
+
+State 70
+
+  113 FOR_LOOP: FOR $@10 IDENTIFIER • COLON EQUAL EXPRESSION_SEQUENCE $@11 AFTER_FOR_CONDITION
+
+    COLON  shift, and go to state 110
+
+
+State 71
+
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION • AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+  110 WHILE_LOOP: WHILE $@7 ANY_EXPRESSION • DO $@8 BODY_OF_LOOP $@9 SEMICOLON
+
+    DO   shift, and go to state 111
+    AND  shift, and go to state 95
+    OR   shift, and go to state 96
+
+
+State 72
+
+   37 READ_STATEMENT: READ LPAREN IDENTIFIER • RPAREN SEMICOLON
+   38               | READ LPAREN IDENTIFIER • ARRAY_ADD_ON_ID RPAREN SEMICOLON
+
+    RPAREN    shift, and go to state 112
+    LBRACKET  shift, and go to state 52
+
+    ARRAY_ADD_ON_ID  go to state 113
+
+
+State 73
+
+   47 WRITE_IDENTIFIER_LIST: INT_NUMBER •
+   48                      | INT_NUMBER • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 47 (WRITE_IDENTIFIER_LIST)
+
+    WRITE_MORE_IDENTIFIERS  go to state 115
+
+
+State 74
+
+   49 WRITE_IDENTIFIER_LIST: DECIMAL_NUMBER •
+   50                      | DECIMAL_NUMBER • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 49 (WRITE_IDENTIFIER_LIST)
+
+    WRITE_MORE_IDENTIFIERS  go to state 116
+
+
+State 75
+
+   41 WRITE_IDENTIFIER_LIST: IDENTIFIER •
+   42                      | IDENTIFIER • WRITE_MORE_IDENTIFIERS
+   43                      | IDENTIFIER • ARRAY_ADD_ON_ID
+   44                      | IDENTIFIER • ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
+
+    COMMA     shift, and go to state 114
+    LBRACKET  shift, and go to state 52
+
+    $default  reduce using rule 41 (WRITE_IDENTIFIER_LIST)
+
+    ARRAY_ADD_ON_ID         go to state 117
+    WRITE_MORE_IDENTIFIERS  go to state 118
+
+
+State 76
+
+   45 WRITE_IDENTIFIER_LIST: STRING •
+   46                      | STRING • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 45 (WRITE_IDENTIFIER_LIST)
+
+    WRITE_MORE_IDENTIFIERS  go to state 119
+
+
+State 77
+
+   51 WRITE_IDENTIFIER_LIST: CHARACTER •
+   52                      | CHARACTER • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 51 (WRITE_IDENTIFIER_LIST)
+
+    WRITE_MORE_IDENTIFIERS  go to state 120
+
+
+State 78
+
+   39 WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST • RPAREN SEMICOLON
+
+    RPAREN  shift, and go to state 121
+
+
+State 79
+
+   40 WRITE_STATEMENT: WRITE_LN LPAREN WRITE_IDENTIFIER_LIST • RPAREN SEMICOLON
+
+    RPAREN  shift, and go to state 122
+
+
+State 80
+
+   65 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL • ANY_EXPRESSION SEMICOLON
+   67                     | IDENTIFIER COLON EQUAL • CHARACTER SEMICOLON
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+    CHARACTER       shift, and go to state 123
+
+    ANY_EXPRESSION               go to state 124
+    EXPRESSION_SEQUENCE          go to state 67
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 68
+    TERM                         go to state 69
+
+
+State 81
+
+   13 BETWEEN_BRACKETS: INT_NUMBER •
+
+    $default  reduce using rule 13 (BETWEEN_BRACKETS)
+
+
+State 82
+
+   14 BETWEEN_BRACKETS: IDENTIFIER •
+   15                 | IDENTIFIER • ARRAY_ADD_ON_ID
+
+    LBRACKET  shift, and go to state 52
+
+    $default  reduce using rule 14 (BETWEEN_BRACKETS)
+
+    ARRAY_ADD_ON_ID  go to state 125
+
+
+State 83
+
+   12 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS • RBRACKET
+
+    RBRACKET  shift, and go to state 126
+
+
+State 84
+
+   66 ASSIGNMENT_STATEMENT: IDENTIFIER ARRAY_ADD_ON_ID COLON • EQUAL ANY_EXPRESSION SEMICOLON
+
+    EQUAL  shift, and go to state 127
+
+
+State 85
+
+   29 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT •
+
+    $default  reduce using rule 29 (BODY_OF_PROGRAM)
+
+
+State 86
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER • ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+
+    ARRAY_DOT  shift, and go to state 128
+
+
+State 87
+
+   25 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON •
+
+    $default  reduce using rule 25 (MULTIPLE_VARIABLE)
+
+
+State 88
+
+   93 BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION •
+   94                            | ANY_EXPRESSION • AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+
+    $default  reduce using rule 93 (BOOLEAN_EXPRESSION_SEQUENCE)
+
+
+State 89
+
+   92 EXPRESSION_SEQUENCE: LPAREN • EXPRESSION_SEQUENCE RPAREN
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 129
+    TERM                 go to state 69
+
+
+State 90
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+   91                    | MINUS EXPRESSION_SEQUENCE •
+
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+
+    $default  reduce using rule 91 (EXPRESSION_SEQUENCE)
+
+
+State 91
+
+   98 TERM: IDENTIFIER ARRAY_ADD_ON_ID •
+
+    $default  reduce using rule 98 (TERM)
+
+
+State 92
+
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION • AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+
+    AND  shift, and go to state 95
+    OR   shift, and go to state 96
+
+
+State 93
+
+   81 ANY_EXPRESSION: EXPRESSION_SEQUENCE •
+   82               | EXPRESSION_SEQUENCE • RELOP EXPRESSION_SEQUENCE
+   83               | LPAREN EXPRESSION_SEQUENCE • RELOP EXPRESSION_SEQUENCE RPAREN
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+   92                    | LPAREN EXPRESSION_SEQUENCE • RPAREN
+
+    PLUS          shift, and go to state 98
+    MINUS         shift, and go to state 99
+    MULTIPLY      shift, and go to state 100
+    DIVIDE        shift, and go to state 101
+    MOD           shift, and go to state 102
+    EQUAL         shift, and go to state 103
+    LESS          shift, and go to state 104
+    GREATER       shift, and go to state 105
+    LESSEQUAL     shift, and go to state 106
+    GREATEREQUAL  shift, and go to state 107
+    NOTEQUAL      shift, and go to state 108
+    RPAREN        shift, and go to state 130
+
+    $default  reduce using rule 81 (ANY_EXPRESSION)
+
+    RELOP  go to state 131
+
+
+State 94
+
+   84 ANY_EXPRESSION: BOOLEAN_EXPRESSION_SEQUENCE •
+   96 BOOLEAN_EXPRESSION_SEQUENCE: LPAREN BOOLEAN_EXPRESSION_SEQUENCE • RPAREN
+
+    RPAREN  shift, and go to state 132
+
+    $default  reduce using rule 84 (ANY_EXPRESSION)
+
+
+State 95
+
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION AND • ANY_EXPRESSION
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+
+    ANY_EXPRESSION               go to state 133
+    EXPRESSION_SEQUENCE          go to state 67
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 68
+    TERM                         go to state 69
+
+
+State 96
+
+   95 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION OR • ANY_EXPRESSION
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+
+    ANY_EXPRESSION               go to state 134
+    EXPRESSION_SEQUENCE          go to state 67
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 68
+    TERM                         go to state 69
+
+
+State 97
+
+   70 CONDITIONAL_STATEMENT: IF $@1 ANY_EXPRESSION $@2 • AFTER_IF_ANY_EXPR
+
+    THEN  shift, and go to state 135
+
+    AFTER_IF_ANY_EXPR  go to state 136
+
+
+State 98
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE PLUS • EXPRESSION_SEQUENCE
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 137
+    TERM                 go to state 69
+
+
+State 99
+
+   87 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE MINUS • EXPRESSION_SEQUENCE
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 138
+    TERM                 go to state 69
+
+
+State 100
+
+   88 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE MULTIPLY • EXPRESSION_SEQUENCE
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 139
+    TERM                 go to state 69
+
+
+State 101
+
+   89 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE DIVIDE • EXPRESSION_SEQUENCE
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 140
+    TERM                 go to state 69
+
+
+State 102
+
+   90 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE MOD • EXPRESSION_SEQUENCE
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 141
+    TERM                 go to state 69
+
+
+State 103
+
+    6 RELOP: EQUAL •
+
+    $default  reduce using rule 6 (RELOP)
+
+
+State 104
+
+    8 RELOP: LESS •
+
+    $default  reduce using rule 8 (RELOP)
+
+
+State 105
+
+   10 RELOP: GREATER •
+
+    $default  reduce using rule 10 (RELOP)
+
+
+State 106
+
+    9 RELOP: LESSEQUAL •
+
+    $default  reduce using rule 9 (RELOP)
+
+
+State 107
+
+   11 RELOP: GREATEREQUAL •
+
+    $default  reduce using rule 11 (RELOP)
+
+
+State 108
+
+    7 RELOP: NOTEQUAL •
+
+    $default  reduce using rule 7 (RELOP)
+
+
+State 109
+
+   82 ANY_EXPRESSION: EXPRESSION_SEQUENCE RELOP • EXPRESSION_SEQUENCE
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 142
+    TERM                 go to state 69
+
+
+State 110
+
+  113 FOR_LOOP: FOR $@10 IDENTIFIER COLON • EQUAL EXPRESSION_SEQUENCE $@11 AFTER_FOR_CONDITION
+
+    EQUAL  shift, and go to state 143
+
+
+State 111
+
+  110 WHILE_LOOP: WHILE $@7 ANY_EXPRESSION DO • $@8 BODY_OF_LOOP $@9 SEMICOLON
+
+    $default  reduce using rule 108 ($@8)
+
+    $@8  go to state 144
+
+
+State 112
+
+   37 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 145
+
+
+State 113
+
+   38 READ_STATEMENT: READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID • RPAREN SEMICOLON
+
+    RPAREN  shift, and go to state 146
+
+
+State 114
+
+   53 WRITE_MORE_IDENTIFIERS: COMMA • IDENTIFIER
+   54                       | COMMA • IDENTIFIER WRITE_MORE_IDENTIFIERS
+   55                       | COMMA • IDENTIFIER ARRAY_ADD_ON_ID
+   56                       | COMMA • IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
+   57                       | COMMA • STRING
+   58                       | COMMA • STRING WRITE_MORE_IDENTIFIERS
+   59                       | COMMA • INT_NUMBER
+   60                       | COMMA • INT_NUMBER WRITE_MORE_IDENTIFIERS
+   61                       | COMMA • DECIMAL_NUMBER
+   62                       | COMMA • DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
+   63                       | COMMA • CHARACTER
+   64                       | COMMA • CHARACTER WRITE_MORE_IDENTIFIERS
+
+    INT_NUMBER      shift, and go to state 147
+    DECIMAL_NUMBER  shift, and go to state 148
+    IDENTIFIER      shift, and go to state 149
+    STRING          shift, and go to state 150
+    CHARACTER       shift, and go to state 151
+
+
+State 115
+
+   48 WRITE_IDENTIFIER_LIST: INT_NUMBER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 48 (WRITE_IDENTIFIER_LIST)
+
+
+State 116
+
+   50 WRITE_IDENTIFIER_LIST: DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 50 (WRITE_IDENTIFIER_LIST)
+
+
+State 117
+
+   43 WRITE_IDENTIFIER_LIST: IDENTIFIER ARRAY_ADD_ON_ID •
+   44                      | IDENTIFIER ARRAY_ADD_ON_ID • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 43 (WRITE_IDENTIFIER_LIST)
+
+    WRITE_MORE_IDENTIFIERS  go to state 152
+
+
+State 118
+
+   42 WRITE_IDENTIFIER_LIST: IDENTIFIER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 42 (WRITE_IDENTIFIER_LIST)
+
+
+State 119
+
+   46 WRITE_IDENTIFIER_LIST: STRING WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 46 (WRITE_IDENTIFIER_LIST)
+
+
+State 120
+
+   52 WRITE_IDENTIFIER_LIST: CHARACTER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 52 (WRITE_IDENTIFIER_LIST)
+
+
+State 121
+
+   39 WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 153
+
+
+State 122
+
+   40 WRITE_STATEMENT: WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 154
+
+
+State 123
+
+   67 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL CHARACTER • SEMICOLON
+
+    SEMICOLON  shift, and go to state 155
+
+
+State 124
+
+   65 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION • SEMICOLON
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION • AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+
+    AND        shift, and go to state 95
+    OR         shift, and go to state 96
+    SEMICOLON  shift, and go to state 156
+
+
+State 125
+
+   15 BETWEEN_BRACKETS: IDENTIFIER ARRAY_ADD_ON_ID •
+
+    $default  reduce using rule 15 (BETWEEN_BRACKETS)
+
+
+State 126
+
+   12 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET •
+
+    $default  reduce using rule 12 (ARRAY_ADD_ON_ID)
+
+
+State 127
+
+   66 ASSIGNMENT_STATEMENT: IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL • ANY_EXPRESSION SEMICOLON
+
+    NOT             shift, and go to state 60
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 65
+
+    ANY_EXPRESSION               go to state 157
+    EXPRESSION_SEQUENCE          go to state 67
+    BOOLEAN_EXPRESSION_SEQUENCE  go to state 68
+    TERM                         go to state 69
+
+
+State 128
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT • INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+
+    INT_NUMBER  shift, and go to state 158
+
+
+State 129
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+   92                    | LPAREN EXPRESSION_SEQUENCE • RPAREN
+
+    PLUS      shift, and go to state 98
+    MINUS     shift, and go to state 99
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+    RPAREN    shift, and go to state 130
+
+
+State 130
+
+   92 EXPRESSION_SEQUENCE: LPAREN EXPRESSION_SEQUENCE RPAREN •
+
+    $default  reduce using rule 92 (EXPRESSION_SEQUENCE)
+
+
+State 131
+
+   82 ANY_EXPRESSION: EXPRESSION_SEQUENCE RELOP • EXPRESSION_SEQUENCE
+   83               | LPAREN EXPRESSION_SEQUENCE RELOP • EXPRESSION_SEQUENCE RPAREN
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 159
+    TERM                 go to state 69
+
+
+State 132
+
+   96 BOOLEAN_EXPRESSION_SEQUENCE: LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN •
+
+    $default  reduce using rule 96 (BOOLEAN_EXPRESSION_SEQUENCE)
+
+
+State 133
+
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION • AND ANY_EXPRESSION
+   94                            | ANY_EXPRESSION AND ANY_EXPRESSION •
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+
+    $default  reduce using rule 94 (BOOLEAN_EXPRESSION_SEQUENCE)
+
+
+State 134
+
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION • AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+   95                            | ANY_EXPRESSION OR ANY_EXPRESSION •
+
+    $default  reduce using rule 95 (BOOLEAN_EXPRESSION_SEQUENCE)
+
+
+State 135
+
+   73 AFTER_IF_ANY_EXPR: THEN • $@3 BODY_OF_CONDITIONAL $@4 AFTER_IF_THEN_BODY
+
+    $default  reduce using rule 71 ($@3)
+
+    $@3  go to state 160
+
+
+State 136
+
+   70 CONDITIONAL_STATEMENT: IF $@1 ANY_EXPRESSION $@2 AFTER_IF_ANY_EXPR •
+
+    $default  reduce using rule 70 (CONDITIONAL_STATEMENT)
+
+
+State 137
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   86                    | EXPRESSION_SEQUENCE PLUS EXPRESSION_SEQUENCE •
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+
+    $default  reduce using rule 86 (EXPRESSION_SEQUENCE)
+
+
+State 138
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE MINUS EXPRESSION_SEQUENCE •
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+
+    $default  reduce using rule 87 (EXPRESSION_SEQUENCE)
+
+
+State 139
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE MULTIPLY EXPRESSION_SEQUENCE •
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+
+    $default  reduce using rule 88 (EXPRESSION_SEQUENCE)
+
+
+State 140
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE DIVIDE EXPRESSION_SEQUENCE •
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+
+    $default  reduce using rule 89 (EXPRESSION_SEQUENCE)
+
+
+State 141
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE MOD EXPRESSION_SEQUENCE •
+
+    $default  reduce using rule 90 (EXPRESSION_SEQUENCE)
+
+
+State 142
+
+   82 ANY_EXPRESSION: EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE •
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+
+    PLUS      shift, and go to state 98
+    MINUS     shift, and go to state 99
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+
+    $default  reduce using rule 82 (ANY_EXPRESSION)
+
+
+State 143
+
+  113 FOR_LOOP: FOR $@10 IDENTIFIER COLON EQUAL • EXPRESSION_SEQUENCE $@11 AFTER_FOR_CONDITION
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 161
+    TERM                 go to state 69
+
+
+State 144
+
+  110 WHILE_LOOP: WHILE $@7 ANY_EXPRESSION DO $@8 • BODY_OF_LOOP $@9 SEMICOLON
+
+    BEGINK  shift, and go to state 162
+
+    BODY_OF_LOOP  go to state 163
+
+
+State 145
+
+   37 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON •
+
+    $default  reduce using rule 37 (READ_STATEMENT)
+
+
+State 146
+
+   38 READ_STATEMENT: READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 164
+
+
+State 147
+
+   59 WRITE_MORE_IDENTIFIERS: COMMA INT_NUMBER •
+   60                       | COMMA INT_NUMBER • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 59 (WRITE_MORE_IDENTIFIERS)
+
+    WRITE_MORE_IDENTIFIERS  go to state 165
+
+
+State 148
+
+   61 WRITE_MORE_IDENTIFIERS: COMMA DECIMAL_NUMBER •
+   62                       | COMMA DECIMAL_NUMBER • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 61 (WRITE_MORE_IDENTIFIERS)
+
+    WRITE_MORE_IDENTIFIERS  go to state 166
+
+
+State 149
+
+   53 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER •
+   54                       | COMMA IDENTIFIER • WRITE_MORE_IDENTIFIERS
+   55                       | COMMA IDENTIFIER • ARRAY_ADD_ON_ID
+   56                       | COMMA IDENTIFIER • ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
+
+    COMMA     shift, and go to state 114
+    LBRACKET  shift, and go to state 52
+
+    $default  reduce using rule 53 (WRITE_MORE_IDENTIFIERS)
+
+    ARRAY_ADD_ON_ID         go to state 167
+    WRITE_MORE_IDENTIFIERS  go to state 168
+
+
+State 150
+
+   57 WRITE_MORE_IDENTIFIERS: COMMA STRING •
+   58                       | COMMA STRING • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 57 (WRITE_MORE_IDENTIFIERS)
+
+    WRITE_MORE_IDENTIFIERS  go to state 169
+
+
+State 151
+
+   63 WRITE_MORE_IDENTIFIERS: COMMA CHARACTER •
+   64                       | COMMA CHARACTER • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 63 (WRITE_MORE_IDENTIFIERS)
+
+    WRITE_MORE_IDENTIFIERS  go to state 170
+
+
+State 152
+
+   44 WRITE_IDENTIFIER_LIST: IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 44 (WRITE_IDENTIFIER_LIST)
+
+
+State 153
+
+   39 WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON •
+
+    $default  reduce using rule 39 (WRITE_STATEMENT)
+
+
+State 154
+
+   40 WRITE_STATEMENT: WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON •
+
+    $default  reduce using rule 40 (WRITE_STATEMENT)
+
+
+State 155
+
+   67 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL CHARACTER SEMICOLON •
+
+    $default  reduce using rule 67 (ASSIGNMENT_STATEMENT)
+
+
+State 156
+
+   65 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON •
+
+    $default  reduce using rule 65 (ASSIGNMENT_STATEMENT)
+
+
+State 157
+
+   66 ASSIGNMENT_STATEMENT: IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION • SEMICOLON
+   94 BOOLEAN_EXPRESSION_SEQUENCE: ANY_EXPRESSION • AND ANY_EXPRESSION
+   95                            | ANY_EXPRESSION • OR ANY_EXPRESSION
+
+    AND        shift, and go to state 95
+    OR         shift, and go to state 96
+    SEMICOLON  shift, and go to state 171
+
+
+State 158
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER • RBRACKET OF DATATYPE SEMICOLON
+
+    RBRACKET  shift, and go to state 172
+
+
+State 159
+
+   82 ANY_EXPRESSION: EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE •
+   83               | LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE • RPAREN
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+
+    PLUS      shift, and go to state 98
+    MINUS     shift, and go to state 99
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+    RPAREN    shift, and go to state 173
+
+    $default  reduce using rule 82 (ANY_EXPRESSION)
+
+
+State 160
+
+   73 AFTER_IF_ANY_EXPR: THEN $@3 • BODY_OF_CONDITIONAL $@4 AFTER_IF_THEN_BODY
+
+    BEGINK  shift, and go to state 174
+
+    BODY_OF_CONDITIONAL  go to state 175
+
+
+State 161
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+  113 FOR_LOOP: FOR $@10 IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE • $@11 AFTER_FOR_CONDITION
+
+    PLUS      shift, and go to state 98
+    MINUS     shift, and go to state 99
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+
+    $default  reduce using rule 112 ($@11)
+
+    $@11  go to state 176
+
+
+State 162
+
+  122 BODY_OF_LOOP: BEGINK • STATEMENTS_INSIDE_LOOP END
+
+    IF          shift, and go to state 21
+    READ        shift, and go to state 24
+    WRITE       shift, and go to state 25
+    WRITE_LN    shift, and go to state 26
+    IDENTIFIER  shift, and go to state 27
+
+    READ_STATEMENT          go to state 177
+    WRITE_STATEMENT         go to state 178
+    ASSIGNMENT_STATEMENT    go to state 179
+    CONDITIONAL_STATEMENT   go to state 180
+    STATEMENTS_INSIDE_LOOP  go to state 181
+    STATEMENT_INSIDE_LOOP   go to state 182
+
+
+State 163
+
+  110 WHILE_LOOP: WHILE $@7 ANY_EXPRESSION DO $@8 BODY_OF_LOOP • $@9 SEMICOLON
+
+    $default  reduce using rule 109 ($@9)
+
+    $@9  go to state 183
+
+
+State 164
+
+   38 READ_STATEMENT: READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON •
+
+    $default  reduce using rule 38 (READ_STATEMENT)
+
+
+State 165
+
+   60 WRITE_MORE_IDENTIFIERS: COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 60 (WRITE_MORE_IDENTIFIERS)
+
+
+State 166
+
+   62 WRITE_MORE_IDENTIFIERS: COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 62 (WRITE_MORE_IDENTIFIERS)
+
+
+State 167
+
+   55 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER ARRAY_ADD_ON_ID •
+   56                       | COMMA IDENTIFIER ARRAY_ADD_ON_ID • WRITE_MORE_IDENTIFIERS
+
+    COMMA  shift, and go to state 114
+
+    $default  reduce using rule 55 (WRITE_MORE_IDENTIFIERS)
+
+    WRITE_MORE_IDENTIFIERS  go to state 184
+
+
+State 168
+
+   54 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 54 (WRITE_MORE_IDENTIFIERS)
+
+
+State 169
+
+   58 WRITE_MORE_IDENTIFIERS: COMMA STRING WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 58 (WRITE_MORE_IDENTIFIERS)
+
+
+State 170
+
+   64 WRITE_MORE_IDENTIFIERS: COMMA CHARACTER WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 64 (WRITE_MORE_IDENTIFIERS)
+
+
+State 171
+
+   66 ASSIGNMENT_STATEMENT: IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON •
+
+    $default  reduce using rule 66 (ASSIGNMENT_STATEMENT)
+
+
+State 172
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET • OF DATATYPE SEMICOLON
+
+    OF  shift, and go to state 185
+
+
+State 173
+
+   83 ANY_EXPRESSION: LPAREN EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE RPAREN •
+
+    $default  reduce using rule 83 (ANY_EXPRESSION)
+
+
+State 174
+
+   78 BODY_OF_CONDITIONAL: BEGINK • STATEMENTS_INSIDE_CONDITIONAL END
+
+    FOR         shift, and go to state 22
+    WHILE       shift, and go to state 23
+    READ        shift, and go to state 24
+    WRITE       shift, and go to state 25
+    WRITE_LN    shift, and go to state 26
+    IDENTIFIER  shift, and go to state 27
+
+    READ_STATEMENT                 go to state 186
+    WRITE_STATEMENT                go to state 187
+    ASSIGNMENT_STATEMENT           go to state 188
+    STATEMENTS_INSIDE_CONDITIONAL  go to state 189
+    STATEMENT_INSIDE_CONDITIONAL   go to state 190
+    LOOPING_STATEMENT              go to state 191
+    WHILE_LOOP                     go to state 35
+    FOR_LOOP                       go to state 36
+
+
+State 175
+
+   73 AFTER_IF_ANY_EXPR: THEN $@3 BODY_OF_CONDITIONAL • $@4 AFTER_IF_THEN_BODY
+
+    $default  reduce using rule 72 ($@4)
+
+    $@4  go to state 192
+
+
+State 176
+
+  113 FOR_LOOP: FOR $@10 IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE $@11 • AFTER_FOR_CONDITION
+
+    TO      shift, and go to state 193
+    DOWNTO  shift, and go to state 194
+
+    AFTER_FOR_CONDITION  go to state 195
+
+
+State 177
+
+  125 STATEMENT_INSIDE_LOOP: READ_STATEMENT •
+
+    $default  reduce using rule 125 (STATEMENT_INSIDE_LOOP)
+
+
+State 178
+
+  126 STATEMENT_INSIDE_LOOP: WRITE_STATEMENT •
+
+    $default  reduce using rule 126 (STATEMENT_INSIDE_LOOP)
+
+
+State 179
+
+  127 STATEMENT_INSIDE_LOOP: ASSIGNMENT_STATEMENT •
+
+    $default  reduce using rule 127 (STATEMENT_INSIDE_LOOP)
+
+
+State 180
+
+  128 STATEMENT_INSIDE_LOOP: CONDITIONAL_STATEMENT •
+
+    $default  reduce using rule 128 (STATEMENT_INSIDE_LOOP)
+
+
+State 181
+
+  122 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP • END
+
+    END  shift, and go to state 196
+
+
+State 182
+
+  123 STATEMENTS_INSIDE_LOOP: STATEMENT_INSIDE_LOOP • STATEMENTS_INSIDE_LOOP
+  124                       | STATEMENT_INSIDE_LOOP •
+
+    IF          shift, and go to state 21
+    READ        shift, and go to state 24
+    WRITE       shift, and go to state 25
+    WRITE_LN    shift, and go to state 26
+    IDENTIFIER  shift, and go to state 27
+
+    $default  reduce using rule 124 (STATEMENTS_INSIDE_LOOP)
+
+    READ_STATEMENT          go to state 177
+    WRITE_STATEMENT         go to state 178
+    ASSIGNMENT_STATEMENT    go to state 179
+    CONDITIONAL_STATEMENT   go to state 180
+    STATEMENTS_INSIDE_LOOP  go to state 197
+    STATEMENT_INSIDE_LOOP   go to state 182
+
+
+State 183
+
+  110 WHILE_LOOP: WHILE $@7 ANY_EXPRESSION DO $@8 BODY_OF_LOOP $@9 • SEMICOLON
+
+    SEMICOLON  shift, and go to state 198
+
+
+State 184
+
+   56 WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS •
+
+    $default  reduce using rule 56 (WRITE_MORE_IDENTIFIERS)
+
+
+State 185
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF • DATATYPE SEMICOLON
+
+    INTEGER  shift, and go to state 38
+    REAL     shift, and go to state 39
+    BOOLEAN  shift, and go to state 40
+    CHAR     shift, and go to state 41
+
+    DATATYPE  go to state 199
+
+
+State 186
+
+  101 STATEMENT_INSIDE_CONDITIONAL: READ_STATEMENT •
+
+    $default  reduce using rule 101 (STATEMENT_INSIDE_CONDITIONAL)
+
+
+State 187
+
+  102 STATEMENT_INSIDE_CONDITIONAL: WRITE_STATEMENT •
+
+    $default  reduce using rule 102 (STATEMENT_INSIDE_CONDITIONAL)
+
+
+State 188
+
+  103 STATEMENT_INSIDE_CONDITIONAL: ASSIGNMENT_STATEMENT •
+
+    $default  reduce using rule 103 (STATEMENT_INSIDE_CONDITIONAL)
+
+
+State 189
+
+   78 BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL • END
+
+    END  shift, and go to state 200
+
+
+State 190
+
+   79 STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL • STATEMENTS_INSIDE_CONDITIONAL
+   80                              | STATEMENT_INSIDE_CONDITIONAL •
+
+    FOR         shift, and go to state 22
+    WHILE       shift, and go to state 23
+    READ        shift, and go to state 24
+    WRITE       shift, and go to state 25
+    WRITE_LN    shift, and go to state 26
+    IDENTIFIER  shift, and go to state 27
+
+    $default  reduce using rule 80 (STATEMENTS_INSIDE_CONDITIONAL)
+
+    READ_STATEMENT                 go to state 186
+    WRITE_STATEMENT                go to state 187
+    ASSIGNMENT_STATEMENT           go to state 188
+    STATEMENTS_INSIDE_CONDITIONAL  go to state 201
+    STATEMENT_INSIDE_CONDITIONAL   go to state 190
+    LOOPING_STATEMENT              go to state 191
+    WHILE_LOOP                     go to state 35
+    FOR_LOOP                       go to state 36
+
+
+State 191
+
+  104 STATEMENT_INSIDE_CONDITIONAL: LOOPING_STATEMENT •
+
+    $default  reduce using rule 104 (STATEMENT_INSIDE_CONDITIONAL)
+
+
+State 192
+
+   73 AFTER_IF_ANY_EXPR: THEN $@3 BODY_OF_CONDITIONAL $@4 • AFTER_IF_THEN_BODY
+
+    ELSE       shift, and go to state 202
+    SEMICOLON  shift, and go to state 203
+
+    AFTER_IF_THEN_BODY  go to state 204
+
+
+State 193
+
+  117 AFTER_FOR_CONDITION: TO • EXPRESSION_SEQUENCE $@12 DO $@13 BODY_OF_LOOP $@14 SEMICOLON
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 205
+    TERM                 go to state 69
+
+
+State 194
+
+  121 AFTER_FOR_CONDITION: DOWNTO • EXPRESSION_SEQUENCE $@15 DO $@16 BODY_OF_LOOP $@17 SEMICOLON
+
+    MINUS           shift, and go to state 61
+    INT_NUMBER      shift, and go to state 62
+    DECIMAL_NUMBER  shift, and go to state 63
+    IDENTIFIER      shift, and go to state 64
+    LPAREN          shift, and go to state 89
+
+    EXPRESSION_SEQUENCE  go to state 206
+    TERM                 go to state 69
+
+
+State 195
+
+  113 FOR_LOOP: FOR $@10 IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE $@11 AFTER_FOR_CONDITION •
+
+    $default  reduce using rule 113 (FOR_LOOP)
+
+
+State 196
+
+  122 BODY_OF_LOOP: BEGINK STATEMENTS_INSIDE_LOOP END •
+
+    $default  reduce using rule 122 (BODY_OF_LOOP)
+
+
+State 197
+
+  123 STATEMENTS_INSIDE_LOOP: STATEMENT_INSIDE_LOOP STATEMENTS_INSIDE_LOOP •
+
+    $default  reduce using rule 123 (STATEMENTS_INSIDE_LOOP)
+
+
+State 198
+
+  110 WHILE_LOOP: WHILE $@7 ANY_EXPRESSION DO $@8 BODY_OF_LOOP $@9 SEMICOLON •
+
+    $default  reduce using rule 110 (WHILE_LOOP)
+
+
+State 199
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE • SEMICOLON
+
+    SEMICOLON  shift, and go to state 207
+
+
+State 200
+
+   78 BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END •
+
+    $default  reduce using rule 78 (BODY_OF_CONDITIONAL)
+
+
+State 201
+
+   79 STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CONDITIONAL •
+
+    $default  reduce using rule 79 (STATEMENTS_INSIDE_CONDITIONAL)
+
+
+State 202
+
+   76 AFTER_IF_THEN_BODY: ELSE • $@5 BODY_OF_CONDITIONAL $@6 SEMICOLON
+
+    $default  reduce using rule 74 ($@5)
+
+    $@5  go to state 208
+
+
+State 203
+
+   77 AFTER_IF_THEN_BODY: SEMICOLON •
+
+    $default  reduce using rule 77 (AFTER_IF_THEN_BODY)
+
+
+State 204
+
+   73 AFTER_IF_ANY_EXPR: THEN $@3 BODY_OF_CONDITIONAL $@4 AFTER_IF_THEN_BODY •
+
+    $default  reduce using rule 73 (AFTER_IF_ANY_EXPR)
+
+
+State 205
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE • $@12 DO $@13 BODY_OF_LOOP $@14 SEMICOLON
+
+    PLUS      shift, and go to state 98
+    MINUS     shift, and go to state 99
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+
+    $default  reduce using rule 114 ($@12)
+
+    $@12  go to state 209
+
+
+State 206
+
+   86 EXPRESSION_SEQUENCE: EXPRESSION_SEQUENCE • PLUS EXPRESSION_SEQUENCE
+   87                    | EXPRESSION_SEQUENCE • MINUS EXPRESSION_SEQUENCE
+   88                    | EXPRESSION_SEQUENCE • MULTIPLY EXPRESSION_SEQUENCE
+   89                    | EXPRESSION_SEQUENCE • DIVIDE EXPRESSION_SEQUENCE
+   90                    | EXPRESSION_SEQUENCE • MOD EXPRESSION_SEQUENCE
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE • $@15 DO $@16 BODY_OF_LOOP $@17 SEMICOLON
+
+    PLUS      shift, and go to state 98
+    MINUS     shift, and go to state 99
+    MULTIPLY  shift, and go to state 100
+    DIVIDE    shift, and go to state 101
+    MOD       shift, and go to state 102
+
+    $default  reduce using rule 118 ($@15)
+
+    $@15  go to state 210
+
+
+State 207
+
+   28 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON •
+
+    $default  reduce using rule 28 (ARRAY_DECLARATION)
+
+
+State 208
+
+   76 AFTER_IF_THEN_BODY: ELSE $@5 • BODY_OF_CONDITIONAL $@6 SEMICOLON
+
+    BEGINK  shift, and go to state 174
+
+    BODY_OF_CONDITIONAL  go to state 211
+
+
+State 209
+
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE $@12 • DO $@13 BODY_OF_LOOP $@14 SEMICOLON
+
+    DO  shift, and go to state 212
+
+
+State 210
+
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE $@15 • DO $@16 BODY_OF_LOOP $@17 SEMICOLON
+
+    DO  shift, and go to state 213
+
+
+State 211
+
+   76 AFTER_IF_THEN_BODY: ELSE $@5 BODY_OF_CONDITIONAL • $@6 SEMICOLON
+
+    $default  reduce using rule 75 ($@6)
+
+    $@6  go to state 214
+
+
+State 212
+
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE $@12 DO • $@13 BODY_OF_LOOP $@14 SEMICOLON
+
+    $default  reduce using rule 115 ($@13)
+
+    $@13  go to state 215
+
+
+State 213
+
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE $@15 DO • $@16 BODY_OF_LOOP $@17 SEMICOLON
+
+    $default  reduce using rule 119 ($@16)
+
+    $@16  go to state 216
+
+
+State 214
+
+   76 AFTER_IF_THEN_BODY: ELSE $@5 BODY_OF_CONDITIONAL $@6 • SEMICOLON
+
+    SEMICOLON  shift, and go to state 217
+
+
+State 215
+
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE $@12 DO $@13 • BODY_OF_LOOP $@14 SEMICOLON
+
+    BEGINK  shift, and go to state 162
+
+    BODY_OF_LOOP  go to state 218
+
+
+State 216
+
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE $@15 DO $@16 • BODY_OF_LOOP $@17 SEMICOLON
+
+    BEGINK  shift, and go to state 162
+
+    BODY_OF_LOOP  go to state 219
+
+
+State 217
+
+   76 AFTER_IF_THEN_BODY: ELSE $@5 BODY_OF_CONDITIONAL $@6 SEMICOLON •
+
+    $default  reduce using rule 76 (AFTER_IF_THEN_BODY)
+
+
+State 218
+
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE $@12 DO $@13 BODY_OF_LOOP • $@14 SEMICOLON
+
+    $default  reduce using rule 116 ($@14)
+
+    $@14  go to state 220
+
+
+State 219
+
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE $@15 DO $@16 BODY_OF_LOOP • $@17 SEMICOLON
+
+    $default  reduce using rule 120 ($@17)
+
+    $@17  go to state 221
+
+
+State 220
+
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE $@12 DO $@13 BODY_OF_LOOP $@14 • SEMICOLON
+
+    SEMICOLON  shift, and go to state 222
+
+
+State 221
+
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE $@15 DO $@16 BODY_OF_LOOP $@17 • SEMICOLON
+
+    SEMICOLON  shift, and go to state 223
+
+
+State 222
+
+  117 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE $@12 DO $@13 BODY_OF_LOOP $@14 SEMICOLON •
+
+    $default  reduce using rule 117 (AFTER_FOR_CONDITION)
+
+
+State 223
+
+  121 AFTER_FOR_CONDITION: DOWNTO EXPRESSION_SEQUENCE $@15 DO $@16 BODY_OF_LOOP $@17 SEMICOLON •
+
+    $default  reduce using rule 121 (AFTER_FOR_CONDITION)
