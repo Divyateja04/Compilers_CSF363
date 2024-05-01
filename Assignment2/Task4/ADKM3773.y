@@ -363,7 +363,9 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    char temp[100];
+    sprintf(temp, "'%s'", $<data>4);
+    addQuadruple(temp, "NA", "NA", $<data>1);
 }
 ;
 
@@ -528,9 +530,17 @@ TERM: IDENTIFIER {
     strcat(str1, str); 
     char storeAddress[100];
     sprintf(storeAddress, "&%s", $<data>1);
+    // First we add a quadruple for the address of the array
+    // we calculate the exact address and store it in a temporary variable -> str1
     addQuadruple(popFromStack(), "+", storeAddress, str1);
-    pushToStack(str1);
-    strcpy($<data>$, str1);
+    // Then we add another quadruple to get the value at that address
+    char str2[5]="t";
+    sprintf(str,"%d", temp_char++);
+    strcat(str2, str);
+    sprintf(str, "*%s", str1);
+    addQuadruple(str, "NA", "NA", str2);
+    pushToStack(str2);
+    strcpy($<data>$, str2);
 }
 | INT_NUMBER {
     char c[100]; 
