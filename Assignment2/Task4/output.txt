@@ -41,11 +41,13 @@ begin
 
   if x then
   begin
+    a := numbers[i] + 9;
     write("x is true");
   end
   else
   begin
     write("x is false");
+    a := numbers[i] - 9;
   end;
 
 
@@ -134,40 +136,50 @@ Compiling the program in gcc
 
 
 :057:>  if_start ;
-:058:>  if_cond_end  =  x  true: goto 059  false: goto 061 ;
+:058:>  if_cond_end  =  x  true: goto 059  false: goto 066 ;
 :059:>  ifthen_body_start ;
-:060:>  ifthen_body_end  =  goto 063 ;
-:061:>  else_body_start ;
-:062:>  else_body_end ;
-:063:>  if_end ;
+:060:>  t22  =  i  *  Integer ;
+:061:>  t23  =  t22  +  &numbers ;
+:062:>  t24  =  *t23 ;
+:063:>  t25  =  t24  +  9 ;
+:064:>  a  =  t25 ;
+:065:>  ifthen_body_end  =  goto 073 ;
+:066:>  else_body_start ;
+:067:>  t26  =  i  *  Integer ;
+:068:>  t27  =  t26  +  &numbers ;
+:069:>  t28  =  *t27 ;
+:070:>  t29  =  t28  -  9 ;
+:071:>  a  =  t29 ;
+:072:>  else_body_end ;
+:073:>  if_end ;
 
 
-:064:>  while_start ;
-:065:>  while_cond_start ;
-:066:>  t22  =  number  <>  0 ;
-:067:>  while_cond_end  =  t22  true: goto 068  false: goto 084 ;
-:068:>  while_body_start ;
-:069:>  t23  =  number  /  10 ;
-:070:>  t24  =  t23  *  10 ;
-:071:>  t25  =  number  -  t24 ;
-:072:>  digit  =  t25 ;
+:074:>  while_start ;
+:075:>  while_cond_start ;
+:076:>  t30  =  number  <>  0 ;
+:077:>  while_cond_end  =  t30  true: goto 078  false: goto 094 ;
+:078:>  while_body_start ;
+:079:>  t31  =  number  /  10 ;
+:080:>  t32  =  t31  *  10 ;
+:081:>  t33  =  number  -  t32 ;
+:082:>  digit  =  t33 ;
 
-:073:>  if_start ;
-:074:>  t26  =  digit  <>  0 ;
-:075:>  if_cond_end  =  t26  true: goto 076  false: goto 080 ;
-:076:>  ifthen_body_start ;
-:077:>  t27  =  count  +  1 ;
-:078:>  count  =  t27 ;
-:079:>  ifthen_body_end  =  goto 080 ;
-:080:>  if_end ;
+:083:>  if_start ;
+:084:>  t34  =  digit  <>  0 ;
+:085:>  if_cond_end  =  t34  true: goto 086  false: goto 090 ;
+:086:>  ifthen_body_start ;
+:087:>  t35  =  count  +  1 ;
+:088:>  count  =  t35 ;
+:089:>  ifthen_body_end  =  goto 090 ;
+:090:>  if_end ;
 
-:081:>  t28  =  number  /  10 ;
-:082:>  number  =  t28 ;
-:083:>  while_body_end  =  goto 065 ;
-:084:>  while_end ;
+:091:>  t36  =  number  /  10 ;
+:092:>  number  =  t36 ;
+:093:>  while_body_end  =  goto 075 ;
+:094:>  while_end ;
 
-:085:>  t29  =  sum  /  5 ;
-:086:>  average  =  t29 ;
+:095:>  t37  =  sum  /  5 ;
+:096:>  average  =  t37 ;
 ============================
 
 

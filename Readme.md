@@ -39,13 +39,13 @@ gcc lex.yy.c -ll -o ADKM3773.out
 ### Task 4 - Intermediate Code Generation
 - In this part of the assignment, we generate Three Address Code for the program
 - We use the following convention for the same:
+#### For loop
 ```pas
 for i := 1 to 5 do
   begin
     sum := sum + 6 * 7 + numbers[i];
   end;
 ```
-becomes
 ```
 :020:>  for_start ;
 :021:>  i  =  1 ;
@@ -57,6 +57,80 @@ becomes
 :027:>  i  =  i  +  1 ;
 :028:>  for_body_end  =  goto 022 ;
 :029:>  for_end ;
+```
+
+#### While loop
+```pas
+while number <> 0 do
+  begin
+    digit := number - (number / 10) * 10;
+    
+    if digit <> 0 then
+    begin
+      count:=count+1;
+    end;
+
+    number := number / 10;
+  end;
+```
+```
+:064:>  while_start ;
+:065:>  while_cond_start ;
+:066:>  t22  =  number  <>  0 ;
+:067:>  while_cond_end  =  t22  true: goto 068  false: goto 084 ;
+:068:>  while_body_start ;
+:069:>  t23  =  number  /  10 ;
+:070:>  t24  =  t23  *  10 ;
+:071:>  t25  =  number  -  t24 ;
+:072:>  digit  =  t25 ;
+
+:073:>  if_start ;
+:074:>  t26  =  digit  <>  0 ;
+:075:>  if_cond_end  =  t26  true: goto 076  false: goto 080 ;
+:076:>  ifthen_body_start ;
+:077:>  t27  =  count  +  1 ;
+:078:>  count  =  t27 ;
+:079:>  ifthen_body_end  =  goto 080 ;
+:080:>  if_end ;
+
+:081:>  t28  =  number  /  10 ;
+:082:>  number  =  t28 ;
+:083:>  while_body_end  =  goto 065 ;
+:084:>  while_end ;
+```
+
+#### If-else
+```pas
+if x then
+  begin
+    a := numbers[i] + 9;
+    write("x is true");
+  end
+  else
+  begin
+    write("x is false");
+    a := numbers[i] - 9;
+  end;
+```
+```
+:057:>  if_start ;
+:058:>  if_cond_end  =  x  true: goto 059  false: goto 066 ;
+:059:>  ifthen_body_start ;
+:060:>  t22  =  i  *  Integer ;
+:061:>  t23  =  t22  +  &numbers ;
+:062:>  t24  =  *t23 ;
+:063:>  t25  =  t24  +  9 ;
+:064:>  a  =  t25 ;
+:065:>  ifthen_body_end  =  goto 073 ;
+:066:>  else_body_start ;
+:067:>  t26  =  i  *  Integer ;
+:068:>  t27  =  t26  +  &numbers ;
+:069:>  t28  =  *t27 ;
+:070:>  t29  =  t28  -  9 ;
+:071:>  a  =  t29 ;
+:072:>  else_body_end ;
+:073:>  if_end ;
+
 ```
   
 ## Pre Cursors

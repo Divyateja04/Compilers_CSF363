@@ -39,11 +39,13 @@ begin
 
   if x then
   begin
+    a := numbers[i] + 9;
     write("x is true");
   end
   else
   begin
     write("x is false");
+    a := numbers[i] - 9;
   end;
 
 
