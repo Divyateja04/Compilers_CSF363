@@ -15,6 +15,42 @@ int quadrupleIndex=0;
 int tos=-1;
 int temp_char=0;
 
+struct symbolTable{
+    char name[100];
+    char type[100];
+    char value[100];
+} symtab[1000];
+
+void addSymTab(char name[], char type[]){
+    // Check if the variable already exists
+    for(int i=0; i<count; i++){
+        if(strcmp(symtab[i].name, name) == 0){
+            exit(1);
+        }
+    }
+    strcpy(symtab[count].name, name);
+    strcpy(symtab[count].type, type);
+    count++;
+}
+
+void displaySymTab(){
+    printf("\n\n\nSymbol Table\n");
+    printf("====================================\n");
+    for(int i=0; i<count; i++){
+        printf("%s\t%s\n", symtab[i].name, symtab[i].type);
+    }
+    printf("====================================\n");
+}
+
+char* getSymTabType(char name[]){
+    for(int i=0; i<count; i++){
+        if(strcmp(symtab[i].name, name) == 0){
+            return symtab[i].type;
+        }
+    }
+    return "NA";
+}
+
 struct quadruple{
     char operator[100];
     char operand1[100];
@@ -106,18 +142,21 @@ void displayQuadruple()
             }
             // we just found the for_var actual name
             // now we need to replace it with the actual name
-            int m = i;
+            int m = k;
             char actual_name[100];
             sscanf(quad[l].result, "for_var_%s", actual_name);
             strcpy(quad[l].result, actual_name);
-            while(l < m){
+            while(m <= j){
                 if(strcmp(quad[m].operand1, "for_var") == 0){
                     strcpy(quad[m].operand1, actual_name);
+                }
+                if(strcmp(quad[m].result, "for_var") == 0){
+                    strcpy(quad[m].result, actual_name);
                 }
                 if(strcmp(quad[m].operand2, "for_var") == 0){
                     strcpy(quad[m].operand2, actual_name);
                 }
-                m--;
+                m++;
             }
         }
     }
@@ -165,6 +204,7 @@ char* popFromStack()
     return c;
 }
 %}
+
 %union {
     char data[100];
 }
@@ -196,7 +236,7 @@ DATATYPE: INTEGER
 ;
 
 RELOP: EQUAL { strcpy($<data>$, "="); }
-| NOTEQUAL { strcpy($<data>$, "!="); }
+| NOTEQUAL { strcpy($<data>$, "<>"); }
 | LESS { strcpy($<data>$, "<"); }
 | LESSEQUAL { strcpy($<data>$, "<="); }
 | GREATER { strcpy($<data>$, ">"); }
@@ -205,9 +245,13 @@ RELOP: EQUAL { strcpy($<data>$, "="); }
 
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
-    char c[100];
-    sprintf(c,"[%s]", $<data>2);
-    strcpy($<data>$, c);
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    addQuadruple($<data>2, "*", getSymTabType(popFromStack()), str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
  } 
 ;
 
@@ -243,6 +287,13 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS
 ;
 
 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
+{
+    char arrayName[100];
+    sprintf(arrayName, "%s", $<data>1);
+    char arrayType[100];
+    sprintf(arrayType, "%s", $<data>10);
+    addSymTab(arrayName, arrayType);
+}
 ; 
 
 /* MAIN BODY OF THE PROGRAM */
@@ -466,10 +517,20 @@ TERM: IDENTIFIER {
     sprintf(c,"%s",$<data>1); 
     pushToStack(c);
 }
-| IDENTIFIER ARRAY_ADD_ON_ID {
+| IDENTIFIER {
     char c[100]; 
-    sprintf(c,"%s%s",$<data>1, $<data>2); 
+    sprintf(c,"%s",$<data>1); 
     pushToStack(c);
+} ARRAY_ADD_ON_ID { 
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+    char storeAddress[100];
+    sprintf(storeAddress, "&%s", $<data>1);
+    addQuadruple(popFromStack(), "+", storeAddress, str1);
+    pushToStack(str1);
+    strcpy($<data>$, str1);
 }
 | INT_NUMBER {
     char c[100]; 
