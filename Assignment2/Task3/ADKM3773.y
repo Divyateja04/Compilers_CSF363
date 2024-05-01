@@ -131,6 +131,7 @@ $<t.nd>$ =initNode("Relop"); $<t.nd>1 = initNode("GREATEREQUAL"); addNodetoTree(
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
     $<t.lineNumber>$ = $<t.lineNumber>2; 
+    strcpy($<t.data_type>$, $<t.data_type>2);
     if(strcmp($<t.data_type>2, "int") == 0){
         strcpy($<t.val>$, $<t.val>2);
     }
@@ -148,6 +149,7 @@ ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET {
 
 BETWEEN_BRACKETS: INT_NUMBER { 
     $<t.lineNumber>$ = $<t.lineNumber>1;
+    strcpy($<t.data_type>$, "int");
     if(strcmp($<t.data_type>1, "int") == 0){
         strcpy($<t.val>$, $<t.val>1);
     } 
@@ -158,8 +160,10 @@ BETWEEN_BRACKETS: INT_NUMBER {
     $<t.nd>1 = initNode("INT_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
-| IDENTIFIER { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+| IDENTIFIER { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
+    strcpy($<t.data_type>$, "int");
     if(symbol != NULL){    
         if((strcmp($<t.data_type>1, "int") == 0) && (symbol->isVarSet == 1)){
         strcpy($<t.val>$, symbol->val);
@@ -175,15 +179,26 @@ BETWEEN_BRACKETS: INT_NUMBER {
     $<t.nd>1 = initNode("IDENTIFIER"); 
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
-| IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+| IDENTIFIER ARRAY_ADD_ON_ID { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+            int index = atoi($<t.val>2);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                strcpy($<t.val>$, symbol->array[index]);
+                if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.data_type>$, symbol->data_type);            
+                }
+                else{
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                }
             }
             else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
             }
         }
         else if(strcmp(symbol->varorarray, "1") == 0){
@@ -402,7 +417,10 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>3;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
+        if(strcmp(symbol->varorarray, "1") == 0){
+            symbol->isVarSet = 1;
+        }
+        else if(strcmp(symbol->varorarray, "2") == 0){
             CustomError2($<t.lineNumber>3, $<t.id_name>3, "Identifier not a variable");
         }
     }
@@ -425,7 +443,19 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>3;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") != 0){
+        if(strcmp(symbol->varorarray, "2") == 0){
+            int index = atoi($<t.val>4);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                symbol->isArraySet[index] = 1;
+            }
+            else{
+                CustomError3($<t.lineNumber>3, $<t.id_name>3, $<t.val>4, "Array index out of bounds");
+            }
+            
+        }
+        else if(strcmp(symbol->varorarray, "1") == 0){
             CustomError2($<t.lineNumber>3, $<t.id_name>3, "Identifier not an array");
         }
     }
@@ -447,53 +477,26 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
 }
 ;
 
-/* WRITE STATEMENT */
-WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; 
-    $<t.nd>$ = initNode("WriteStatement");
-    $<t.nd>1 = initNode("WRITE");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("LPAREN");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-    $<t.nd>4 = initNode("RPAREN");
-    addNodetoTree($<t.nd>$,$<t.nd>4);
-    $<t.nd>5 = initNode("SEMICOLON");
-    addNodetoTree($<t.nd>$,$<t.nd>5);
-}
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; 
-    $<t.nd>$ = initNode("WriteStatement");
-    $<t.nd>1 = initNode("WRITE_LN");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("LPAREN");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-    $<t.nd>4 = initNode("RPAREN");
-    addNodetoTree($<t.nd>$,$<t.nd>4);
-    $<t.nd>5 = initNode("SEMICOLON");
-    addNodetoTree($<t.nd>$,$<t.nd>5);
-}
+WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
 ;
 
-WRITE_IDENTIFIER_LIST: IDENTIFIER {
+WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER { $<t.lineNumber>$ = $<t.lineNumber>1; }
+| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST { $<t.lineNumber>$ = $<t.lineNumber>1; }
+;
+
+WRITE_IDENTIFIER: IDENTIFIER {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
+        if(strcmp(symbol->varorarray, "1") == 0){
+            if(checkIsVarSet(symbol_table, $<t.id_name>1, symbol_table_index)){
+            }
+            else{
+                CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not set");
+            }
         }
-    }
-    else{
-        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
-    }
-    $<t.nd>$ = initNode("WriteIdentifierList");
-    $<t.nd>1 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-}
-| IDENTIFIER WRITE_MORE_IDENTIFIERS {
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
+        else if(strcmp(symbol->varorarray, "2") == 0){
             CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
         }
     }
@@ -510,35 +513,21 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
+            int index = atoi($<t.val>2);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                strcpy($<t.val>$, symbol->array[index]);
+                if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.data_type>$, symbol->data_type);            
+                }
+                else{
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                }
             }
             else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
-            }
-        }
-        else if(strcmp(symbol->varorarray, "1") == 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
-    }
-    $<t.nd>$ = initNode("WriteIdentifierList");
-    $<t.nd>1 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-}
-| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { 
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
-            }
-            else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
             }
         }
         else if(strcmp(symbol->varorarray, "1") == 0){
@@ -562,16 +551,6 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     $<t.nd>1 = initNode("STRING");
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
-| STRING WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "string") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for string");
-    } 
-    $<t.nd>$ = initNode("WriteIdentifierList");
-    $<t.nd>1 = initNode("STRING");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    addNodetoTree($<t.nd>$,$<t.nd>2);   
-}
 | INT_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "int") != 0){
@@ -580,16 +559,6 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     $<t.nd>$ = initNode("WriteIdentifierList");
     $<t.nd>1 = initNode("INT_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>1);  
-}
-| INT_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "int") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for integer");
-    }    
-    $<t.nd>$ = initNode("WriteIdentifierList");
-    $<t.nd>1 = initNode("INT_NUMBER");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 | DECIMAL_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
@@ -600,16 +569,6 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     $<t.nd>1 = initNode("DECIMAL_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>1);  
 }
-| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "real") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for real number");
-    } 
-    $<t.nd>$ = initNode("WriteIdentifierList");
-    $<t.nd>1 = initNode("DECIMAL_NUMBER");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    addNodetoTree($<t.nd>$,$<t.nd>2);   
-}
 | CHARACTER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>1, "char") != 0){
@@ -618,195 +577,6 @@ WRITE_IDENTIFIER_LIST: IDENTIFIER {
     $<t.nd>$ = initNode("WriteIdentifierList");
     $<t.nd>1 = initNode("CHARACTER");
     addNodetoTree($<t.nd>$,$<t.nd>1);   
-}
-| CHARACTER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>1, "char") != 0){
-        CustomError1($<t.lineNumber>1, "Invalid data type for character");
-    }  
-    $<t.nd>$ = initNode("WriteIdentifierList");
-    $<t.nd>1 = initNode("CHARACTER");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    addNodetoTree($<t.nd>$,$<t.nd>2);  
-}
-;
-
-WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER { 
-    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
-    }
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-}
-| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
-            CustomError2($<t.lineNumber>2, $<t.id_name>2, "Identifier not a variable");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
-    }
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-}
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>2, atoi($<t.val>3), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
-            }
-            else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>2, $<t.val>3, "Array index not set");
-            }
-        }
-        else if(strcmp(symbol->varorarray, "1") == 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>2, "Identifier not an array");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
-    }
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-}
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>2, atoi($<t.val>3), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
-            }
-            else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>2, $<t.val>3, "Array index not set");
-            }
-        }
-        else if(strcmp(symbol->varorarray, "1") == 0){
-            CustomError2($<t.lineNumber>1, $<t.id_name>2, "Identifier not an array");
-        }
-    }
-    else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
-    }
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("IDENTIFIER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-    addNodetoTree($<t.nd>$,$<t.nd>4);
-}
-| COMMA STRING {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "string") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for string");
-    }   
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("STRING");
-    addNodetoTree($<t.nd>$,$<t.nd>2); 
-}
-| COMMA STRING WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "string") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for string");
-    }   
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("STRING"); 
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);
-}
-| COMMA INT_NUMBER {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "int") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for integer");
-    }  
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("INT_NUMBER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-}
-| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "int") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for integer");
-    }   
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("INT_NUMBER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3); 
-}
-| COMMA DECIMAL_NUMBER {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "real") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
-    }  
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("DECIMAL_NUMBER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);  
-}
-| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "real") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
-    } 
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("DECIMAL_NUMBER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);   
-}
-| COMMA CHARACTER {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "char") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for character");
-    }  
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("CHARACTER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);  
-}
-| COMMA CHARACTER WRITE_MORE_IDENTIFIERS {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
-    if(strcmp($<t.data_type>2, "char") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for character");
-    }  
-    $<t.nd>$ = initNode("WriteMoreIdentifiers");
-    $<t.nd>1 = initNode("COMMA");
-    addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>2 = initNode("CHARACTER");
-    addNodetoTree($<t.nd>$,$<t.nd>2);
-    addNodetoTree($<t.nd>$,$<t.nd>3);  
 }
 ;
 
@@ -818,7 +588,6 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
         if(strcmp(symbol->varorarray, "1") == 0){
             symbol->isVarSet = 1;
             if(strcmp(symbol->data_type, $<t.data_type>4) == 0){
-                // strcpy(symbol->val, $<t.val>4);
             }
             else{
                 CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
@@ -848,12 +617,23 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") == 0){
             if(strcmp($<t.data_type>2, "int") == 0){
-                if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
+                int index = atoi($<t.val>2);
+                int min_index = atoi(symbol->min_index);
+                int max_index = atoi(symbol->max_index);
+                if((index >= min_index) && (index <= max_index)){
+                    strcpy($<t.val>$, symbol->array[index]);
+                    strcpy($<t.data_type>$, symbol->data_type);
+                    if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
                     symbol->isArraySet[atoi($<t.val>2)] = 1;
+                    }
+                    else{
+                        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
+                    }
                 }
                 else{
-                    CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
                 }
+                
             }
             else{
                 CustomError1($<t.lineNumber>1, "Array index must be integer");
@@ -878,7 +658,8 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     $<t.nd>6 = initNode("SEMICOLON");
     addNodetoTree($<t.nd>$,$<t.nd>6);
 }
-| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") == 0){
@@ -1263,23 +1044,32 @@ TERM: IDENTIFIER {
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 
-| IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+| IDENTIFIER ARRAY_ADD_ON_ID { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") == 0){
-            // printf("\nVariable < %s > found", $<t.id_name>1);
-            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable found in expression instead of array");
-        }
-        else if(strcmp(symbol->varorarray, "2") == 0){
+        if(strcmp(symbol->varorarray, "2") == 0){
             // printf("\nArray < %s > found", $<t.id_name>1);
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
-                strcpy($<t.data_type>$, symbol->data_type);
+            int index = atoi($<t.val>2);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.data_type>$, symbol->data_type);            
+                }
+                else{
+                    // printf("\nArray index not set for < %s >", $<t.id_name>1);
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                }
             }
             else{
-                // printf("\nArray index not set for < %s >", $<t.id_name>1);
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
             }
+        }
+        else if(strcmp(symbol->varorarray, "1") == 0){
+            // printf("\nVariable < %s > found", $<t.id_name>1);
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
         }
     }
     else{
@@ -1364,10 +1154,10 @@ FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUEN
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
+        symbol->isVarSet = 1;
         if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
             {
                 if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
-                    symbol->isVarSet = 1;
                     strcpy(symbol->val, $<t.val>5);
                 }
                 else{
@@ -1407,10 +1197,10 @@ FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSIO
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
+        symbol->isVarSet = 1;
         if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
             {
                 if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
-                    symbol->isVarSet = 1;
                     strcpy(symbol->val, $<t.val>5);
                 }
                 else{
