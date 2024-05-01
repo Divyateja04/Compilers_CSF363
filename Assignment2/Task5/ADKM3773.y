@@ -123,7 +123,7 @@ void printIST() {
             [](const int& i) { std::cout << "integer   | " << i; },
             [](const float& f) { std::cout << "real      | " << f; },
             [](const char& c) { std::cout << "char      | " << c; },
-            [](const bool& b) { std::cout << "bool     | " << std::boolalpha << b; },
+            [](const bool& b) { std::cout << "bool      | " << std::boolalpha << b; },
             [](const ArrayType& a) { std::cout << "array     | "; printArray(a); }
         }, it.second);
         std::cout << " \n";
