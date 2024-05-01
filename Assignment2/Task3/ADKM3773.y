@@ -92,6 +92,7 @@ RELOP: EQUAL { strcpy($<t.operator>$, "="); $<t.lineNumber>$ = $<t.lineNumber>1;
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
     $<t.lineNumber>$ = $<t.lineNumber>2; 
+    strcpy($<t.data_type>$, $<t.data_type>2);
     if(strcmp($<t.data_type>2, "int") == 0){
         strcpy($<t.val>$, $<t.val>2);
     }
@@ -103,6 +104,7 @@ ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET {
 
 BETWEEN_BRACKETS: INT_NUMBER { 
     $<t.lineNumber>$ = $<t.lineNumber>1;
+    strcpy($<t.data_type>$, "int");
     if(strcmp($<t.data_type>1, "int") == 0){
         strcpy($<t.val>$, $<t.val>1);
     } 
@@ -110,8 +112,10 @@ BETWEEN_BRACKETS: INT_NUMBER {
         CustomError1($<t.lineNumber>1, "Array index must be integer");
     }     
 }
-| IDENTIFIER { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+| IDENTIFIER { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
+    strcpy($<t.data_type>$, "int");
     if(symbol != NULL){    
         if((strcmp($<t.data_type>1, "int") == 0) && (symbol->isVarSet == 1)){
         strcpy($<t.val>$, symbol->val);
@@ -124,15 +128,26 @@ BETWEEN_BRACKETS: INT_NUMBER {
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }     
 }
-| IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+| IDENTIFIER ARRAY_ADD_ON_ID { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+            int index = atoi($<t.val>2);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                strcpy($<t.val>$, symbol->array[index]);
+                if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.data_type>$, symbol->data_type);            
+                }
+                else{
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                }
             }
             else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
             }
         }
         else if(strcmp(symbol->varorarray, "1") == 0){
@@ -234,7 +249,10 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>3;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
+        if(strcmp(symbol->varorarray, "1") == 0){
+            symbol->isVarSet = 1;
+        }
+        else if(strcmp(symbol->varorarray, "2") == 0){
             CustomError2($<t.lineNumber>3, $<t.id_name>3, "Identifier not a variable");
         }
     }
@@ -246,7 +264,19 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>3, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>3;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "2") != 0){
+        if(strcmp(symbol->varorarray, "2") == 0){
+            int index = atoi($<t.val>4);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                symbol->isArraySet[index] = 1;
+            }
+            else{
+                CustomError3($<t.lineNumber>3, $<t.id_name>3, $<t.val>4, "Array index out of bounds");
+            }
+            
+        }
+        else if(strcmp(symbol->varorarray, "1") == 0){
             CustomError2($<t.lineNumber>3, $<t.id_name>3, "Identifier not an array");
         }
     }
@@ -268,7 +298,14 @@ WRITE_IDENTIFIER: IDENTIFIER {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") != 0){
+        if(strcmp(symbol->varorarray, "1") == 0){
+            if(checkIsVarSet(symbol_table, $<t.id_name>1, symbol_table_index)){
+            }
+            else{
+                CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not set");
+            }
+        }
+        else if(strcmp(symbol->varorarray, "2") == 0){
             CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not a variable");
         }
     }
@@ -281,11 +318,21 @@ WRITE_IDENTIFIER: IDENTIFIER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") == 0){
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                // printf("\n%s", symbol->array[atoi($<t.val>2)]);
+            int index = atoi($<t.val>2);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                strcpy($<t.val>$, symbol->array[index]);
+                if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.data_type>$, symbol->data_type);            
+                }
+                else{
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                }
             }
             else{
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
             }
         }
         else if(strcmp(symbol->varorarray, "1") == 0){
@@ -330,7 +377,6 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
         if(strcmp(symbol->varorarray, "1") == 0){
             symbol->isVarSet = 1;
             if(strcmp(symbol->data_type, $<t.data_type>4) == 0){
-                // strcpy(symbol->val, $<t.val>4);
             }
             else{
                 CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
@@ -350,12 +396,23 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "2") == 0){
             if(strcmp($<t.data_type>2, "int") == 0){
-                if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
+                int index = atoi($<t.val>2);
+                int min_index = atoi(symbol->min_index);
+                int max_index = atoi(symbol->max_index);
+                if((index >= min_index) && (index <= max_index)){
+                    strcpy($<t.val>$, symbol->array[index]);
+                    strcpy($<t.data_type>$, symbol->data_type);
+                    if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
                     symbol->isArraySet[atoi($<t.val>2)] = 1;
+                    }
+                    else{
+                        CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
+                    }
                 }
                 else{
-                    CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
                 }
+                
             }
             else{
                 CustomError1($<t.lineNumber>1, "Array index must be integer");
@@ -369,7 +426,8 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
 }
-| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
+| IDENTIFIER COLON EQUAL CHARACTER SEMICOLON { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
         if(strcmp(symbol->varorarray, "1") == 0){
@@ -634,23 +692,32 @@ TERM: IDENTIFIER {
     }
 }
 
-| IDENTIFIER ARRAY_ADD_ON_ID { Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
+| IDENTIFIER ARRAY_ADD_ON_ID { 
+    Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
-        if(strcmp(symbol->varorarray, "1") == 0){
-            // printf("\nVariable < %s > found", $<t.id_name>1);
-            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable found in expression instead of array");
-        }
-        else if(strcmp(symbol->varorarray, "2") == 0){
+        if(strcmp(symbol->varorarray, "2") == 0){
             // printf("\nArray < %s > found", $<t.id_name>1);
-            if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
-                strcpy($<t.data_type>$, symbol->data_type);
+            int index = atoi($<t.val>2);
+            int min_index = atoi(symbol->min_index);
+            int max_index = atoi(symbol->max_index);
+            if((index >= min_index) && (index <= max_index)){
+                if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
+                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.data_type>$, symbol->data_type);            
+                }
+                else{
+                    // printf("\nArray index not set for < %s >", $<t.id_name>1);
+                    CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                }
             }
             else{
-                // printf("\nArray index not set for < %s >", $<t.id_name>1);
-                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index not set");
+                CustomError3($<t.lineNumber>1, $<t.id_name>1, $<t.val>2, "Array index out of bounds");
             }
+        }
+        else if(strcmp(symbol->varorarray, "1") == 0){
+            // printf("\nVariable < %s > found", $<t.id_name>1);
+            CustomError2($<t.lineNumber>1, $<t.id_name>1, "Identifier not an array");
         }
     }
     else{
@@ -695,10 +762,10 @@ FOR_LOOP_TO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE TO EXPRESSION_SEQUEN
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
+        symbol->isVarSet = 1;
         if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
             {
                 if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
-                    symbol->isVarSet = 1;
                     strcpy(symbol->val, $<t.val>5);
                 }
                 else{
@@ -720,10 +787,10 @@ FOR_LOOP_DOWNTO: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE DOWNTO EXPRESSIO
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
+        symbol->isVarSet = 1;
         if(strcmp($<t.data_type>5, $<t.data_type>7) == 0){
             {
                 if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
-                    symbol->isVarSet = 1;
                     strcpy(symbol->val, $<t.val>5);
                 }
                 else{
