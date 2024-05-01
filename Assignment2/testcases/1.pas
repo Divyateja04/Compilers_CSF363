@@ -14,6 +14,8 @@ begin
   number := 0;
   digit := 0.0;
 
+  numbers[3] := 7;
+
   write("Enter 5 integer values:");
 
   c := 'c';
@@ -37,11 +39,13 @@ begin
 
   if x then
   begin
+    a := numbers[i] + 9;
     write("x is true");
   end
   else
   begin
     write("x is false");
+    a := numbers[i] - 9;
   end;
 
 

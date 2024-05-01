@@ -201,6 +201,13 @@ char* popFromStack()
 {
     char* c = stac[tos].c;
     tos=tos-1;
+    if(tos <= -1) printf("Stack is empty");
+    return c;
+}
+
+char* topOfStack()
+{
+    char* c = stac[tos].c;
     return c;
 }
 %}
@@ -250,8 +257,9 @@ ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET {
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple($<data>2, "*", getSymTabType(popFromStack()), str1);
-    pushToStack(str1);
     strcpy($<data>$, str1);
+    pushToStack(str1);
+    // printf("Arr: |%s|", topOfStack());
  } 
 ;
 
@@ -319,7 +327,13 @@ STATEMENT: READ_STATEMENT
 
 /* READ STATEMENT */
 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
-| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
+| READ LPAREN IDENTIFIER {
+    // If we just find id, we push it to stack
+    // This is popped out from stack in the ARRAY_ADD_ON_ID
+    char c[100]; 
+    sprintf(c,"%s",$<data>3); 
+    pushToStack(c);
+} ARRAY_ADD_ON_ID RPAREN SEMICOLON
 ;
 
 /* WRITE STATEMENT */
@@ -327,40 +341,47 @@ WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
 | WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
 ;
 
-WRITE_IDENTIFIER_LIST: IDENTIFIER
-| IDENTIFIER WRITE_MORE_IDENTIFIERS
-| IDENTIFIER ARRAY_ADD_ON_ID
-| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
-| STRING
-| STRING WRITE_MORE_IDENTIFIERS
-| INT_NUMBER
-| INT_NUMBER WRITE_MORE_IDENTIFIERS
-| DECIMAL_NUMBER
-| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
-| CHARACTER
-| CHARACTER WRITE_MORE_IDENTIFIERS
+WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER
+| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST
 ;
 
-WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
-| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS 
-| COMMA STRING
-| COMMA STRING WRITE_MORE_IDENTIFIERS
-| COMMA INT_NUMBER
-| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS
-| COMMA DECIMAL_NUMBER
-| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
-| COMMA CHARACTER
-| COMMA CHARACTER WRITE_MORE_IDENTIFIERS
+WRITE_IDENTIFIER: IDENTIFIER
+| IDENTIFIER ARRAY_ADD_ON_ID
+| STRING
+| INT_NUMBER
+| DECIMAL_NUMBER
+| CHARACTER
 ;
 
 /* ASSIGNMENT */
 ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
-| IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+| IDENTIFIER {
+    // If we just find id, we push it to stack
+    // This is popped out from stack in the ARRAY_ADD_ON_ID
+    char c[100]; 
+    sprintf(c,"%s",$<data>1); 
+    pushToStack(c);
+} ARRAY_ADD_ON_ID {
+    // Create a new temp variable to store the address of the array + the index
+    char str[5];
+    char str1[5]="t"; 
+    sprintf(str,"%d", temp_char++);
+    strcat(str1, str); 
+
+    // First we add a quadruple for the address of the array
+    // we calculate the exact address
+    char storeAddress[100];
+    sprintf(storeAddress, "&%s", $<data>1);
+    addQuadruple(popFromStack(), "+", storeAddress, str1);
+    pushToStack(str1);
+} COLON EQUAL ANY_EXPRESSION SEMICOLON {
+    char temp[100];
+    sprintf(temp, "%s", popFromStack());
+    char temp2[100];
+    sprintf(temp2, "*%s", popFromStack());
+    addQuadruple(temp, "NA", "NA", temp2);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
     char temp[100];
@@ -450,6 +471,7 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     char str1[5]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
+    printf("|%s|", topOfStack());
     addQuadruple(popFromStack(), "*", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
