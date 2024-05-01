@@ -7,15 +7,8 @@ begin
   count := 0;
   while number <> 0 do
   begin
-    if number <> 0 then
-    begin
-      count:=count+1;
-    end
-    else 
-    begin
-     count :=count;
-    end; 
     number := number / 10;
+    count := count + 1;
   end;
   write("The number of digits is: ");
   write(count);

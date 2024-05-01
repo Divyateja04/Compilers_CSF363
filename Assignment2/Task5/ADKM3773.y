@@ -1,10 +1,17 @@
 %{
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#include <iostream>
+#include <unordered_map>
+#include <variant>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <fstream>
 
 int yylex(void);
-int yyerror();
+int yyerror(const char* s);
 extern FILE *yyin;
 
 int printLogs = 0;
@@ -16,7 +23,7 @@ int tos=-1;
 int temp_char=0;
 
 struct quadruple{
-    char operator[100];
+    char op[100];
     char operand1[100];
     char operand2[100];
     char result[100];
@@ -26,13 +33,363 @@ struct stack {
     char c[100]; 
 } stac[1000];
 
-void addQuadruple(char op1[], char op[], char op2[], char result[])
-{
-    strcpy(quad[quadrupleIndex].operator, op);
+template <typename T>
+struct Array {
+    std::vector<T> array;
+    int offset;
+};
+
+void addQuadruple(char op1[], char op[], char op2[], char result[]) {
+    strcpy(quad[quadrupleIndex].op, op);
     strcpy(quad[quadrupleIndex].operand1, op1);
     strcpy(quad[quadrupleIndex].operand2, op2);
     strcpy(quad[quadrupleIndex].result, result);
     quadrupleIndex++;
+}
+
+using VariantType = std::variant<int, float, char, bool>;
+using ArrayType = struct Array<VariantType>;
+
+std::unordered_map<std::string, std::variant<int, float, char, bool, ArrayType>> interpreterSymbolTable;
+
+void updateIST(std::string symbol, std::variant<int, float, char, bool, ArrayType> value) {
+    interpreterSymbolTable[symbol] = value;
+}
+
+std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
+    if (symbol == "NA") {
+        return 0; // TODO: deal with float case
+    }
+
+    // Check if symbol can be converted to an integer
+    char* end;
+    long int_value = std::strtol(symbol.c_str(), &end, 10);
+    if (end != symbol.c_str() && *end == '\0') {
+        return static_cast<int>(int_value);
+    }
+
+    // Check if symbol can be converted to a float
+    char* end2;
+    float float_value = std::strtof(symbol.c_str(), &end2);
+    if (end2 != symbol.c_str() && *end2 == '\0') {
+        return static_cast<float>(float_value);
+    }
+
+    if (interpreterSymbolTable.find(symbol) != interpreterSymbolTable.end()) {
+        return interpreterSymbolTable[symbol];
+    } else {
+        std::string error_message = "Symbol '" + symbol + "' not found in symbol table";
+        yyerror(error_message.c_str());
+        return 0;
+    }
+}
+
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+void printArray(const ArrayType& arr) {
+    std::cout << "[";
+    for (size_t i = 0; i < arr.array.size(); i++) {
+        const auto& elem = arr.array[i];
+        std::visit(overloaded {
+            [](const int& j) { std::cout << j; },
+            [](const float& f) { std::cout << f; },
+            [](const char& c) { std::cout << c; },
+            [](const bool& b) { std::cout << std::boolalpha << b; },
+            [](const ArrayType& a) { printArray(a); }
+        }, elem);
+        if (i != arr.array.size() - 1) {
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]";
+}
+
+
+void printIST() {
+    int max_length = 0;
+    for (auto& it: interpreterSymbolTable) {
+        if (it.first.length() > max_length) {
+            max_length = it.first.length();
+        }
+    }
+
+    std::cout << std::endl;
+    std::cout << "\033[1;37m" << "ID Name" << std::string(max_length - 6, ' ') << "  Data Type      Value" << "\033[0m\n";
+
+    for (auto& it: interpreterSymbolTable) {
+        std::cout << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
+        std::visit(overloaded {
+            [](const int& i) { std::cout << "integer   | " << i; },
+            [](const float& f) { std::cout << "real      | " << f; },
+            [](const char& c) { std::cout << "char      | " << c; },
+            [](const bool& b) { std::cout << "bool     | " << std::boolalpha << b; },
+            [](const ArrayType& a) { std::cout << "array     | "; printArray(a); }
+        }, it.second);
+        std::cout << " \n";
+    }
+}
+
+template <typename T>
+T performOperation(char op, T operand1, T operand2) {
+    switch (op) {
+        case '+': return operand1 + operand2;
+        case '-': return operand1 - operand2;
+        case '*': return operand1 * operand2;
+        case '/': return operand1 / operand2;
+        case '%': 
+            if constexpr (std::is_same_v<T, int>) {
+                return operand1 % operand2;
+            } // TODO: Is fmod needed here?
+            break;
+        case '<': return operand1 < operand2;
+        case '>': return operand1 > operand2;
+        case '=': return operand1 == operand2;
+    }
+
+    return T();
+}
+
+std::vector<std::string> temporaryVariablesVector;
+
+void interpreter() {
+    int current_line = -1;
+    while(current_line++ < quadrupleIndex) {
+        std::cerr << "Result:" << quad[current_line].result 
+          << " Operand1:" << quad[current_line].operand1 
+          << " Operator:" << quad[current_line].op 
+          << " Operand2:" << quad[current_line].operand2 
+          << std::endl;
+        // printIST();
+        
+        if (
+            strcmp(quad[current_line].result, "write") == 0 || 
+            strcmp(quad[current_line].result, "writeln") == 0
+            ) {
+                char array_name[100];
+                char array_index[100];
+                if (sscanf(quad[current_line].operand1, "%[^[][%[^]]]", array_name, array_index) == 2) {
+                    ArrayType array = std::get<ArrayType>(getIST(array_name));
+
+                    int index = 0;
+                    if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
+                        index = std::get<int>(interpreterSymbolTable[array_index]);
+                    } else {
+                        index = std::stoi(array_index);
+                    }
+
+                    std::visit(overloaded {
+                        [](const int& i) { std::cout << i; },
+                        [](const float& f) { std::cout << f; },
+                        [](const char& c) { std::cout << c; },
+                        [](const bool& b) { std::cout << std::boolalpha << b; },
+                        [](const ArrayType& a) { printArray(a); }
+                    }, array.array[index - array.offset]);
+                } else if (interpreterSymbolTable.find(quad[current_line].operand1) != interpreterSymbolTable.end()) {
+                    std::visit(overloaded {
+                        [](int i) { std::cout << i; },
+                        [](float f) { std::cout << f; },
+                        [](char c) { std::cout << c; },
+                        [](bool b) { std::cout << std::boolalpha << b; },
+                        [](ArrayType a) { printArray(a); }
+                    }, interpreterSymbolTable[quad[current_line].operand1]);
+                } else {
+                    std::cout << quad[current_line].operand1;
+                }
+
+            if (strcmp(quad[current_line].result, "writeln") == 0) {
+                std::cout << std::endl;
+            }
+
+            continue;
+        }
+
+        if (strcmp(quad[current_line].result, "read") == 0) {
+            std::visit(overloaded {
+                [](int& i) { std::cin >> i; },
+                [](float& f) { std::cin >> f; },
+                [](char& c) { std::cin >> c; },
+                [](bool& b) { std::cin >> std::boolalpha >> b; },
+                [](ArrayType& a) { /* handle array input */ }
+            }, interpreterSymbolTable[quad[current_line].operand1]);
+            std::cout << std::endl;
+            continue;
+        }
+
+
+        // Operator is NA
+        // simple assignment operation e.g. s = 6
+        if (strcmp(quad[current_line].op, "NA") == 0) {
+            if (strcmp(quad[current_line].operand1, "NA") == 0 && strcmp(quad[current_line].operand2, "NA") == 0) {
+                // Keywords
+                continue;
+            } else if (strcmp(quad[current_line].operand1, "NA") == 0) {
+                char char_result;
+                char array_name[100];
+                char array_index[100];
+                if (sscanf(quad[current_line].result, "%[^[][%[^]]]", array_name, array_index) == 2) {
+                    ArrayType array = std::get<ArrayType>(getIST(array_name));
+
+                    int index = 0;
+                    if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
+                        index = std::get<int>(interpreterSymbolTable[array_index]);
+                    } else {
+                        index = std::stoi(array_index);
+                    }
+
+                    if (interpreterSymbolTable.find(quad[current_line].operand2) != interpreterSymbolTable.end()) {
+                        auto temp = interpreterSymbolTable[quad[current_line].operand2];
+
+                        std::variant<int, float, char, bool> downcasted_temp;
+                        if (std::holds_alternative<int>(temp)) {
+                            downcasted_temp = std::get<int>(temp);
+                        } else if (std::holds_alternative<float>(temp)) {
+                            downcasted_temp = std::get<float>(temp);
+                        } else if (std::holds_alternative<char>(temp)) {
+                            downcasted_temp = std::get<char>(temp);
+                        } else if (std::holds_alternative<bool>(temp)) {
+                            downcasted_temp = std::get<bool>(temp);
+                        } else {
+                            std::cerr << "Error: Cannot assign array type to array element" << std::endl;
+                            continue;
+                        }
+
+                        array.array[index - array.offset] = downcasted_temp;
+                    } else {
+                        array.array[index - array.offset] = std::stoi(quad[current_line].operand2);
+                    }
+
+                    updateIST(array_name, array);
+                } else if (sscanf(quad[current_line].operand2, "'%c'", &char_result) == 1) {
+                    updateIST(quad[current_line].result, char_result);
+                } else {
+                    updateIST(quad[current_line].result, getIST(quad[current_line].operand2));
+                }
+            } else if (strcmp(quad[current_line].operand2, "NA") == 0) {
+                char char_result;
+                if (sscanf(quad[current_line].operand1, "'%c'", &char_result) == 1) {
+                    updateIST(quad[current_line].result, char_result);
+                } else {
+                    updateIST(quad[current_line].result, getIST(quad[current_line].operand1));
+                }
+            }
+            continue;
+        }
+
+        // For loop
+        if (
+            strcmp(quad[current_line].result, "for_cond_end") == 0 || 
+            strcmp(quad[current_line].result, "while_cond_end") == 0
+            ) {
+            int true_line, false_line;
+            if (sscanf(quad[current_line].op, "true: goto %d", &true_line) == 1 &&
+                sscanf(quad[current_line].operand2, "false: goto %d", &false_line) == 1) {
+                if (std::holds_alternative<bool>(getIST(quad[current_line].operand1))) {
+                    if (std::get<bool>(getIST(quad[current_line].operand1))) {
+                        current_line = true_line - 1;
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
+                    } else {
+                        current_line = false_line - 1;
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
+                    }
+                }
+            }
+            continue;
+        }
+
+        // If condition
+        if (
+            strcmp(quad[current_line].result, "if_cond_end") == 0
+            ) {
+            int true_line, false_line;
+            if (sscanf(quad[current_line].op, "true: goto %d", &true_line) == 1 &&
+                sscanf(quad[current_line].op, "false: goto %d", &false_line) == 1) {
+                if (std::holds_alternative<bool>(getIST(quad[current_line].operand1))) {
+                    if (std::get<bool>(getIST(quad[current_line].operand1))) {
+                        current_line = true_line - 1;
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
+                    } else {
+                        current_line = false_line - 1;
+                        std::cerr << "Going to line " << current_line + 1 << std::endl;
+                    }
+                }
+            }
+            continue;
+        }
+        
+        if (
+            strcmp(quad[current_line].result, "for_body_end") == 0 || 
+            strcmp(quad[current_line].result, "while_body_end") == 0 || 
+            strcmp(quad[current_line].result, "ifthen_body_end") == 0
+            ) {
+            int end_line;
+            if (sscanf(quad[current_line].op, "goto %d", &end_line) == 1) {
+                current_line = end_line - 1;
+                std::cerr << "Going to line " << current_line + 1 << std::endl;
+            }
+            continue;
+        }
+
+        // For single character trivial operators (op != NA)
+        if (strlen(quad[current_line].op) == 1) {
+            switch (quad[current_line].op[0]) {
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                    if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                        // Both int
+                        int result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
+                        updateIST(quad[current_line].result, result);
+                    } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) || std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                        // Both float or can be converted to float
+                        float operand1 = std::holds_alternative<int>(getIST(quad[current_line].operand1)) ? static_cast<float>(std::get<int>(getIST(quad[current_line].operand1))) : std::get<float>(getIST(quad[current_line].operand1));
+                        float operand2 = std::holds_alternative<int>(getIST(quad[current_line].operand2)) ? static_cast<float>(std::get<int>(getIST(quad[current_line].operand2))) : std::get<float>(getIST(quad[current_line].operand2));
+                        float result = performOperation(quad[current_line].op[0], operand1, operand2);
+                        updateIST(quad[current_line].result, result);
+                    } else {
+                        // address adding
+                        
+                    }
+                    break;
+                case '%':
+                case '<':
+                case '>':
+                case '=':
+                    if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                        bool result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
+                        updateIST(quad[current_line].result, result);
+                    }
+                    break;
+            }
+            continue;
+        }
+        
+        // For multicharacter op (op != NA)
+        if (strcmp(quad[current_line].op, "<>") == 0 || strcmp(quad[current_line].op, "!=") == 0) {
+            if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<int>(getIST(quad[current_line].operand1)) != std::get<int>(getIST(quad[current_line].operand2)));
+            } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<float>(getIST(quad[current_line].operand1)) != std::get<float>(getIST(quad[current_line].operand2)));
+            }
+            continue;
+        } else if (strcmp(quad[current_line].op, "<=") == 0) {
+            if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<int>(getIST(quad[current_line].operand1)) <= std::get<int>(getIST(quad[current_line].operand2)));
+            } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<float>(getIST(quad[current_line].operand1)) <= std::get<float>(getIST(quad[current_line].operand2)));
+            }
+            continue;
+        } else if (strcmp(quad[current_line].op, ">=") == 0) {
+            if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<int>(getIST(quad[current_line].operand1)) >= std::get<int>(getIST(quad[current_line].operand2)));
+            } else if (std::holds_alternative<float>(getIST(quad[current_line].operand1)) && std::holds_alternative<float>(getIST(quad[current_line].operand2))) {
+                updateIST(quad[current_line].result, std::get<float>(getIST(quad[current_line].operand1)) >= std::get<float>(getIST(quad[current_line].operand2)));
+            }
+            continue;
+        }
+    }
+    printIST();
 }
 
 void displayQuadruple()
@@ -47,8 +404,14 @@ void displayQuadruple()
                 // replace the goto with the actual line number
                 j++;
             }
-            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].op, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
+            // Add go to if_end when you reach ifthen_body_end
+            int k = j;
+            while(strcmp(quad[k].result, "if_end") != 0 && k > 0){
+                k++;
+            }
+            sprintf(quad[j].op, "goto %03d", k);
         }
         // Check if the current quadruple starts a while condition
         if(strcmp(quad[i].result, "while_cond_end") == 0){
@@ -58,14 +421,14 @@ void displayQuadruple()
                 // replace the goto with the actual line number
                 j++;
             }
-            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].op, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
             // Add go to while_cond_start when you reach while_body_end
             int k = j;
             while(strcmp(quad[k].result, "while_cond_start") != 0 && k > 0){
                 k--;
             }
-            sprintf(quad[j].operator, "goto %03d", k);
+            sprintf(quad[j].op, "goto %03d", k);
         }
         // Check if the current quadruple starts a for condition
         if(strcmp(quad[i].result, "for_cond_end") == 0){
@@ -73,7 +436,7 @@ void displayQuadruple()
             int j = i-1;
             strcpy(quad[j].operand1, quad[i].operand1);
             strcpy(quad[j].operand2, quad[i].operand2);
-            strcpy(quad[j].operator, quad[i].operator);
+            strcpy(quad[j].op, quad[i].op);
             
             // Then we put the condition in the next line
             strcpy(quad[i].operand1, quad[j].result);
@@ -84,14 +447,14 @@ void displayQuadruple()
                 // replace the goto with the actual line number
                 j++;
             }
-            sprintf(quad[i].operator, "true: goto %03d", i+1);
+            sprintf(quad[i].op, "true: goto %03d", i+1);
             sprintf(quad[i].operand2, "false: goto %03d", j+1);
             // Add go to for_cond_start when you reach for_body_end
             int k = j;
             while(strcmp(quad[k].result, "for_cond_start") != 0 && k > 0){
                 k--;
             }
-            sprintf(quad[j].operator, "goto %03d", k);
+            sprintf(quad[j].op, "goto %03d", k);
             // Also replace the for_var with the actual name 
             // of the variable in the for loop
             int l = i-1;
@@ -100,18 +463,21 @@ void displayQuadruple()
             }
             // we just found the for_var actual name
             // now we need to replace it with the actual name
-            int m = i;
+            int m = k;
             char actual_name[100];
             sscanf(quad[l].result, "for_var_%s", actual_name);
             strcpy(quad[l].result, actual_name);
-            while(l < m){
+            while(m <= j){
                 if(strcmp(quad[m].operand1, "for_var") == 0){
                     strcpy(quad[m].operand1, actual_name);
+                }
+                if(strcmp(quad[m].result, "for_var") == 0){
+                    strcpy(quad[m].result, actual_name);
                 }
                 if(strcmp(quad[m].operand2, "for_var") == 0){
                     strcpy(quad[m].operand2, actual_name);
                 }
-                m--;
+                m++;
             }
         }
     }
@@ -130,12 +496,12 @@ void displayQuadruple()
 
         // Print = only if there's something after that
         if(strcmp(quad[i].operand1, "NA") != 0
-        || strcmp(quad[i].operator, "NA") != 0
+        || strcmp(quad[i].op, "NA") != 0
         || strcmp(quad[i].operand2, "NA") != 0
         ) printf(" = ");
 
         if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
-        if(strcmp(quad[i].operator, "NA") != 0) printf(" %s ", quad[i].operator);
+        if(strcmp(quad[i].op, "NA") != 0) printf(" %s ", quad[i].op);
         if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
         printf(";\n");
 
@@ -163,13 +529,16 @@ char* popFromStack()
     char data[100];
 }
 
+%define parse.error verbose
+
 %token NL
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE WRITE_LN ARRAY_DOT
 %token PLUS MINUS MULTIPLY DIVIDE MOD 
 %token EQUAL LESS GREATER LESSEQUAL GREATEREQUAL NOTEQUAL
-%token INT_NUMBER DECIMAL_NUMBER
-%token IDENTIFIER
-%token SEMICOLON COMMA COLON DOT LPAREN RPAREN LBRACKET RBRACKET STRING THEN OF INVALID_TOKEN CHARACTER
+%token <data> INT_NUMBER DECIMAL_NUMBER
+%token <data> IDENTIFIER
+%token SEMICOLON COMMA COLON DOT LPAREN RPAREN LBRACKET RBRACKET THEN OF INVALID_TOKEN
+%token <data> STRING CHARACTER
 
 %left PLUS MINUS 
 %left MULTIPLY DIVIDE MOD
@@ -200,7 +569,7 @@ RELOP: EQUAL { strcpy($<data>$, "="); }
 /* ARRAY ADD ON FOR EVERY ID */
 ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET { 
     char c[100];
-    sprintf(c,"[%s]", $<data>2);
+    sprintf(c, "[%s]", $<data>2);
     strcpy($<data>$, c);
  } 
 ;
@@ -226,24 +595,78 @@ DECLARATION_LIST: SINGLE_VARIABLE
 | ARRAY_DECLARATION
 ;
 
-SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON
+SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { 
+    if (strcmp($<data>3, "Integer") == 0) {
+        updateIST($<data>1, 0);
+    } else if (strcmp($<data>3, "real") == 0) {
+        updateIST($<data>1, 0.0f);
+    } else if (strcmp($<data>3, "char") == 0) {
+        updateIST($<data>1, '\0');
+    } else if (strcmp($<data>3, "bool") == 0) {
+        updateIST($<data>1, false);
+    }
+ }
 ;
 
-MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON
+MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { 
+    if (strcmp($<data>4, "Integer") == 0) {
+        updateIST($<data>1, 0);
+    } else if (strcmp($<data>4, "real") == 0) {
+        updateIST($<data>1, 0.0f);
+    } else if (strcmp($<data>4, "char") == 0) {
+        updateIST($<data>1, '\0');
+    } else if (strcmp($<data>4, "bool") == 0) {
+        updateIST($<data>1, false);
+    }
+
+    for (auto i : temporaryVariablesVector) {
+        if (strcmp($<data>4, "Integer") == 0) {
+            updateIST(i, 0);
+        } else if (strcmp($<data>4, "real") == 0) {
+            updateIST(i, 0.0f);
+        } else if (strcmp($<data>4, "char") == 0) {
+            updateIST(i, '\0');
+        } else if (strcmp($<data>4, "bool") == 0) {
+            updateIST(i, false);
+        }
+    }
+
+    temporaryVariablesVector.clear();
+ }
 ;
 
-MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS 
-| COMMA IDENTIFIER
+MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS { 
+    temporaryVariablesVector.push_back($<data>2);
+ }
+| COMMA IDENTIFIER { 
+    temporaryVariablesVector.push_back($<data>2);
+ }
 ;
 
-ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON
-; 
+ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
+    Array<VariantType> newArray;
+    newArray.offset = std::stoi($<data>7) - std::stoi($<data>5) + 1; // Storing the size of array
+    if (strcmp($<data>10, "Integer") == 0) {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0));
+    } else if (strcmp($<data>10, "real") == 0) {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0.0f));
+    } else if (strcmp($<data>10, "char") == 0) {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType('\0'));
+    } else if (strcmp($<data>10, "bool") == 0) {
+        newArray.array = std::vector<VariantType>(newArray.offset, VariantType(false));
+    }
+    newArray.offset = std::stoi($<data>5); // Setting actual offset
+    updateIST($<data>1, newArray);
+}
+;
 
 /* MAIN BODY OF THE PROGRAM */
 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
-    printf("============================\n");
+    printf("\n============================\n");
     displayQuadruple();
-    printf("============================\n");
+    printf("\n============================\n");
+    interpreter();
+    printf("\n============================\n");
 }
 ;
 
@@ -261,41 +684,25 @@ STATEMENT: READ_STATEMENT
 ;
 
 /* READ STATEMENT */
-READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON
-| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON
+READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON { addQuadruple($3, "NA", "NA", "read"); }
+| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON { addQuadruple($3, "NA", "NA", "read"); }
 ;
 
 /* WRITE STATEMENT */
 WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
-| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON
+| WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { addQuadruple("", "NA", "NA", "writeln"); }
 ;
 
-WRITE_IDENTIFIER_LIST: IDENTIFIER
-| IDENTIFIER WRITE_MORE_IDENTIFIERS
-| IDENTIFIER ARRAY_ADD_ON_ID
-| IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS
-| STRING
-| STRING WRITE_MORE_IDENTIFIERS
-| INT_NUMBER
-| INT_NUMBER WRITE_MORE_IDENTIFIERS
-| DECIMAL_NUMBER
-| DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
-| CHARACTER
-| CHARACTER WRITE_MORE_IDENTIFIERS
+WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER
+| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST
 ;
 
-WRITE_MORE_IDENTIFIERS: COMMA IDENTIFIER
-| COMMA IDENTIFIER WRITE_MORE_IDENTIFIERS
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID
-| COMMA IDENTIFIER ARRAY_ADD_ON_ID WRITE_MORE_IDENTIFIERS 
-| COMMA STRING
-| COMMA STRING WRITE_MORE_IDENTIFIERS
-| COMMA INT_NUMBER
-| COMMA INT_NUMBER WRITE_MORE_IDENTIFIERS
-| COMMA DECIMAL_NUMBER
-| COMMA DECIMAL_NUMBER WRITE_MORE_IDENTIFIERS
-| COMMA CHARACTER
-| COMMA CHARACTER WRITE_MORE_IDENTIFIERS
+WRITE_IDENTIFIER: IDENTIFIER { addQuadruple($<data>1, "NA", "NA", "write"); }
+| IDENTIFIER ARRAY_ADD_ON_ID { char temp[100]; sprintf(temp, "%s%s", $<data>1, $<data>2); addQuadruple(temp, "NA", "NA", "write"); }
+| STRING { addQuadruple($<data>1, "NA", "NA", "write"); }
+| INT_NUMBER { addQuadruple($<data>1, "NA", "NA", "write"); }
+| DECIMAL_NUMBER { addQuadruple($<data>1, "NA", "NA", "write"); }
+| CHARACTER { addQuadruple($<data>1, "NA", "NA", "write"); }
 ;
 
 /* ASSIGNMENT */
@@ -303,10 +710,14 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addQuadruple("NA", "NA", $<data>4, $<data>1);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    char c[100];
+    sprintf(c,"%s%s",$<data>1, $<data>2); 
+    addQuadruple("NA", "NA", $<data>5, c);
 }
 | IDENTIFIER COLON EQUAL CHARACTER SEMICOLON {
-    addQuadruple("NA", "NA", $<data>4, $<data>1);
+    char temp[100];
+    sprintf(temp, "'%s'", $<data>4);
+    addQuadruple(temp, "NA", "NA", $<data>1);
 }
 ;
 
@@ -524,6 +935,7 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
+    addQuadruple("for_var", "+", "1", "for_var");
     addQuadruple("NA", "NA", "NA", "for_body_end");
 } SEMICOLON {
     addQuadruple("NA", "NA", "NA", "for_end");
@@ -558,8 +970,12 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 
 
 %%
-void main()
+int main()
 {
+    std::ofstream file("temp.output");
+    auto* oldCerrBuffer = std::cerr.rdbuf();
+    std::cerr.rdbuf(file.rdbuf());
+
     yyin = fopen("sample.txt", "r");
     if(yyin == NULL){
         if(printLogs) printf("\nFile not found");
@@ -569,9 +985,13 @@ void main()
         if(printLogs) printf("\nInput file found, Parsing....");
         yyparse();
     }
+
+    std::cerr.rdbuf(oldCerrBuffer);
+
+    return 0;
 }
 
-int yyerror(){
-    printf("\n\n\nSyntax error found");
+int yyerror(const char* s){
+    std::cerr << "Error: " << s << std::endl;
     return 0;
 }
