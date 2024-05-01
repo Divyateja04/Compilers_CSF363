@@ -566,7 +566,7 @@ EXPRESSION_SEQUENCE: TERM { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNu
             (strcmp($<t.data_type>3, "char")  == 0) || 
             (strcmp($<t.data_type>1, "string")  == 0) || 
             (strcmp($<t.data_type>3, "string")  == 0)){
-        printf("%s %s", $<t.data_type>1, $<t.data_type>3);
+        // printf("%s %s", $<t.data_type>1, $<t.data_type>3);
         CustomError1($<t.lineNumber>1, "Invalid data type for addition");
     }
     else{
@@ -717,8 +717,6 @@ TERM: IDENTIFIER {
             else{
                 strcpy($<t.data_type>$, symbol->data_type);
                 strcpy($<t.data_type>1, symbol->data_type);
-                printf("\n%s", $<t.data_type>1);
-                printf("\n%s", $<t.data_type>$);
                 CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not set");
             }
         }
@@ -983,16 +981,16 @@ int yyerror(){
 }
 
 void CustomError1(int lineNumber, char* message){
-    printf("\n\nLine: %d :: %s", lineNumber, message);
+    printf("\n\nLine: %d ::> %s", lineNumber, message);
     /* printSymbolTable(); */
 }
 
 void CustomError2(int lineNumber, char* id_name, char* message){
-    printf("\n\nLine: %d :: %s::> %s", lineNumber, id_name, message);
+    printf("\n\nLine: %d ::> %s -> %s", lineNumber, id_name, message);
     /* printSymbolTable(); */
 }
 
 void CustomError3(int lineNumber, char* id_name, char* index,char* message){
-    printf("\n\nLine: %d :: %s[%s] ::> %s", lineNumber, id_name, index, message);
+    printf("\n\nLine: %d ::> %s[%s] -> %s", lineNumber, id_name, index, message);
     /* printSymbolTable(); */
 }
