@@ -260,8 +260,8 @@ WRITE_STATEMENT: WRITE LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineN
 | WRITE_LN LPAREN WRITE_IDENTIFIER_LIST RPAREN SEMICOLON { $<t.lineNumber>$ = $<t.lineNumber>3; }
 ;
 
-WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER { $<t.lineNumber>$ = $<t.lineNumber>3; }
-| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST { $<t.lineNumber>$ = $<t.lineNumber>3; }
+WRITE_IDENTIFIER_LIST: WRITE_IDENTIFIER { $<t.lineNumber>$ = $<t.lineNumber>1; }
+| WRITE_IDENTIFIER COMMA WRITE_IDENTIFIER_LIST { $<t.lineNumber>$ = $<t.lineNumber>1; }
 ;
 
 WRITE_IDENTIFIER: IDENTIFIER {
@@ -309,7 +309,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
     }    
 }
 | DECIMAL_NUMBER {
-    $<t.lineNumber>$ = $<t.lineNumber>2;
+    $<t.lineNumber>$ = $<t.lineNumber>1;
     if(strcmp($<t.data_type>2, "real") != 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for real number");
     }    
