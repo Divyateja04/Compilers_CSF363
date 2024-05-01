@@ -16,6 +16,7 @@ int printToken = 0;
 "//" { 
     BEGIN(COMMENT);
 }
+<COMMENT>[^\n]* { }
 <COMMENT>[\n] { BEGIN(INITIAL); }
 
 (?i:program) { if(printToken) printf("\n::> | %s |", yytext); return PROGRAM; }
@@ -67,7 +68,7 @@ int printToken = 0;
 []] { if(printToken) printf("\n::> | %s |", yytext); return RBRACKET; }
 
 [\"] { BEGIN(READ_DQ_STRING_INPUT); }
-<READ_DQ_STRING_INPUT>[^\n^\"]* { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); sprintf(yylval.t.data_type, "%s", "string"); yylval.t.lineNumber = lineNumber; return STRING; }
+<READ_DQ_STRING_INPUT>[^\n^\"]* { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "string"); yylval.t.lineNumber = lineNumber; return STRING; }
 <READ_DQ_STRING_INPUT>[\"] { BEGIN(INITIAL); }
 
 [\'] { BEGIN(READ_CHAR_INPUT); }

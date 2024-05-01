@@ -1044,8 +1044,8 @@ TERM: IDENTIFIER {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     strcpy($<t.id_name>$, $<t.id_name>1);
     $<t.lineNumber>$ = $<t.lineNumber>1;
-    strcpy($<t.data_type>$, symbol->data_type);
     if(symbol != NULL){
+        strcpy($<t.data_type>$, symbol->data_type);
         if(strcmp(symbol->varorarray, "1") == 0){
             if(checkIsVarSet(symbol_table, $<t.id_name>1, symbol_table_index)){
                 strcpy($<t.val>$, symbol->val);
@@ -1332,7 +1332,7 @@ bool check(Symbol** symbol_table, char new_id_name[], int symbol_table_index){
     return false;
 }
 
-void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[10], int symbol_table_index){
+void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[], int symbol_table_index){
     /* printf("enter called"); */
     for(int i = 0; i < symbol_table_index; i++){
         /* printf("\n%s", symbol_table[i]->data_type); */
