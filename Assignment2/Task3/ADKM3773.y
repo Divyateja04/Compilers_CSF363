@@ -47,7 +47,7 @@ typedef struct Symbol{
 }Symbol;
 
 
-char TreeInString[4000];
+char TreeInString[400000];
 int TreeInStringIndex = 0;
 
 Symbol* symbol_table[100];
@@ -99,7 +99,8 @@ void CustomError3(int lineNumber, char* id_name, char* index,char* message);
 stmt: { if(printLogs) printf("\nParsing started");  } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); 
 $<t.nd>$= initNode("root"); 
 addNodetoTree($<t.nd>$,$<t.nd>2); 
-addNodetoTree($<t.nd>$,$<t.nd>3); addNodetoTree($<t.nd>$,$<t.nd>4); head=$<t.nd>$; }
+addNodetoTree($<t.nd>$,$<t.nd>3); 
+addNodetoTree($<t.nd>$,$<t.nd>4); head=$<t.nd>$; }
 ;
 
 /* TYPE DECLARATIONS */
@@ -1607,6 +1608,14 @@ void main()
     }
     printSymbolTable();
     printTree(head);
+
+    FILE *file_ptr;
+    file_ptr = fopen("syntaxtree.txt", "w");
+    if (file_ptr == NULL) {
+        printf("Error opening the file.\n");
+    }
+    fprintf(file_ptr, "%s", TreeInString);
+    fclose(file_ptr);
     printf("\n\n\n%s", TreeInString);
 }
 
