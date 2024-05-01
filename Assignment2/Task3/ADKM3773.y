@@ -310,8 +310,8 @@ WRITE_IDENTIFIER: IDENTIFIER {
 }
 | DECIMAL_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
-    if(strcmp($<t.data_type>2, "real") != 0){
-        CustomError1($<t.lineNumber>2, "Invalid data type for real number");
+    if(strcmp($<t.data_type>1, "real") != 0){
+        CustomError1($<t.lineNumber>1, "Invalid data type for real number");
     }    
 }
 | CHARACTER {
