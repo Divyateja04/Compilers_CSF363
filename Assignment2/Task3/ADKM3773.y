@@ -991,12 +991,13 @@ EXPRESSION_SEQUENCE: TERM {
     addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | MINUS EXPRESSION_SEQUENCE { 
-    // printf("\n- %s", $<t.data_type>2);
     $<t.lineNumber>$ = $<t.lineNumber>2; 
     if(strcmp($<t.data_type>2, "boolean") == 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for -ve expression");
     }
-    strcpy($<t.val>$, strcat("-",$<t.val>2));
+    char temp[20];
+    temp[0] = '-';
+    strcpy($<t.val>$, strcat(temp, $<t.val>2));
     strcpy($<t.data_type>$, $<t.data_type>2); 
     $<t.nd>$ = initNode("ExpressionSequence");
     $<t.nd>1 = initNode("MINUS");

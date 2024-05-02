@@ -17,7 +17,7 @@ begin
   number := 0;
   digit := 0.0;
 
-  numbers[3] := 4;
+  numBers[3] := 4;
 
   write("Enter 5 integer values:");
 
@@ -76,30 +76,61 @@ Compiling the program in gcc
 Line: 10 ::> d -> Variable not set
 
 Line: 15 ::> digit -> Invalid data type for assignment
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 24 ::> Invalid data type for forloop initialization
+        numbers|       int|         0
+          count|        int|          0
+         number|        int|          0
+          digit|        int|          0
+            sum|        int|          0
+              d|        int|          0
+              b|        int|          0
+              a|        int|          0
+              i|        int|          0
+        average|       real|          0
+              x|    boolean|          0
+              c|       char|          0
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 26 ::> numbers[0] -> Array index out of bounds
+        numbers|       int|         0
+          count|        int|          0
+         number|        int|          0
+          digit|        int|          0
+            sum|        int|          0
+              d|        int|          0
+              b|        int|          0
+              a|        int|          0
+              i|        int|          1
+        average|       real|          0
+              x|    boolean|          0
+              c|       char|          0
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 24 ::> Invalid data type for forloop limit
-
-Line: 31 ::> numbers[0] -> Array index out of bounds
-
-Line: 29 ::> Invalid data type for forloop limit
-
-Line: 37 ::> numbers[0] -> Array index out of bounds
-
-Line: 35 ::> Invalid data type for forloop limit
-
-Line: 42 ::> numbers[0] -> Array index out of bounds
+        numbers|       int|         0
+          count|        int|          0
+         number|        int|          0
+          digit|        int|          0
+            sum|        int|          0
+              d|        int|          0
+              b|        int|          0
+              a|        int|          0
+              i|        int|          1
+        average|       real|          0
+              x|    boolean|          0
+              c|       char|          0
 
 Line: 48 ::> i -> Variable must be integer and must be set before it's accessed
 
 Line: 48 ::> numbers[9] -> Array index out of bounds
-
-Line: 48 ::> Invalid data type for subtraction, found character
-
-Line: 48 ::> a -> Invalid data type for assignment
 
 Line: 54 ::> digit -> Invalid data type for assignment
 
@@ -109,19 +140,22 @@ Line: 61 ::> number -> Invalid data type for assignment
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][[][INT_NUMBER][DOTDOT][INT_NUMBER][]][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]]]]]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Real]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Boolean]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Char]][SEMICOLON]]]]]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][]]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][CHARACTER][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ReadStatement[READ][LPAREN][IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]][END]][SEMICOLON]]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]]][END]][SEMICOLON]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]]][RPAREN][SEMICOLON]]]]]]]]]]]]]]]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][Leftbracket][INT_NUMBER][DOTDOT][INT_NUMBER][Rightbracket][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]]]]]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Real]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Boolean]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Char]][SEMICOLON]]]]]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MULTIPLY][ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][RPAREN]]]][PLUS][ExpressionSequence[ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][RPAREN]][MULTIPLY][ExpressionSequence[Term[IDENTIFIER]]]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[BooleanExpressionSequence[AnyExpression[LPAREN][ExpressionSequence[Term[INT_NUMBER]]][Relop[LESS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][AND][AnyExpression[LPAREN][ExpressionSequence[Term[INT_NUMBER]]][Relop[GREATER]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[MINUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[DECIMAL_NUMBER]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][Rightbracket]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][CHARACTER][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ReadStatement[READ][LPAREN][IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[ExpressionSequence[Term[INT_NUMBER]]][MULTIPLY][ExpressionSequence[Term[INT_NUMBER]]]]][PLUS][ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]]][END]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][MINUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]][END]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MINUS][ExpressionSequence[ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]][RPAREN]][MULTIPLY][ExpressionSequence[Term[INT_NUMBER]]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]][END]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]]][END]][SEMICOLON]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]]][RPAREN][SEMICOLON]]]]]]]]]]]]]]]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 2
 program MaxValueArray;
 var
   numbers: array[1..10] of Integer;
   i, maxValue: Integer;
+  number:integer;
+  i:char;
 begin
-  write("Enter 10 integer values:");
+  write("Enter 10 integer values:",i);
   maxValue := numbers[12];
   for i := 1 to 10 do
   begin
     read(numbers[i]);
+    write(numbers[i]);
   end;
   maxValue := numbers[1];
   for i := 2 to 10 do
@@ -133,6 +167,18 @@ begin
   end;
   write("The maximum value is: ");  
   write(maxValue);
+  while number <> 0 do
+  begin
+    if number <> 0 then
+    begin
+      count:=count+1;
+    end
+    else 
+    begin
+     count :=count;
+    end; 
+    number := number / 10;
+  end;
 end.
 Deleting old files
 Compiling yacc program
@@ -140,27 +186,57 @@ Compiling lex program
 Compiling the program in gcc
 
 
-Line: 7 ::> numbers[12] -> Array index out of bounds
+Variable < i > already declared
 
-Line: 7 ::> maxValue -> Invalid data type for assignment
+Line: 8 ::> i -> Variable not set
 
-Line: 10 ::> numbers[0] -> Array index out of bounds
+Line: 9 ::> numbers[12] -> Array index out of bounds
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 8 ::> Invalid data type for forloop limit
+        numbers|       int|         0
+       maxvalue|        int|          0
+              i|        int|          0
+         number|        int|          0
+              i|       char|          0
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 12 ::> numbers[1] -> Array index not set
+        numbers|       int|         0
+       maxvalue|        int|          0
+              i|        int|          1
+         number|        int|          0
+              i|       char|          0
 
-Line: 15 ::> numbers[0] -> Array index out of bounds
+Line: 18 ::> numbers[2] -> Array index not set
 
-Line: 17 ::> numbers[0] -> Array index out of bounds
+Line: 20 ::> numbers[2] -> Array index not set
 
-Line: 13 ::> Invalid data type for forloop limit
+Line: 25 ::> number -> Variable not set
+
+Line: 27 ::> number -> Variable not set
+
+Line: 29 ::> count -> Variable not declared
+
+Line: 29 ::> count -> Variable not declared
+
+Line: 33 ::> count -> Variable not declared
+
+Line: 33 ::> count -> Variable not declared
+
+Line: 35 ::> number -> Variable not set
+
+Line: 35 ::> number -> Invalid data type for assignment
 
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][[][INT_NUMBER][DOTDOT][INT_NUMBER][]][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ReadStatement[READ][LPAREN][IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]][Relop[GREATER]][ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][Leftbracket][INT_NUMBER][DOTDOT][INT_NUMBER][Rightbracket][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Char]][SEMICOLON]]]]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]]][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][Rightbracket]]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ReadStatement[READ][LPAREN][IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]][RPAREN][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][RPAREN][SEMICOLON]]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][Rightbracket]]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][Relop[GREATER]][ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]][SEMICOLON]]]][END]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]][END]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]]][END]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]][END]][SEMICOLON]]]]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 3
 program ReverseNumber;
@@ -193,7 +269,7 @@ Line: 12 ::> number -> Invalid data type for assignment
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[INT_NUMBER]][COMMA][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[INT_NUMBER]][COMMA][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MOD][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MULTIPLY][ExpressionSequence[Term[INT_NUMBER]]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 4
 program NumberOfDigits;
@@ -230,7 +306,7 @@ Line: 16 ::> number -> Invalid data type for assignment
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MINUS][ExpressionSequence[ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]][RPAREN]][MULTIPLY][ExpressionSequence[Term[INT_NUMBER]]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]][END]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 5
 program NumberOfDigits;
@@ -260,7 +336,7 @@ Line: 10 ::> number -> Invalid data type for assignment
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 6
 program FactorialCalculation;
@@ -284,12 +360,20 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
+
+              i|        int|          0
+      factorial|        int|          0
+         number|        int|          0
 
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[IDENTIFIER]]][ForLoopDownTo[DOWNTO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[IDENTIFIER]]][ForLoopDownTo[DOWNTO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MULTIPLY][ExpressionSequence[Term[IDENTIFIER]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 7
 program SumOfSquares;
@@ -311,14 +395,20 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 8 ::> Invalid data type for forloop limit
+              i|        int|          0
+            sum|        int|          0
+         number|        int|          0
 
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[IDENTIFIER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[IDENTIFIER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MULTIPLY][ExpressionSequence[Term[IDENTIFIER]]]][RPAREN]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 8
 program forif;
@@ -340,14 +430,19 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 5 ::> Invalid data type for forloop limit
+              j|        int|          0
+              i|        int|          0
 
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MOD][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MOD][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]][END]][SEMICOLON]]]][END]][SEMICOLON]]]]]][END][DOT]]]
 =======================================
 Test Case 9
 program Example9;
@@ -376,7 +471,7 @@ Compiling the program in gcc
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[GREATER]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]][SEMICOLON]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[GREATER]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MINUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]][END]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]][END]][SEMICOLON]]]]][END][DOT]]]
 =======================================
 Test Case 10
 program forif;
@@ -384,6 +479,7 @@ var
   i, j, a, b, x: Integer;
   arr: array[1..20] of Integer;
 begin
+  x := 1;
   for i := 1 to 20 do
   begin
     if i % 3 = 0 then 
@@ -417,27 +513,59 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 13 ::> x -> Variable must be integer and must be set before it's accessed
+              x|        int|          0
+              b|        int|          0
+              a|        int|          0
+              j|        int|          0
+              i|        int|          0
+            arr|       int|         0
 
-Line: 16 ::> a -> Variable not set
+Line: 14 ::> arr[0] -> Array index out of bounds
 
-Line: 16 ::> b -> Variable not set
+Line: 17 ::> a -> Variable not set
 
-Line: 16 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 17 ::> b -> Variable not set
 
-Line: 6 ::> Invalid data type for forloop limit
+Line: 17 ::> i -> Variable must be integer and must be set before it's accessed
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
+
+              x|        int|          0
+              b|        int|          0
+              a|        int|          0
+              j|        int|          0
+              i|        int|          1
+            arr|       int|         0
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
+
+              x|        int|          0
+              b|        int|          0
+              a|        int|          0
+              j|        int|          0
+              i|        int|          3
+            arr|       int|         0
 
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][[][INT_NUMBER][DOTDOT][INT_NUMBER][]][OF][Datatype[Integer]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MOD][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][]]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][]]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]]]]][RPAREN][SEMICOLON]]]]]]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MOD][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopDownTo[DOWNTO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[INT_NUMBER]]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]]]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopDownTo[DOWNTO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[INT_NUMBER]]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]]]][SEMICOLON]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][Leftbracket][INT_NUMBER][DOTDOT][INT_NUMBER][Rightbracket][OF][Datatype[Integer]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MOD][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][Rightbracket]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][Rightbracket]][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]]]][RPAREN][SEMICOLON]]]]]]]]][END]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MOD][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopDownTo[DOWNTO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[INT_NUMBER]]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]]][END]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopDownTo[DOWNTO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[INT_NUMBER]]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]]][END]][SEMICOLON]]]]]][END][DOT]]]
 =======================================
 Test Case 11
 Program OneHundredDoors;
 var
    doors : Array[1..100] of Boolean;
+   arr: array[1..100] of Integer;
    i, j	 : Integer;
 begin
    for i := 1 to 100 do begin
@@ -476,7 +604,7 @@ begin
 	   write("only array without brackets");
    end;
 
-   writeln(a, 3, arr[arr[arr[3]]], "ada", 'a');
+   writeln(a, 3, arr[3], "ada", 'a');
 
    if arr[i] and a then begin
 	   write("array with boolean 1");
@@ -534,196 +662,175 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 9 ::> j -> Invalid data type for assignment
+          doors|   boolean|         0
+            arr|       int|         0
+              j|        int|          0
+              i|        int|          0
 
-Line: 6 ::> Invalid data type for forloop limit
+Line: 10 ::> j -> Invalid data type for assignment
 
-Line: 12 ::> a -> Variable not declared
+Line: 13 ::> a -> Variable not declared
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 15 ::> Invalid data type for character
+          doors|   boolean|         0
+            arr|       int|         0
+              j|        int|          0
+              i|        int|          1
 
-Line: 14 ::> Invalid data type for forloop limit
+Line: 16 ::> Invalid data type for character
 
-Line: 18 ::> a -> Variable not declared
+Line: 19 ::> a -> Variable not declared
 
-Line: 18 ::> Invalid data type for if condition
+Line: 19 ::> Invalid data type for if condition
 
-Line: 22 ::> a -> Variable not declared
+Line: 23 ::> a -> Variable not declared
 
-Line: 22 ::> Invalid data type for if condition
+Line: 23 ::> Invalid data type for if condition
 
-Line: 30 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 31 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 30 ::> Array not declared
+Line: 31 ::> arr[8] -> Array index not set
 
-Line: 30 ::> Invalid data type for if condition
+Line: 31 ::> Invalid data type for if condition
 
-Line: 34 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 35 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 34 ::> Array not declared
+Line: 35 ::> arr[8] -> Array index not set
 
-Line: 34 ::> Invalid data type for subtraction, found character
+Line: 39 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 31 ::> Invalid data type for relational expressions
-string boolean
+Line: 39 ::> arr[4] -> Array index not set
 
-Line: 38 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 39 ::> Invalid data type for if condition
 
-Line: 38 ::> Array not declared
+Line: 43 ::> a -> Variable not declared
 
-Line: 38 ::> Invalid data type for if condition
+Line: 43 ::> arr[3] -> Array index not set
 
-Line: 42 ::> a -> Variable not declared
+Line: 43 ::> Invalid data type for character
 
-Line: 42 ::> arr -> Array not declared
+Line: 45 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 42 ::> arr -> Array not declared
+Line: 45 ::> arr[a] -> Array index out of bounds
 
-Line: 42 ::> arr -> Array not declared
-
-Line: 42 ::> Invalid data type for character
-
-Line: 44 ::> i -> Variable must be integer and must be set before it's accessed
-
-Line: 44 ::> Array not declared
-
-Line: 44 ::> a -> Variable not declared
-
-Line: 44 ::> Invalid data type for boolean expressions
-
-Line: 48 ::> i -> Variable must be integer and must be set before it's accessed
-
-Line: 48 ::> doors[a] -> Array index out of bounds
+Line: 45 ::> a -> Variable not declared
 
 Line: 45 ::> Invalid data type for boolean expressions
 
-Line: 48 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 49 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 48 ::> doors[a] -> Array index out of bounds
+Line: 49 ::> doors[a] -> Array index out of bounds
 
-Line: 48 ::> Invalid data type for boolean expressions
+Line: 49 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 60 ::> a -> Variable not declared
+Line: 49 ::> doors[a] -> Array index out of bounds
 
-Line: 60 ::> v -> Variable not declared
+Line: 61 ::> a -> Variable not declared
 
-Line: 60 ::> Invalid data type for addition
+Line: 61 ::> v -> Variable not declared
 
-Line: 60 ::> x -> Variable not declared
+Line: 61 ::> Invalid data type for addition
 
-Line: 60 ::> Invalid data type for addition
+Line: 61 ::> x -> Variable not declared
 
-Line: 60 ::> d -> Variable not declared
+Line: 61 ::> Invalid data type for addition
 
-Line: 60 ::> Invalid data type for subtraction, found character
+Line: 61 ::> d -> Variable not declared
 
-Line: 57 ::> Invalid data type for relational expressions
-string boolean
+Line: 61 ::> Invalid data type for subtraction, found character
 
-Line: 60 ::> a -> Variable not declared
+Line: 61 ::> a -> Variable not declared
 
-Line: 64 ::> a -> Variable not declared
+Line: 65 ::> a -> Variable not declared
 
-Line: 64 ::> v -> Variable not declared
+Line: 65 ::> v -> Variable not declared
 
-Line: 64 ::> x -> Variable not declared
+Line: 65 ::> x -> Variable not declared
 
-Line: 64 ::> Invalid data type for addition
+Line: 65 ::> Invalid data type for addition
 
-Line: 64 ::> Invalid data type for addition
+Line: 65 ::> Invalid data type for addition
 
-Line: 64 ::> d -> Variable not declared
+Line: 65 ::> d -> Variable not declared
 
-Line: 64 ::> Invalid data type for subtraction, found character
+Line: 65 ::> Invalid data type for subtraction, found character
 
-Line: 61 ::> Invalid data type for relational expressions
-string boolean
+Line: 65 ::> a -> Variable not declared
 
-Line: 64 ::> a -> Variable not declared
+Line: 70 ::> a -> Variable not declared
 
-Line: 69 ::> a -> Variable not declared
+Line: 70 ::> v -> Variable not declared
 
-Line: 69 ::> v -> Variable not declared
+Line: 70 ::> Invalid data type for addition
 
-Line: 69 ::> Invalid data type for addition
+Line: 70 ::> x -> Variable not declared
 
-Line: 69 ::> x -> Variable not declared
+Line: 70 ::> Invalid data type for addition
 
-Line: 69 ::> Invalid data type for addition
+Line: 70 ::> d -> Variable not declared
 
-Line: 69 ::> d -> Variable not declared
+Line: 70 ::> Invalid data type for subtraction, found character
 
-Line: 69 ::> Invalid data type for subtraction, found character
+Line: 70 ::> Invalid data type for if condition
 
-Line: 69 ::> Invalid data type for if condition
+Line: 74 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 73 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 74 ::> doors[1] -> Array index not set
 
-Line: 73 ::> doors[1] -> Array index not set
+Line: 74 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 70 ::> Invalid data type for boolean expressions
+Line: 74 ::> doors[1] -> Array index not set
 
-Line: 73 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 78 ::> id -> Variable not declared
 
-Line: 73 ::> doors[1] -> Array index not set
+Line: 78 ::> id -> Variable not declared
 
-Line: 73 ::> Invalid data type for boolean expressions
-
-Line: 77 ::> id -> Variable not declared
-
-Line: 77 ::> id -> Variable not declared
-
-Line: 77 ::> Invalid data type for relational expressions
+Line: 78 ::> Invalid data type for relational expressions
 string int
-
-Line: 77 ::> Invalid data type for boolean expressions
-
-Line: 81 ::> i -> Variable must be integer and must be set before it's accessed
-
-Line: 81 ::> doors[2] -> Array index not set
 
 Line: 78 ::> Invalid data type for boolean expressions
 
-Line: 81 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 82 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 81 ::> doors[2] -> Array index not set
+Line: 82 ::> doors[2] -> Array index not set
 
-Line: 81 ::> Invalid data type for boolean expressions
+Line: 82 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 85 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 82 ::> doors[2] -> Array index not set
 
-Line: 85 ::> doors[2] -> Array index not set
+Line: 86 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 82 ::> Invalid data type for boolean expressions
+Line: 86 ::> doors[2] -> Array index not set
 
-Line: 85 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 86 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 85 ::> doors[2] -> Array index not set
+Line: 86 ::> doors[2] -> Array index not set
 
-Line: 85 ::> Invalid data type for boolean expressions
-
-Line: 85 ::> x -> Variable not declared
-
-Line: 85 ::> Invalid data type for boolean expressions
-
-Line: 89 ::> i -> Variable must be integer and must be set before it's accessed
-
-Line: 89 ::> doors[2] -> Array index not set
+Line: 86 ::> x -> Variable not declared
 
 Line: 86 ::> Invalid data type for boolean expressions
 
-Line: 89 ::> i -> Variable must be integer and must be set before it's accessed
+Line: 90 ::> i -> Variable must be integer and must be set before it's accessed
 
-Line: 89 ::> doors[2] -> Array index not set
+Line: 90 ::> doors[2] -> Array index not set
 
-Line: 89 ::> Invalid data type for boolean expressions
+Line: 90 ::> i -> Variable must be integer and must be set before it's accessed
+
+Line: 90 ::> doors[2] -> Array index not set
 
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][[][INT_NUMBER][DOTDOT][INT_NUMBER][]][OF][Datatype[Boolean]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][CHARACTER][SEMICOLON]]]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[CHARACTER]]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[LPAREN][ExpressionSequence[Term[IDENTIFIER]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[LPAREN][ExpressionSequence[ExpressionSequence[Term[INT_NUMBER]]][MULTIPLY][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[LPAREN][ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]][MINUS][ExpressionSequence[Term[INT_NUMBER]]]][RPAREN]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[LPAREN][ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE_LN][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[INT_NUMBER]][COMMA][WriteIdentifierList[WriteIdentifierList[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][]]]][]]]][]]]][COMMA][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[CHARACTER]]]]]]][RPAREN][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]]]][OR]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[LESS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[LPAREN][ExpressionSequence[Term[IDENTIFIER]]][Relop[LESS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[LPAREN][ExpressionSequence[ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[LPAREN][ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][RPAREN]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][PLUS][ExpressionSequence[LPAREN][ExpressionSequence[Term[IDENTIFIER]]][RPAREN]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]]][RPAREN]]][OR]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[GREATER]][ExpressionSequence[Term[INT_NUMBER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]]][RPAREN]]][OR]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]]][RPAREN]]][OR]]][AND][AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]]]]][OR]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]]]]]]]]]]]]]]]]]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][Leftbracket][INT_NUMBER][DOTDOT][INT_NUMBER][Rightbracket][OF][Datatype[Boolean]][SEMICOLON]]][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][Leftbracket][INT_NUMBER][DOTDOT][INT_NUMBER][Rightbracket][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]]]][BodyOfProgram[BEGIN][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][CHARACTER][SEMICOLON]]]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[INT_NUMBER]]][PLUS][ExpressionSequence[MINUS][ExpressionSequence[MINUS][ExpressionSequence[MINUS][ExpressionSequence[Term[INT_NUMBER]]]]]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[CHARACTER]]]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[LPAREN][ExpressionSequence[Term[IDENTIFIER]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[LPAREN][ExpressionSequence[ExpressionSequence[Term[INT_NUMBER]]][MULTIPLY][ExpressionSequence[Term[INT_NUMBER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[LPAREN][ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][MINUS][ExpressionSequence[Term[INT_NUMBER]]]][RPAREN]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[LPAREN][ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE_LN][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[INT_NUMBER]][COMMA][WriteIdentifierList[WriteIdentifier[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][Rightbracket]]][COMMA][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[CHARACTER]]]]]]][RPAREN][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]]][OR][AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[LESS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[LPAREN][ExpressionSequence[Term[IDENTIFIER]]][Relop[LESS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[LPAREN][ExpressionSequence[ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[LPAREN][ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][RPAREN]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]][RPAREN]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[EQUALS]][ExpressionSequence[Term[INT_NUMBER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[ExpressionSequence[LPAREN][ExpressionSequence[ExpressionSequence[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]][PLUS][ExpressionSequence[LPAREN][ExpressionSequence[Term[IDENTIFIER]]][RPAREN]]][MINUS][ExpressionSequence[Term[IDENTIFIER]]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]][RPAREN]]][OR][AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]][RPAREN]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][AND][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[GREATER]][ExpressionSequence[Term[INT_NUMBER]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]][RPAREN]]][OR][AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]][RPAREN]]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]][RPAREN]]][OR][AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]][RPAREN]]]]][AND][AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]]]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[ConditionalStatement[IF][AnyExpression[BooleanExpressionSequence[LPAREN][BooleanExpressionSequence[AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]]][OR][AnyExpression[BooleanExpressionSequence[NOT][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]]]]][RPAREN]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]]]]]]]]]]]]]]]]]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 12
 program Mean;
@@ -750,15 +857,24 @@ Compiling lex program
 Compiling the program in gcc
 
 
-Line: 9 ::> a -> Variable not declared
+Variable < mean > already declared
 
-Line: 11 ::> Invalid data type for forloop limit
+Line: 9 ::> a -> Variable not declared
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
+
+            sum|        int|          0
+              n|        int|          0
+              i|        int|          0
+           mean|       real|          0
 
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Real]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[IDENTIFIER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]][COMMA][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Real]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[MINUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[LPAREN][ExpressionSequence[MINUS][ExpressionSequence[Term[INT_NUMBER]]]][RPAREN]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[IDENTIFIER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[IDENTIFIER]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[IDENTIFIER]]]]][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]][COMMA][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 13
 program NumberOfDigits;
@@ -774,7 +890,7 @@ begin
     if flag  then
     begin
       count:=count+1;
-      flag := 1;
+      flag := false;
     end
     else 
     begin
@@ -793,6 +909,8 @@ Compiling the program in gcc
 
 Line: 11 ::> flag -> Variable not set
 
+Line: 14 ::> false -> Variable not declared
+
 Line: 14 ::> flag -> Invalid data type for assignment
 
 Line: 20 ::> number -> Invalid data type for assignment
@@ -801,7 +919,7 @@ Line: 20 ::> number -> Invalid data type for assignment
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Boolean]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Boolean]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]]]][END]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]]][END]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 14
 program NumberOfDigits;
@@ -838,7 +956,7 @@ Line: 18 ::> number -> Invalid data type for assignment
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]][COLON][Datatype[Integer]][SEMICOLON]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]][END]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]]][SEMICOLON]]]][END]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][DIVIDE][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]][END]][SEMICOLON]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 15
 program MaxValueArray;
@@ -869,26 +987,34 @@ Compiling yacc program
 Compiling lex program
 Compiling the program in gcc
 
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 7 ::> Invalid data type for forloop initialization
+        numbers|       int|         0
+       maxvalue|        int|          0
+              j|        int|          0
+              i|        int|          0
+========
+Symbol Table:
+========
+    ID Name    | Data Type |   Value   
 
-Line: 9 ::> numbers[0] -> Array index out of bounds
-
-Line: 7 ::> Invalid data type for forloop limit
-
-Line: 12 ::> numbers[1] -> Array index not set
+        numbers|       int|         0
+       maxvalue|        int|          0
+              j|        int|          0
+              i|        int|          1
 
 Line: 15 ::> numbers[0] -> Array index out of bounds
 
 Line: 17 ::> numbers[0] -> Array index out of bounds
 
-Line: 13 ::> Invalid data type for forloop limit
-
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][[][INT_NUMBER][DOTDOT][INT_NUMBER][]][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ReadStatement[READ][LPAREN][IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]][ForLoopTo[TO][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]][Relop[NOTEQUALS]][ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][Leftbracket][INT_NUMBER][DOTDOT][INT_NUMBER][Rightbracket][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ReadStatement[READ][LPAREN][IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]][RPAREN][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[INT_NUMBER]][Rightbracket]]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]][ForLoopTo[TO][ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][PLUS][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]][Relop[NOTEQUALS]][ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][Rightbracket]]]]][SEMICOLON]]]][END]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]]][RPAREN][SEMICOLON]]]]]]]]]][END][DOT]]]
 =======================================
 Test Case 16
 program ArrayAverage;
@@ -900,30 +1026,12 @@ var
   maxValue : real;
   // the programs starts here
 begin
-  write("Enter a number:");
-  read(number);
+  number := 10;
   while number <> 0 do
   begin
-    if number > 0 then
-    begin
-      count:=count+1;
-    end
-    else
-    begin
-     count :=count;
-    end;
-    number := number - (number / 10) * 10;
-    number := number %  10;
+   write(number, " | ");
+   number := number - 1;
   end;
-  for i := 2 to 10 do
-  begin
-    if numbers[i] <= maxValue then
-    begin
-      maxValue := numbers[i] + 10;
-    end;
-  end;
-  average := sum / 5;
-  write(sum, maxValue);
   // the program ends here
 end.
 Deleting old files
@@ -932,34 +1040,8 @@ Compiling lex program
 Compiling the program in gcc
 
 
-Line: 15 ::> count -> Variable not declared
-
-Line: 15 ::> count -> Variable not declared
-
-Line: 19 ::> count -> Variable not declared
-
-Line: 19 ::> count -> Variable not declared
-
-Line: 21 ::> number -> Invalid data type for assignment
-
-Line: 26 ::> numbers[0] -> Array index out of bounds
-
-Line: 26 ::> maxValue -> Variable not set
-
-Line: 28 ::> numbers[0] -> Array index out of bounds
-
-Line: 28 ::> maxValue -> Invalid data type for assignment
-
-Line: 24 ::> Invalid data type for forloop limit
-
-Line: 31 ::> sum -> Variable not set
-
-Line: 31 ::> average -> Variable not declared
-
-Line: 32 ::> sum -> Variable not set
-
 
 Parsing completed successfully
 
 
-[root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Char]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Boolean]][SEMICOLON]]][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][[][INT_NUMBER][DOTDOT][INT_NUMBER][]][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Real]][SEMICOLON]]]]]]]]][BodyOfProgram[BEGIN][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[STRING]]][RPAREN][SEMICOLON]]][Statements[Statement[ReadStatement[READ][LPAREN][IDENTIFIER][RPAREN][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[GREATER]][ExpressionSequence[Term[INT_NUMBER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][ELSE][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]]][END]][SEMICOLON]]]][Statements[Statement[LoopingStatement[ForLoop[FOR][IDENTIFIER][COLON][EQUAL][ExpressionSequence[Term[INT_NUMBER]]][ForLoopTo[TO][ExpressionSequence[Term[INT_NUMBER]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[ConditionalStatement[IF][AnyExpression[ExpressionSequence[Term[IDENTIFIER][ArrayAddOn[BetweenBrackets[IDENTIFIER]][]]]]][Relop[LESSEQUAL]][ExpressionSequence[Term[IDENTIFIER]]]][THEN][BodyOfConditional[BEGINK][StatementsInsideConditional[StatementInsideConditional[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]]]][SEMICOLON]]]][END]][SEMICOLON]]]]][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][ANY_EXPRESSION]]][Statements[Statement[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifierList[IDENTIFIER]]]][RPAREN][SEMICOLON]]]]]]]]][END][DOT]]]
+[Root[ProgramDeclaration[PROGRAM][IDENTIFIER][SEMICOLON]][VariableDeclaration[VAR][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Char]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Boolean]][SEMICOLON]]][DeclarationLists[DeclarationList[ArrayDeclaration[IDENTIFIER][COLON][ARRAY][Leftbracket][INT_NUMBER][DOTDOT][INT_NUMBER][Rightbracket][OF][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[MultipleVariable[IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER][MoreIdentifiers[COMMA][IDENTIFIER]]][COLON][Datatype[Integer]][SEMICOLON]]][DeclarationLists[DeclarationList[SingleVariable[IDENTIFIER][COLON][Datatype[Real]][SEMICOLON]]]]]]]]][BodyOfProgram[BEGIN][Statements[Statement[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[Term[INT_NUMBER]]]][SEMICOLON]]][Statements[Statement[LoopingStatement[WhileLoop[WHILE][AnyExpression[ExpressionSequence[Term[IDENTIFIER]]][Relop[NOTEQUALS]][ExpressionSequence[Term[INT_NUMBER]]]][DO][BodyOfLoop[BEGINK][StatementsInsideLoop[StatementInsideLoop[WriteStatement[WRITE][LPAREN][WriteIdentifierList[WriteIdentifier[IDENTIFIER]][COMMA][WriteIdentifierList[WriteIdentifier[STRING]]]][RPAREN][SEMICOLON]]][StatementsInsideLoop[StatementInsideLoop[AssignmentStatement[IDENTIFIER][COLON][EQUAL][AnyExpression[ExpressionSequence[ExpressionSequence[Term[IDENTIFIER]]][MINUS][ExpressionSequence[Term[INT_NUMBER]]]]][SEMICOLON]]]]][END]][SEMICOLON]]]]]][END][DOT]]]
