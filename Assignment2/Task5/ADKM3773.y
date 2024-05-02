@@ -987,8 +987,8 @@ FOR_LOOP: FOR {
 
 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
     // Add a condition which says for_var <= $<data>1
-    char str[5];
-    char str1[5]="t"; 
+    char str[100];
+    char str1[100]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("NA", "NA", "NA", str1);
@@ -1002,8 +1002,8 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
     addQuadruple("NA", "NA", "NA", "for_end");
 }
 | DOWNTO EXPRESSION_SEQUENCE {
-    char str[5];
-    char str1[5]="t"; 
+    char str[100];
+    char str1[100]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
     addQuadruple("NA", "NA", "NA", str1);
@@ -1011,6 +1011,7 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
+    addQuadruple("for_var", "-", "1", "for_var");
     addQuadruple("NA", "NA", "NA", "for_body_end");
 } SEMICOLON {
     addQuadruple("NA", "NA", "NA", "for_end");
