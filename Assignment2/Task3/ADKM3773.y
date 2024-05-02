@@ -43,7 +43,8 @@ typedef struct Symbol{
 char TreeInString[400000];
 int TreeInStringIndex = 0;
 
-Symbol* symbol_table[100];
+Symbol* symbol_table[1000];
+
 void addVar(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_data_type[], char new_varorarray[]);
 void addVarName(Symbol** symbol_table, int symbol_table_index, char new_id_name[], char new_varorarray[]);
 bool check(Symbol** symbol_table, char new_id_name[], int symbol_table_index);
@@ -51,7 +52,9 @@ void enterDataTypeIntoSymbolTable(Symbol** symbol_table, char data_type[], int s
 Symbol* findSymbol(Symbol** symbol_table, char id_name[], int symbol_table_index);
 bool checkIsVarSet(Symbol** symbol_table, char id_name[], int symbol_table_index);
 bool checkIsArraySet(Symbol** symbol_table, char id_name[], int arr_ind, int symbol_table_index);
+
 void printSymbolTable();
+
 void CustomError1(int lineNumber, char* message);
 void CustomError2(int lineNumber, char* id_name, char* message);
 void CustomError3(int lineNumber, char* id_name, char* index,char* message);
@@ -59,17 +62,17 @@ void CustomError3(int lineNumber, char* id_name, char* index,char* message);
 %}
 
 %union {
-    struct t{
-    char id_name[50];
-    char data_type[10];
-    char val[20];
-    char varorarray[2];
-    char min_index[10];
-    char max_index[10];
-    char operator[3];
-    int lineNumber;
-    struct Treenode * nd;
-}t;
+    struct t {
+        char id_name[50];
+        char data_type[10];
+        char val[20];
+        char varorarray[2];
+        char min_index[10];
+        char max_index[10];
+        char operator[3];
+        int lineNumber;
+        struct Treenode * nd;
+    } t;
 }
 
 %token PROGRAM INTEGER REAL BEGINK END BOOLEAN CHAR IF ELSE TO DOWNTO VAR ARRAY FOR WHILE DO NOT AND OR READ WRITE WRITE_LN ARRAY_DOT
@@ -161,7 +164,7 @@ BETWEEN_BRACKETS: INT_NUMBER {
     strcpy($<t.data_type>$, "int");
     if(symbol != NULL){    
         if((strcmp($<t.data_type>1, "int") == 0) && (symbol->isVarSet == 1)){
-        strcpy($<t.val>$, symbol->val);
+            strcpy($<t.val>$, symbol->val);
         } 
         else{
             CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable must be integer and must be set before it's accessed");
