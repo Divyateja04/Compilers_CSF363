@@ -11,7 +11,7 @@ begin
     if flag  then
     begin
       count:=count+1;
-      flag := 1;
+      flag := false;
     end
     else 
     begin
