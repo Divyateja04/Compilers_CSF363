@@ -1497,15 +1497,11 @@ void main()
         
     }
 
-    yyin = fopen("sample.txt", "r");
-    if(yyin == NULL){
-        /* if(printLogs) printf("\nFile not found"); */
-        exit(1);
-    }
-    else{
-        /* if(printLogs) printf("\nInput file found, Parsing...."); */
-        yyparse();
-    }
+  char* filename;
+    filename=argv[1];
+    printf("\n");
+    yyin = fopen(filename, "r");
+    yyparse();
     printTree(head);
 
     FILE *file_ptr;
