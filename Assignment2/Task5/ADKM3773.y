@@ -82,6 +82,14 @@ std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
         }, array.array[index - array.offset]);
     }
 
+    if (symbol == "true") {
+        return true;
+    }
+
+    if (symbol == "false") {
+        return false;
+    }
+
     if (symbol == "NA") {
         return 0; // TODO: deal with float case
     }
