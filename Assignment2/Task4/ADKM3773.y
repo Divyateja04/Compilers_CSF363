@@ -519,7 +519,7 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
-    addQuadruple("NA", "!", popFromStack(), str1);
+    addQuadruple("NA", "not", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
 }
@@ -528,7 +528,7 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
-    addQuadruple(popFromStack(), "&", popFromStack(), str1);
+    addQuadruple(popFromStack(), "and", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
 }
@@ -537,7 +537,7 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION /* NOT a */ {
     char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
-    addQuadruple(popFromStack(), "|", popFromStack(), str1);
+    addQuadruple(popFromStack(), "or", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
 }

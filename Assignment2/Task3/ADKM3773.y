@@ -30,13 +30,13 @@ int symbol_table_index = 0;
 typedef struct Symbol{
     char id_name[50];
     char data_type[10];
-    char val[10];
-    char array[100][100];
+    char val[20];
+    char array[1000][1000];
     int isVarSet;
-    int isArraySet[100];
+    int isArraySet[1000];
     char varorarray[2];
-    char min_index[5];
-    char max_index[5];
+    char min_index[10];
+    char max_index[10];
 }Symbol;
 
 
@@ -62,10 +62,10 @@ void CustomError3(int lineNumber, char* id_name, char* index,char* message);
     struct t{
     char id_name[50];
     char data_type[10];
-    char val[10];
+    char val[20];
     char varorarray[2];
-    char min_index[5];
-    char max_index[5];
+    char min_index[10];
+    char max_index[10];
     char operator[3];
     int lineNumber;
     struct Treenode * nd;

@@ -57,7 +57,31 @@ void updateIST(std::string symbol, std::variant<int, float, char, bool, ArrayTyp
     interpreterSymbolTable[symbol] = value;
 }
 
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
 std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
+    char array_name[100];
+    char array_index[100];
+    if (sscanf(symbol.c_str(), "%[^[][%[^]]]", array_name, array_index) == 2) {
+        ArrayType array = std::get<ArrayType>(getIST(array_name));
+
+        int index = 0;
+        if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
+            index = std::get<int>(interpreterSymbolTable[array_index]);
+        } else {
+            index = std::stoi(array_index);
+        }
+
+        return std::visit(overloaded {
+            [](const int& i) { return std::variant<int, float, char, bool, ArrayType>(i); },
+            [](const float& f) { return std::variant<int, float, char, bool, ArrayType>(f); },
+            [](const char& c) { return std::variant<int, float, char, bool, ArrayType>(c); },
+            [](const bool& b) { return std::variant<int, float, char, bool, ArrayType>(b); },
+            [](const ArrayType& a) { return std::variant<int, float, char, bool, ArrayType>(a); }
+        }, array.array[index - array.offset]);
+    }
+
     if (symbol == "NA") {
         return 0; // TODO: deal with float case
     }
@@ -84,9 +108,6 @@ std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
         return 0;
     }
 }
-
-template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 void printArray(const ArrayType& arr) {
     std::cout << "[";
@@ -1006,7 +1027,7 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 %%
 int main()
 {
-    std::ofstream file("temp.output");
+    std::ofstream file("temp.out");
     auto* oldCerrBuffer = std::cerr.rdbuf();
     std::cerr.rdbuf(file.rdbuf());
 
