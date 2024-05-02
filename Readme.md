@@ -134,7 +134,24 @@ if x then
 :073:>  if_end ;
 
 ```
-  
+
+### Task 5 - Interpreting the Intermediate code
+In this task, we interpret the Three Address Code (3AC) generated in the previous task. The 3AC is a type of intermediate representation (IR) that has at most three operands for each instruction, making it suitable for typical machine instructions.
+
+The interpretation process involves the following steps:
+
+1. **Reading the 3AC**: The interpreter reads the 3AC line by line. Each line represents an instruction to be executed.
+
+2. **Decoding the Instructions**: Each instruction is decoded to understand the operation to be performed. The operation could be arithmetic (like addition, subtraction, multiplication, division), relational (like less than, greater than, equal to), logical (like AND, OR, NOT), or control flow (like goto, if-else, loops).
+
+3. **Executing the Instructions**: After decoding, the instruction is executed. If it's an arithmetic, relational, or logical operation, the result is stored in a temporary variable. If it's a control flow operation, the flow of the program is altered accordingly.
+
+4. **Maintaining the Symbol Table**: A symbol table is maintained to keep track of all variables and their current values. When a variable is updated, the symbol table is updated as well.
+
+5. **Handling Control Flow**: For control flow operations, the interpreter keeps track of the line number to execute next. For example, in case of a 'goto' operation, the interpreter will jump to the specified line number.
+
+This process continues until all lines of the 3AC have been read and executed. The final state of the symbol table represents the result of the program.
+ 
 ## Pre Cursors
 ### Assignment 1 - Part 1
 - We have to convert a given regular expression to an eNFA/NFA and run it on a given set of strings
