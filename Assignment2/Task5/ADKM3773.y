@@ -110,21 +110,21 @@ std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
 }
 
 void printArray(const ArrayType& arr) {
-    std::cout << "[";
+    std::cerr << "[";
     for (size_t i = 0; i < arr.array.size(); i++) {
         const auto& elem = arr.array[i];
         std::visit(overloaded {
-            [](const int& j) { std::cout << j; },
-            [](const float& f) { std::cout << f; },
-            [](const char& c) { std::cout << c; },
-            [](const bool& b) { std::cout << std::boolalpha << b; },
+            [](const int& j) { std::cerr << j; },
+            [](const float& f) { std::cerr << f; },
+            [](const char& c) { std::cerr << c; },
+            [](const bool& b) { std::cerr << std::boolalpha << b; },
             [](const ArrayType& a) { printArray(a); }
         }, elem);
         if (i != arr.array.size() - 1) {
-            std::cout << ", ";
+            std::cerr << ", ";
         }
     }
-    std::cout << "]";
+    std::cerr << "]";
 }
 
 
@@ -136,19 +136,19 @@ void printIST() {
         }
     }
 
-    std::cout << std::endl;
-    std::cout << "\033[1;37m" << "ID Name" << std::string(max_length - 7, ' ') << "  Data Type      Value" << "\033[0m\n";
+    std::cerr << std::endl;
+    std::cerr << "\033[1;37m" << "ID Name" << std::string(max_length - 7, ' ') << "  Data Type      Value" << "\033[0m\n";
 
     for (auto& it: interpreterSymbolTable) {
-        std::cout << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
+        std::cerr << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
         std::visit(overloaded {
-            [](const int& i) { std::cout << "integer   | " << i; },
-            [](const float& f) { std::cout << "real      | " << f; },
-            [](const char& c) { std::cout << "char      | " << c; },
-            [](const bool& b) { std::cout << "boolean   | " << std::boolalpha << b; },
-            [](const ArrayType& a) { std::cout << "array     | "; printArray(a); }
+            [](const int& i) { std::cerr << "integer   | " << i; },
+            [](const float& f) { std::cerr << "real      | " << f; },
+            [](const char& c) { std::cerr << "char      | " << c; },
+            [](const bool& b) { std::cerr << "boolean   | " << std::boolalpha << b; },
+            [](const ArrayType& a) { std::cerr << "array     | "; printArray(a); }
         }, it.second);
-        std::cout << " \n";
+        std::cerr << " \n";
     }
 }
 
@@ -395,9 +395,6 @@ void interpreter() {
                         float operand2 = std::holds_alternative<int>(getIST(quad[current_line].operand2)) ? static_cast<float>(std::get<int>(getIST(quad[current_line].operand2))) : std::get<float>(getIST(quad[current_line].operand2));
                         float result = performOperation(quad[current_line].op[0], operand1, operand2);
                         updateIST(quad[current_line].result, result);
-                    } else {
-                        // address adding
-                        
                     }
                     break;
                 case '%':
@@ -543,35 +540,35 @@ void displayQuadruple()
     }
     // =====================================================================================
     // This is the part where it's printed
-    for(int i=0; i<quadrupleIndex; i++){
-        if(strncmp(quad[i].result, "if_start", 8) == 0
-        || strncmp(quad[i].result, "while_start", 11) == 0
-        || strncmp(quad[i].result, "for_start", 9) == 0
-        ){
-            printf("\n");
-        };
+    // for(int i=0; i<quadrupleIndex; i++){
+    //     if(strncmp(quad[i].result, "if_start", 8) == 0
+    //     || strncmp(quad[i].result, "while_start", 11) == 0
+    //     || strncmp(quad[i].result, "for_start", 9) == 0
+    //     ){
+    //         printf("\n");
+    //     };
 
-        printf(":%03d:> ", i);
-        printf(" %s ", quad[i].result);
+    //     printf(":%03d:> ", i);
+    //     printf(" %s ", quad[i].result);
 
-        // Print = only if there's something after that
-        if(strcmp(quad[i].operand1, "NA") != 0
-        || strcmp(quad[i].op, "NA") != 0
-        || strcmp(quad[i].operand2, "NA") != 0
-        ) printf(" = ");
+    //     // Print = only if there's something after that
+    //     if(strcmp(quad[i].operand1, "NA") != 0
+    //     || strcmp(quad[i].op, "NA") != 0
+    //     || strcmp(quad[i].operand2, "NA") != 0
+    //     ) printf(" = ");
 
-        if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
-        if(strcmp(quad[i].op, "NA") != 0) printf(" %s ", quad[i].op);
-        if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
-        printf(";\n");
+    //     if(strcmp(quad[i].operand1, "NA") != 0) printf(" %s ", quad[i].operand1);
+    //     if(strcmp(quad[i].op, "NA") != 0) printf(" %s ", quad[i].op);
+    //     if(strcmp(quad[i].operand2, "NA") != 0) printf(" %s ", quad[i].operand2);
+    //     printf(";\n");
 
-        if(strncmp(quad[i].result, "if_end", 11) == 0
-        || strncmp(quad[i].result, "while_end", 9) == 0
-        || strncmp(quad[i].result, "for_end", 7) == 0
-        ){
-            printf("\n");
-        };
-    }
+    //     if(strncmp(quad[i].result, "if_end", 11) == 0
+    //     || strncmp(quad[i].result, "while_end", 9) == 0
+    //     || strncmp(quad[i].result, "for_end", 7) == 0
+    //     ){
+    //         printf("\n");
+    //     };
+    // }
 }
 
 void pushToStack(char *c){
@@ -724,7 +721,6 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
 BODY_OF_PROGRAM: BEGINK STATEMENTS END DOT {
     printf("\n============================\n");
     displayQuadruple();
-    printf("\n============================\n");
     interpreter();
     printf("\n============================\n");
 }
