@@ -351,7 +351,7 @@ void interpreter() {
             ) {
             int true_line, false_line;
             if (sscanf(quad[current_line].op, "true: goto %d", &true_line) == 1 &&
-                sscanf(quad[current_line].op, "false: goto %d", &false_line) == 1) {
+                sscanf(quad[current_line].operand2, "false: goto %d", &false_line) == 1) {
                 if (std::holds_alternative<bool>(getIST(quad[current_line].operand1))) {
                     if (std::get<bool>(getIST(quad[current_line].operand1))) {
                         current_line = true_line - 1;
@@ -930,6 +930,7 @@ TERM: IDENTIFIER {
     char c[100]; 
     sprintf(c,"%s%s",$<data>1, $<data>2); 
     pushToStack(c);
+    strcpy($<data>$, c);
 }
 | INT_NUMBER {
     char c[100]; 
