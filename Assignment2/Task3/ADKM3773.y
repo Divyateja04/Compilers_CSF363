@@ -856,10 +856,12 @@ EXPRESSION_SEQUENCE: TERM {
             (strcmp($<t.data_type>1, "string")  == 0) || 
             (strcmp($<t.data_type>3, "string")  == 0)){
         // printf("%s %s", $<t.data_type>1, $<t.data_type>3);
+        strcpy($<t.data_type>$, "int");    
         CustomError1($<t.lineNumber>1, "Invalid data type for addition");
     }
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for addition");
+        strcpy($<t.data_type>$, "int");    
     }
     $<t.nd>$ = initNode("ExpressionSequence");
     addNodetoTree($<t.nd>$,$<t.nd>1);
@@ -886,9 +888,11 @@ EXPRESSION_SEQUENCE: TERM {
         (strcmp($<t.data_type>3, "string")  == 0)
     ){
         CustomError1($<t.lineNumber>1, "Invalid data type for subtraction, found character");
+        strcpy($<t.data_type>$, "int");    
     }
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for subtraction");
+        strcpy($<t.data_type>$, "int");    
     }
     $<t.nd>$ = initNode("ExpressionSequence");
     addNodetoTree($<t.nd>$,$<t.nd>1);
@@ -913,9 +917,11 @@ EXPRESSION_SEQUENCE: TERM {
             (strcmp($<t.data_type>1, "string")  == 0) || 
             (strcmp($<t.data_type>3, "string")  == 0)){
         CustomError1($<t.lineNumber>1, "Invalid data type for multiplication");
+        strcpy($<t.data_type>$, "int");
     }
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for multiplication");
+        strcpy($<t.data_type>$, "int");
     }
     $<t.nd>$ = initNode("ExpressionSequence");
     addNodetoTree($<t.nd>$,$<t.nd>1);
@@ -940,9 +946,11 @@ EXPRESSION_SEQUENCE: TERM {
             (strcmp($<t.data_type>1, "string")  == 0) || 
             (strcmp($<t.data_type>3, "string")  == 0)){
         CustomError1($<t.lineNumber>1, "Invalid data type for division");
+        strcpy($<t.data_type>$, "int");
     }
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for division");
+        strcpy($<t.data_type>$, "int");
     }
     $<t.nd>$ = initNode("ExpressionSequence");
     addNodetoTree($<t.nd>$,$<t.nd>1);
@@ -967,9 +975,11 @@ EXPRESSION_SEQUENCE: TERM {
             (strcmp($<t.data_type>1, "string")  == 0) || 
             (strcmp($<t.data_type>3, "string")  == 0)){
         CustomError1($<t.lineNumber>1, "Invalid data type for mod");
+        strcpy($<t.data_type>$, "int");
     }
     else{
         CustomError1($<t.lineNumber>1, "Invalid data type for mod");
+        strcpy($<t.data_type>$, "int");
     }
     $<t.nd>$ = initNode("ExpressionSequence");
     addNodetoTree($<t.nd>$,$<t.nd>1);
@@ -983,6 +993,7 @@ EXPRESSION_SEQUENCE: TERM {
     if(strcmp($<t.data_type>2, "boolean") == 0){
         CustomError1($<t.lineNumber>2, "Invalid data type for -ve expression");
     }
+    strcpy($<t.val>$, strcat("-",$<t.val>2));
     strcpy($<t.data_type>$, $<t.data_type>2); 
     $<t.nd>$ = initNode("ExpressionSequence");
     $<t.nd>1 = initNode("MINUS");
@@ -992,6 +1003,7 @@ EXPRESSION_SEQUENCE: TERM {
 | LPAREN EXPRESSION_SEQUENCE RPAREN { 
     strcpy($<t.data_type>$, $<t.data_type>2); 
     $<t.lineNumber>$ = $<t.lineNumber>2; 
+    strcpy($<t.val>$, $<t.val>2);
     $<t.nd>$ = initNode("ExpressionSequence");
     $<t.nd>1 = initNode("LPAREN");
     addNodetoTree($<t.nd>$,$<t.nd>1);
@@ -1198,7 +1210,7 @@ FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
         }
     }
     else{
-        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Array not declared");
+        CustomError2($<t.lineNumber>2, $<t.id_name>2, "Variable not declared");
     }
 } AFTER_FOR_CONDITION {
     $<t.nd>$ = initNode("ForLoop");
