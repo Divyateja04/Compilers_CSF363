@@ -14,7 +14,7 @@ begin
   number := 0;
   digit := 0.0;
 
-  numbers[3] := 4;
+  numBers[3] := 4;
 
   write("Enter 5 integer values:");
 

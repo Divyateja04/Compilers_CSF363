@@ -1,8 +1,11 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "y.tab.h"
 int printToken = 0;
+
+char* toLowerCase(char *str);
 %}
 
 %x READ_DQ_STRING_INPUT
@@ -17,30 +20,30 @@ int printToken = 0;
 }
 <COMMENT>[\n] { BEGIN(INITIAL); }
 
-(?i:program) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return PROGRAM; }
-(?i:integer) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return INTEGER; }
-(?i:real) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return REAL; }
-(?i:boolean) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return BOOLEAN; }
-(?i:char) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return CHAR; }
-(?i:var) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return VAR; }
-(?i:to) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return TO; }
-(?i:downto) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return DOWNTO; }
-(?i:if) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return IF; }
-(?i:else) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return ELSE; }
-(?i:while) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return WHILE; }
-(?i:for) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return FOR; }
-(?i:do) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return DO; }
-(?i:array) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return ARRAY; }
-(?i:and) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return AND; }
-(?i:or) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return OR; }
-(?i:not) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return NOT; }
-(?i:begin) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return BEGINK; }
-(?i:end) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return END; }
-(?i:read) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return READ;}
-(?i:write) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return WRITE; }
-(?i:writeln) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return WRITE_LN; }
-(?i:then) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return THEN; }
-(?i:of) {if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return OF;}
+(?i:program) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return PROGRAM; }
+(?i:integer) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return INTEGER; }
+(?i:real) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return REAL; }
+(?i:boolean) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return BOOLEAN; }
+(?i:char) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return CHAR; }
+(?i:var) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return VAR; }
+(?i:to) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return TO; }
+(?i:downto) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return DOWNTO; }
+(?i:if) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return IF; }
+(?i:else) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return ELSE; }
+(?i:while) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return WHILE; }
+(?i:for) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return FOR; }
+(?i:do) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return DO; }
+(?i:array) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return ARRAY; }
+(?i:and) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return AND; }
+(?i:or) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return OR; }
+(?i:not) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return NOT; }
+(?i:begin) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return BEGINK; }
+(?i:end) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return END; }
+(?i:read) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return READ;}
+(?i:write) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return WRITE; }
+(?i:writeln) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return WRITE_LN; }
+(?i:then) { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return THEN; }
+(?i:of) {if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return OF;}
 
 [+] { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return PLUS; }
 [-] { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return MINUS; }
@@ -76,10 +79,17 @@ int printToken = 0;
 [0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return INT_NUMBER; }
 [0-9]+[.][0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return DECIMAL_NUMBER; }
 
-[a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return IDENTIFIER; }
+[a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", toLowerCase(yytext)); return IDENTIFIER; }
 
 [[:space:]]+ {}
 
 .  { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.data, "%s", yytext); return INVALID_TOKEN;}
 
 %%
+
+char* toLowerCase(char *str) {
+    for(int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+    return str;
+}

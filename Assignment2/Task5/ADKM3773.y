@@ -630,7 +630,7 @@ DECLARATION_LIST: SINGLE_VARIABLE
 ;
 
 SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON { 
-    if (strcmp($<data>3, "Integer") == 0) {
+    if (strcmp($<data>3, "integer") == 0) {
         updateIST($<data>1, 0);
     } else if (strcmp($<data>3, "real") == 0) {
         updateIST($<data>1, 0.0f);
@@ -643,7 +643,7 @@ SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON {
 ;
 
 MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON { 
-    if (strcmp($<data>4, "Integer") == 0) {
+    if (strcmp($<data>4, "integer") == 0) {
         updateIST($<data>1, 0);
     } else if (strcmp($<data>4, "real") == 0) {
         updateIST($<data>1, 0.0f);
@@ -654,7 +654,7 @@ MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON {
     }
 
     for (auto i : temporaryVariablesVector) {
-        if (strcmp($<data>4, "Integer") == 0) {
+        if (strcmp($<data>4, "integer") == 0) {
             updateIST(i, 0);
         } else if (strcmp($<data>4, "real") == 0) {
             updateIST(i, 0.0f);
@@ -680,7 +680,7 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {
 ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMBER RBRACKET OF DATATYPE SEMICOLON {
     Array<VariantType> newArray;
     newArray.offset = std::stoi($<data>7) - std::stoi($<data>5) + 1; // Storing the size of array
-    if (strcmp($<data>10, "Integer") == 0) {
+    if (strcmp($<data>10, "integer") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0));
     } else if (strcmp($<data>10, "real") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0.0f));
