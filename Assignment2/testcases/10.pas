@@ -3,6 +3,7 @@ var
   i, j, a, b, x: Integer;
   arr: array[1..20] of Integer;
 begin
+  x := 1;
   for i := 1 to 20 do
   begin
     if i % 3 = 0 then 
