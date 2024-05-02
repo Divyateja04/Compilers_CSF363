@@ -151,6 +151,67 @@ The interpretation process involves the following steps:
 5. **Handling Control Flow**: For control flow operations, the interpreter keeps track of the line number to execute next. For example, in case of a 'goto' operation, the interpreter will jump to the specified line number.
 
 This process continues until all lines of the 3AC have been read and executed. The final state of the symbol table represents the result of the program.
+
+For example when we run the following code:
+```pas
+program MaxValueArray;
+var
+  numbers: array[1..10] of Integer;
+  i, maxValue: Integer;
+  number:integer;
+  i:char;
+begin
+  write("Enter 10 integer values:",i);
+  maxValue := numbers[12];
+  for i := 1 to 10 do
+  begin
+    read(numbers[i]);
+    write(numbers[i]);
+  end;
+  maxValue := numbers[1];
+  for i := 2 to 10 do
+  begin
+    if numbers[i] > maxValue then
+    begin
+      maxValue := numbers[i];
+    end;
+  end;
+  write("The maximum value is: ");  
+  write(maxValue);
+  while number <> 0 do
+  begin
+    if number <> 0 then
+    begin
+      count:=count+1;
+    end
+    else 
+    begin
+     count :=count;
+    end; 
+    number := number / 10;
+  end;
+end.
+```
+
+it prints the output
+
+```
+The maximum value is: 9
+```
+
+and the symbol table
+
+| Variable |   Type  | Value                          |
+|:-------- |:-------:|:------------------------------ |
+| t3       | boolean | false                          |
+| t2       | boolean | false                          |
+| t0       | boolean | false                          |
+| t1       | boolean | false                          |
+| number   | integer | 0                              |
+| maxvalue | integer | 9                              |
+| i        | integer | 11                             |
+| numbers  |  array  | [4, 3, 2, 5, 6, 7, 1, 8, 9, 1] |
+
  
 ## Pre Cursors
 ### Assignment 1 - Part 1
