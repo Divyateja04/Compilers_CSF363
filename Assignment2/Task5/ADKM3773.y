@@ -118,45 +118,45 @@ std::variant<int, float, char, bool, ArrayType> getIST(std::string symbol) {
 }
 
 void printArray(const ArrayType& arr) {
-    std::cerr << "[";
+    std::cout << "[";
     for (size_t i = 0; i < arr.array.size(); i++) {
         const auto& elem = arr.array[i];
         std::visit(overloaded {
-            [](const int& j) { std::cerr << j; },
-            [](const float& f) { std::cerr << f; },
-            [](const char& c) { std::cerr << c; },
-            [](const bool& b) { std::cerr << std::boolalpha << b; },
+            [](const int& j) { std::cout << j; },
+            [](const float& f) { std::cout << f; },
+            [](const char& c) { std::cout << c; },
+            [](const bool& b) { std::cout << std::boolalpha << b; },
             [](const ArrayType& a) { printArray(a); }
         }, elem);
         if (i != arr.array.size() - 1) {
-            std::cerr << ", ";
+            std::cout << ", ";
         }
     }
-    std::cerr << "]";
+    std::cout << "]";
 }
 
 
 void printIST() {
-    int max_length = 7;
+    int max_length = 8;
     for (auto& it: interpreterSymbolTable) {
         if (it.first.length() > max_length) {
             max_length = it.first.length();
         }
     }
 
-    std::cerr << std::endl;
-    std::cerr << "\033[1;37m" << "ID Name" << std::string(max_length - 7, ' ') << "  Data Type      Value" << "\033[0m\n";
+    std::cout << std::endl;
+    std::cout << "\033[1;37m" << "Variable" << std::string(max_length - 8, ' ') << "   Type        Value" << "\033[0m\n";
 
     for (auto& it: interpreterSymbolTable) {
-        std::cerr << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
+        std::cout << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
         std::visit(overloaded {
-            [](const int& i) { std::cerr << "integer   | " << i; },
-            [](const float& f) { std::cerr << "real      | " << f; },
-            [](const char& c) { std::cerr << "char      | " << c; },
-            [](const bool& b) { std::cerr << "boolean   | " << std::boolalpha << b; },
-            [](const ArrayType& a) { std::cerr << "array     | "; printArray(a); }
+            [](const int& i) { std::cout << "integer   | " << i; },
+            [](const float& f) { std::cout << "real      | " << f; },
+            [](const char& c) { std::cout << "char      | " << c; },
+            [](const bool& b) { std::cout << "boolean   | " << std::boolalpha << b; },
+            [](const ArrayType& a) { std::cout << "array     | "; printArray(a); }
         }, it.second);
-        std::cerr << " \n";
+        std::cout << " \n";
     }
 }
 
