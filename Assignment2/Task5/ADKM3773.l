@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "y.tab.h"
-int lineNumber = 1;
 int printToken = 0;
 %}
 
 %x READ_DQ_STRING_INPUT
 %x READ_CHAR_INPUT
 %x COMMENT
+
+%option yylineno
 
 %%
 "//" { 

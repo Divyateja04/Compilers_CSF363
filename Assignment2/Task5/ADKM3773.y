@@ -13,6 +13,7 @@
 int yylex(void);
 int yyerror(const char* s);
 extern FILE *yyin;
+extern int yylineno;
 
 int printLogs = 0;
 int yydebug = 1;
@@ -123,7 +124,7 @@ void printIST() {
             [](const int& i) { std::cout << "integer   | " << i; },
             [](const float& f) { std::cout << "real      | " << f; },
             [](const char& c) { std::cout << "char      | " << c; },
-            [](const bool& b) { std::cout << "bool      | " << std::boolalpha << b; },
+            [](const bool& b) { std::cout << "boolean   | " << std::boolalpha << b; },
             [](const ArrayType& a) { std::cout << "array     | "; printArray(a); }
         }, it.second);
         std::cout << " \n";
@@ -145,6 +146,8 @@ T performOperation(char op, T operand1, T operand2) {
         case '<': return operand1 < operand2;
         case '>': return operand1 > operand2;
         case '=': return operand1 == operand2;
+        case '&': return operand1 && operand2;
+        case '|': return operand1 || operand2;
     }
 
     return T();
@@ -205,13 +208,37 @@ void interpreter() {
         }
 
         if (strcmp(quad[current_line].result, "read") == 0) {
-            std::visit(overloaded {
-                [](int& i) { std::cin >> i; },
-                [](float& f) { std::cin >> f; },
-                [](char& c) { std::cin >> c; },
-                [](bool& b) { std::cin >> std::boolalpha >> b; },
-                [](ArrayType& a) { /* handle array input */ }
-            }, interpreterSymbolTable[quad[current_line].operand1]);
+            char array_name[100];
+            char array_index[100];
+            if (sscanf(quad[current_line].operand1, "%[^[][%[^]]]", array_name, array_index) == 2) {
+                ArrayType array = std::get<ArrayType>(getIST(array_name));
+
+                int index = 0;
+                if (interpreterSymbolTable.find(array_index) != interpreterSymbolTable.end()) {
+                    index = std::get<int>(interpreterSymbolTable[array_index]);
+                } else {
+                    index = std::stoi(array_index);
+                }
+
+                std::visit(overloaded {
+                    [](int& i) { std::cin >> i; },
+                    [](float& f) { std::cin >> f; },
+                    [](char& c) { std::cin >> c; },
+                    [](bool& b) { std::cin >> std::boolalpha >> b; },
+                    [](ArrayType& a) { /* handle array input */ }
+                }, array.array[index - array.offset]);
+
+                updateIST(array_name, array);
+            } else {
+                std::visit(overloaded {
+                    [](int& i) { std::cin >> i; },
+                    [](float& f) { std::cin >> f; },
+                    [](char& c) { std::cin >> c; },
+                    [](bool& b) { std::cin >> std::boolalpha >> b; },
+                    [](ArrayType& a) { /* handle array input */ }
+                }, interpreterSymbolTable[quad[current_line].operand1]);
+            }
+
             std::cout << std::endl;
             continue;
         }
@@ -358,6 +385,13 @@ void interpreter() {
                 case '=':
                     if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
                         bool result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
+                        updateIST(quad[current_line].result, result);
+                    }
+                    break;
+                case '&':
+                case '|':
+                    if (std::holds_alternative<bool>(getIST(quad[current_line].operand1)) && std::holds_alternative<bool>(getIST(quad[current_line].operand2))) {
+                        bool result = performOperation(quad[current_line].op[0], std::get<bool>(getIST(quad[current_line].operand1)), std::get<bool>(getIST(quad[current_line].operand2)));
                         updateIST(quad[current_line].result, result);
                     }
                     break;
@@ -602,7 +636,7 @@ SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON {
         updateIST($<data>1, 0.0f);
     } else if (strcmp($<data>3, "char") == 0) {
         updateIST($<data>1, '\0');
-    } else if (strcmp($<data>3, "bool") == 0) {
+    } else if (strcmp($<data>3, "boolean") == 0) {
         updateIST($<data>1, false);
     }
  }
@@ -615,7 +649,7 @@ MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON {
         updateIST($<data>1, 0.0f);
     } else if (strcmp($<data>4, "char") == 0) {
         updateIST($<data>1, '\0');
-    } else if (strcmp($<data>4, "bool") == 0) {
+    } else if (strcmp($<data>4, "boolean") == 0) {
         updateIST($<data>1, false);
     }
 
@@ -626,7 +660,7 @@ MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON {
             updateIST(i, 0.0f);
         } else if (strcmp($<data>4, "char") == 0) {
             updateIST(i, '\0');
-        } else if (strcmp($<data>4, "bool") == 0) {
+        } else if (strcmp($<data>4, "boolean") == 0) {
             updateIST(i, false);
         }
     }
@@ -652,7 +686,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType(0.0f));
     } else if (strcmp($<data>10, "char") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType('\0'));
-    } else if (strcmp($<data>10, "bool") == 0) {
+    } else if (strcmp($<data>10, "boolean") == 0) {
         newArray.array = std::vector<VariantType>(newArray.offset, VariantType(false));
     }
     newArray.offset = std::stoi($<data>5); // Setting actual offset
@@ -685,7 +719,7 @@ STATEMENT: READ_STATEMENT
 
 /* READ STATEMENT */
 READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON { addQuadruple($3, "NA", "NA", "read"); }
-| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON { addQuadruple($3, "NA", "NA", "read"); }
+| READ LPAREN IDENTIFIER ARRAY_ADD_ON_ID RPAREN SEMICOLON {char temp[100]; sprintf(temp, "%s%s", $<data>3, $<data>4); addQuadruple(temp, "NA", "NA", "read"); }
 ;
 
 /* WRITE STATEMENT */
@@ -992,6 +1026,6 @@ int main()
 }
 
 int yyerror(const char* s){
-    std::cerr << "Error: " << s << std::endl;
-    return 0;
+    std::cerr << "Error[Line " << yylineno << "]: " << s << std::endl;
+    exit(1);
 }
