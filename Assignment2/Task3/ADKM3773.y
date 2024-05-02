@@ -1086,6 +1086,7 @@ TERM: IDENTIFIER {
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index); 
     $<t.lineNumber>$ = $<t.lineNumber>1;
     if(symbol != NULL){
+        strcpy($<t.data_type>$, symbol->data_type);            
         if(strcmp(symbol->varorarray, "2") == 0){
             // printf("\nArray < %s > found", $<t.id_name>1);
             int index = atoi($<t.val>2);
@@ -1189,7 +1190,10 @@ FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         symbol->isVarSet = 1;
+        strcpy(symbol->val, $<t.val>5);
+        strcpy($<t.val>2, symbol->val);
         if((strcmp($<t.data_type>5, "int") != 0) || (strcmp($<t.data_type>2, "int") != 0)){
+            printf("%s %s", $<t.data_type>5, $<t.data_type>2);
             CustomError1($<t.lineNumber>2, "Invalid data type for forloop initialization");
         }
     }
@@ -1212,7 +1216,7 @@ FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
 ;
 
 AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE DO BODY_OF_LOOP SEMICOLON {
-    if($<t.data_type>2 != "int" ){
+    if((strcmp($<t.data_type>2, "int") != 0) ){
         CustomError1($<t.lineNumber>2, "Invalid data type for forloop limit");
     }
     $<t.nd>$ = initNode("ForLoopTo");
