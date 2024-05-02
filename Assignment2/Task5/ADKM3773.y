@@ -401,6 +401,11 @@ void interpreter() {
                     }
                     break;
                 case '%':
+                    if (std::holds_alternative<int>(getIST(quad[current_line].operand1)) && std::holds_alternative<int>(getIST(quad[current_line].operand2))) {
+                        int result = performOperation(quad[current_line].op[0], std::get<int>(getIST(quad[current_line].operand1)), std::get<int>(getIST(quad[current_line].operand2)));
+                        updateIST(quad[current_line].result, result);
+                    }
+                    break;
                 case '<':
                 case '>':
                 case '=':
