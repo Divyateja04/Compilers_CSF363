@@ -34,7 +34,7 @@ if args.a:
         os.system(f'flex ADKM3773.l')
         os.system(f'echo "Compiling the program in gcc"')
         os.system(f'g++ y.tab.c lex.yy.c -ll -o ADKM3773.out')
-        os.system(f'./ADKM3773.out')
+        os.system(f'./ADKM3773.out sample.txt')
 elif args.tc:
     test_case_num = int(args.tc)
     os.system('clear')
@@ -55,7 +55,7 @@ elif args.tc:
     os.system(f'flex ADKM3773.l')
     os.system(f'echo "Compiling the program in gcc"')
     os.system(f'g++ y.tab.c lex.yy.c -ll -o ADKM3773.out -Wno-write-strings')
-    os.system(f'./ADKM3773.out')
+    os.system(f'./ADKM3773.out sample.txt')
 else: 
     parser.print_help()
     

@@ -1032,21 +1032,17 @@ STATEMENT_INSIDE_LOOP: READ_STATEMENT
 
 
 %%
-int main()
+int main(int argc, char *argv[])
 {
     std::ofstream file("temp.out");
     auto* oldCerrBuffer = std::cerr.rdbuf();
     std::cerr.rdbuf(file.rdbuf());
 
-    yyin = fopen("sample.txt", "r");
-    if(yyin == NULL){
-        if(printLogs) printf("\nFile not found");
-        exit(1);
-    }
-    else{
-        if(printLogs) printf("\nInput file found, Parsing....");
-        yyparse();
-    }
+    char* filename;
+    filename=argv[1];
+    printf("\n");
+    yyin = fopen(filename, "r");
+    yyparse();
 
     std::cerr.rdbuf(oldCerrBuffer);
 
