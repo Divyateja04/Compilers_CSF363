@@ -135,9 +135,9 @@ ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET {
     } 
     $<t.nd>$ = initNode("ArrayAddOn");
     addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>1 = initNode("[");
+    $<t.nd>1 = initNode("Leftbracket");
     addNodetoTree($<t.nd>$,$<t.nd>2);
-    $<t.nd>3 = initNode("]");
+    $<t.nd>3 = initNode("Rightbracket");
     addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 ;
@@ -341,7 +341,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("ARRAY");
     addNodetoTree($<t.nd>$,$<t.nd>3);
-    $<t.nd>4 = initNode("[");
+    $<t.nd>4 = initNode("Leftbracket");
     addNodetoTree($<t.nd>$,$<t.nd>4);
     $<t.nd>5 = initNode("INT_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>5);
@@ -349,7 +349,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
     addNodetoTree($<t.nd>$,$<t.nd>6);
     $<t.nd>7 = initNode("INT_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>7);
-    $<t.nd>8 = initNode("]");
+    $<t.nd>8 = initNode("Rightbracket");
     addNodetoTree($<t.nd>$,$<t.nd>8);
     $<t.nd>9 = initNode("OF");
     addNodetoTree($<t.nd>$,$<t.nd>9);
