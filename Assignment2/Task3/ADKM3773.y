@@ -163,7 +163,7 @@ BETWEEN_BRACKETS: INT_NUMBER {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     strcpy($<t.data_type>$, "int");
     if(symbol != NULL){    
-        if((strcmp($<t.data_type>1, "int") == 0) && (symbol->isVarSet == 1)){
+        if((strcmp(symbol->data_type, "int") == 0) && (symbol->isVarSet == 1)){
             strcpy($<t.val>$, symbol->val);
         } 
         else{
@@ -186,9 +186,10 @@ BETWEEN_BRACKETS: INT_NUMBER {
             int min_index = atoi(symbol->min_index);
             int max_index = atoi(symbol->max_index);
             if((index >= min_index) && (index <= max_index)){
-                strcpy($<t.val>$, symbol->array[index]);
+                // strcpy($<t.val>$, symbol->array[index]);
+                strcpy($<t.data_type>$, symbol->data_type);            
                 if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.val>$, symbol->array[index]);
                     strcpy($<t.data_type>$, symbol->data_type);            
                 }
                 else{
@@ -551,7 +552,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
             if((index >= min_index) && (index <= max_index)){
                 strcpy($<t.val>$, symbol->array[index]);
                 if(checkIsArraySet(symbol_table, $<t.id_name>1, atoi($<t.val>2), symbol_table_index)){
-                    strcpy($<t.val>$, symbol->array[atoi($<t.val>2)]);
+                    strcpy($<t.val>$, symbol->array[index]);
                     strcpy($<t.data_type>$, symbol->data_type);            
                 }
                 else{
@@ -620,6 +621,7 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
         if(strcmp(symbol->varorarray, "1") == 0){
             symbol->isVarSet = 1;
             if(strcmp(symbol->data_type, $<t.data_type>4) == 0){
+                strcpy(symbol->val, $<t.val>4);
             }
             else{
                 CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
@@ -656,7 +658,7 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
                     strcpy($<t.val>$, symbol->array[index]);
                     strcpy($<t.data_type>$, symbol->data_type);
                     if(strcmp(symbol->data_type, $<t.data_type>5) == 0){
-                    symbol->isArraySet[atoi($<t.val>2)] = 1;
+                    symbol->isArraySet[index] = 1;
                     }
                     else{
                         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Invalid data type for assignment");
