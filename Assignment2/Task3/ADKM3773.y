@@ -1198,14 +1198,14 @@ WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON {
 ;
 
 FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
+    printSymbolTable();
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
         symbol->isVarSet = 1;
         strcpy(symbol->val, $<t.val>5);
         strcpy($<t.val>2, symbol->val);
-        if((strcmp($<t.data_type>5, "int") != 0) || (strcmp($<t.data_type>2, "int") != 0)){
-            printf("%s %s", $<t.data_type>5, $<t.data_type>2);
+        if((strcmp($<t.data_type>5, "int") != 0) || (strcmp(symbol->data_type, "int") != 0)){
             CustomError1($<t.lineNumber>2, "Invalid data type for forloop initialization");
         }
     }
