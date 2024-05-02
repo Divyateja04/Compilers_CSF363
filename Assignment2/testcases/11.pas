@@ -1,6 +1,7 @@
 Program OneHundredDoors;
 var
    doors : Array[1..100] of Boolean;
+   arr: array[1..100] of Integer;
    i, j	 : Integer;
 begin
    for i := 1 to 100 do begin
@@ -39,7 +40,7 @@ begin
 	   write("only array without brackets");
    end;
 
-   writeln(a, 3, arr[arr[arr[3]]], "ada", 'a');
+   writeln(a, 3, arr[3], "ada", 'a');
 
    if arr[i] and a then begin
 	   write("array with boolean 1");

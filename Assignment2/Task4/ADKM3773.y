@@ -480,7 +480,6 @@ EXPRESSION_SEQUENCE: TERM /* I think we can ignore this because these are being 
     char str1[CHAR_UPPER_LIMIT_SMOL]="t"; 
     sprintf(str,"%d", temp_char++);
     strcat(str1, str); 
-    printf("|%s|", topOfStack());
     addQuadruple(popFromStack(), "*", popFromStack(), str1);
     pushToStack(str1);
     strcpy($<data>$, str1);
