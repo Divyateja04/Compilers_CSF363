@@ -646,6 +646,7 @@ AFTER_FOR_CONDITION: TO EXPRESSION_SEQUENCE {
 } DO {
     addQuadruple("NA", "NA", "NA", "for_body_start");
 } BODY_OF_LOOP {
+    addQuadruple("for_var", "-", "1", "for_var");
     addQuadruple("NA", "NA", "NA", "for_body_end");
 } SEMICOLON {
     addQuadruple("NA", "NA", "NA", "for_end");
