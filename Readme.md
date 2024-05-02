@@ -1,10 +1,12 @@
 # Pascal Compiler 
 
 ## Contributors
-- Divyateja Pasupuleti - 2021A7PS0075H
-- Kumarasamy Chelliah - 2021A7PS0096H
-- Adarsh Das - 2021A7PS1511H
-- Manan Gupta - 2021A7PS2091H
+| Name                 |       ID      |
+|:-------------------- |:-------------:|
+| Divyateja Pasupuleti | 2021A7PS0075H |
+| Kumarasamy Chelliah  | 2021A7PS0096H |
+| Adarsh Das           | 2021A7PS1511H |
+| Manan Gupta          | 2021A7PS2091H |
 
 ## Guide
 - You would need yacc and lex pre installed

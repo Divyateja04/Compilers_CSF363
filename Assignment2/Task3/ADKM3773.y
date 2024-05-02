@@ -90,10 +90,12 @@ void CustomError3(int lineNumber, char* id_name, char* index,char* message);
 
 %%
 stmt: { if(printLogs) printf("\nParsing started");  } PROGRAM_DECLARATION VARIABLE_DECLARATION BODY_OF_PROGRAM { printf("\n\n\nParsing completed successfully"); 
-$<t.nd>$= initNode("root"); 
+$<t.nd>$= initNode("Root"); 
 addNodetoTree($<t.nd>$,$<t.nd>2); 
 addNodetoTree($<t.nd>$,$<t.nd>3); 
-addNodetoTree($<t.nd>$,$<t.nd>4); head=$<t.nd>$; }
+addNodetoTree($<t.nd>$,$<t.nd>4); 
+head=$<t.nd>$; 
+}
 ;
 
 /* TYPE DECLARATIONS */
@@ -133,9 +135,9 @@ ARRAY_ADD_ON_ID: LBRACKET BETWEEN_BRACKETS RBRACKET {
     } 
     $<t.nd>$ = initNode("ArrayAddOn");
     addNodetoTree($<t.nd>$,$<t.nd>1);
-    $<t.nd>1 = initNode("[");
+    $<t.nd>1 = initNode("Leftbracket");
     addNodetoTree($<t.nd>$,$<t.nd>2);
-    $<t.nd>3 = initNode("]");
+    $<t.nd>3 = initNode("Rightbracket");
     addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 ;
@@ -339,7 +341,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("ARRAY");
     addNodetoTree($<t.nd>$,$<t.nd>3);
-    $<t.nd>4 = initNode("[");
+    $<t.nd>4 = initNode("Leftbracket");
     addNodetoTree($<t.nd>$,$<t.nd>4);
     $<t.nd>5 = initNode("INT_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>5);
@@ -347,7 +349,7 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
     addNodetoTree($<t.nd>$,$<t.nd>6);
     $<t.nd>7 = initNode("INT_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>7);
-    $<t.nd>8 = initNode("]");
+    $<t.nd>8 = initNode("Rightbracket");
     addNodetoTree($<t.nd>$,$<t.nd>8);
     $<t.nd>9 = initNode("OF");
     addNodetoTree($<t.nd>$,$<t.nd>9);
@@ -531,7 +533,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Variable not declared");
     }
-    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("IDENTIFIER");
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
@@ -564,7 +566,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
     else{
         CustomError2($<t.lineNumber>1, $<t.id_name>1, "Array not declared");
     }
-    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("IDENTIFIER");
     addNodetoTree($<t.nd>$,$<t.nd>1);
     addNodetoTree($<t.nd>$,$<t.nd>2);
@@ -574,7 +576,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
     if(strcmp($<t.data_type>1, "string") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for string");
     }    
-    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("STRING");
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
@@ -583,7 +585,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
     if(strcmp($<t.data_type>1, "int") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for integer");
     }  
-    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("INT_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>1);  
 }
@@ -592,7 +594,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
     if(strcmp($<t.data_type>1, "real") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for real number");
     }  
-    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("DECIMAL_NUMBER");
     addNodetoTree($<t.nd>$,$<t.nd>1);  
 }
@@ -601,7 +603,7 @@ WRITE_IDENTIFIER: IDENTIFIER {
     if(strcmp($<t.data_type>1, "char") != 0){
         CustomError1($<t.lineNumber>1, "Invalid data type for character");
     } 
-    $<t.nd>$ = initNode("WriteIdentifierList");
+    $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("CHARACTER");
     addNodetoTree($<t.nd>$,$<t.nd>1);   
 }
@@ -634,9 +636,9 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("EQUAL");
     addNodetoTree($<t.nd>$,$<t.nd>3);
-    $<t.nd>4 = initNode("ANY_EXPRESSION");
     addNodetoTree($<t.nd>$,$<t.nd>4);
     $<t.nd>5 = initNode("SEMICOLON");
+    addNodetoTree($<t.nd>$,$<t.nd>5);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID COLON EQUAL ANY_EXPRESSION SEMICOLON { 
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>1, symbol_table_index);
@@ -761,6 +763,7 @@ BODY_OF_CONDITIONAL: BEGINK STATEMENTS_INSIDE_CONDITIONAL END {
     addNodetoTree($<t.nd>$,$<t.nd>1);
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("END");
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 ;
 
@@ -776,8 +779,11 @@ STATEMENTS_INSIDE_CONDITIONAL: STATEMENT_INSIDE_CONDITIONAL STATEMENTS_INSIDE_CO
 ;
 
 /* EXPRESSION FORMULATION */
-ANY_EXPRESSION: EXPRESSION_SEQUENCE { strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; 
-$<t.nd>$ = initNode("AnyExpression"); addNodetoTree($<t.nd>$,$<t.nd>1); }
+ANY_EXPRESSION: EXPRESSION_SEQUENCE { 
+    strcpy($<t.data_type>$, $<t.data_type>1); $<t.lineNumber>$ = $<t.lineNumber>1; 
+    $<t.nd>$ = initNode("AnyExpression"); 
+    addNodetoTree($<t.nd>$,$<t.nd>1); 
+}
 | EXPRESSION_SEQUENCE RELOP EXPRESSION_SEQUENCE {
     $<t.lineNumber>$ = $<t.lineNumber>1;
     strcpy($<t.data_type>$, "boolean");
@@ -819,9 +825,13 @@ $<t.nd>$ = initNode("AnyExpression"); addNodetoTree($<t.nd>$,$<t.nd>1); }
     addNodetoTree($<t.nd>$,$<t.nd>4);
     $<t.nd>5 = initNode("RPAREN");
     addNodetoTree($<t.nd>$,$<t.nd>5);
- }
-| BOOLEAN_EXPRESSION_SEQUENCE { $<t.lineNumber>$ = $<t.lineNumber>1; strcpy($<t.data_type>$, $<t.data_type>1);
-$<t.nd>$ = initNode("AnyExpression"); addNodetoTree($<t.nd>$,$<t.nd>1); }
+}
+| BOOLEAN_EXPRESSION_SEQUENCE { 
+    $<t.lineNumber>$ = $<t.lineNumber>1; 
+    strcpy($<t.data_type>$, $<t.data_type>1);
+    $<t.nd>$ = initNode("AnyExpression"); 
+    addNodetoTree($<t.nd>$,$<t.nd>1); 
+}
 ; 
 
 EXPRESSION_SEQUENCE: TERM { 
@@ -1024,6 +1034,7 @@ BOOLEAN_EXPRESSION_SEQUENCE: NOT ANY_EXPRESSION {
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("OR");
     addNodetoTree($<t.nd>$,$<t.nd>2);
+    addNodetoTree($<t.nd>$,$<t.nd>3);
 }
 | LPAREN BOOLEAN_EXPRESSION_SEQUENCE RPAREN {
     $<t.lineNumber>$ = $<t.lineNumber>2;
