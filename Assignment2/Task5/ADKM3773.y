@@ -129,7 +129,7 @@ void printArray(const ArrayType& arr) {
 
 
 void printIST() {
-    int max_length = 0;
+    int max_length = 7;
     for (auto& it: interpreterSymbolTable) {
         if (it.first.length() > max_length) {
             max_length = it.first.length();
@@ -137,7 +137,7 @@ void printIST() {
     }
 
     std::cout << std::endl;
-    std::cout << "\033[1;37m" << "ID Name" << std::string(max_length - 6, ' ') << "  Data Type      Value" << "\033[0m\n";
+    std::cout << "\033[1;37m" << "ID Name" << std::string(max_length - 7, ' ') << "  Data Type      Value" << "\033[0m\n";
 
     for (auto& it: interpreterSymbolTable) {
         std::cout << it.first << std::string(max_length - it.first.length(), ' ') << " | ";
