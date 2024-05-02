@@ -1479,7 +1479,7 @@ void printTree(struct Treenode *tree)
     TreeInStringIndex++;
 }
 
-void main()
+void main(int argc, char *argv[])
 {
     for(int i = 0; i < 100; i++){
         symbol_table[i] = (Symbol *)malloc(sizeof(Symbol));
@@ -1497,7 +1497,7 @@ void main()
         
     }
 
-  char* filename;
+    char* filename;
     filename=argv[1];
     printf("\n");
     yyin = fopen(filename, "r");
