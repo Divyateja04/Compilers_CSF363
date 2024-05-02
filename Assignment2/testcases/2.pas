@@ -9,9 +9,8 @@ begin
   maxValue := numbers[12];
   for i := 1 to 10 do
   begin
-    write(numbers[1]);
     read(numbers[i]);
-    write(number[i]);
+    write(numbers[i]);
   end;
   maxValue := numbers[1];
   for i := 2 to 10 do
