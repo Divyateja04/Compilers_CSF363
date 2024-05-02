@@ -175,6 +175,8 @@ BETWEEN_BRACKETS: INT_NUMBER {
     }    
     $<t.nd>$ = initNode("BetweenBrackets");
     $<t.nd>1 = initNode("IDENTIFIER"); 
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID { 
@@ -209,6 +211,8 @@ BETWEEN_BRACKETS: INT_NUMBER {
     }
     $<t.nd>$ = initNode("BetweenBrackets");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     addNodetoTree($<t.nd>$,$<t.nd>2);
 }
@@ -227,6 +231,8 @@ PROGRAM_DECLARATION: PROGRAM IDENTIFIER SEMICOLON {
     $<t.nd>1 = initNode("PROGRAM");
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>2);
+    addNodetoTree($<t.nd>2,node);
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("SEMICOLON");
     addNodetoTree($<t.nd>$,$<t.nd>3);
@@ -277,6 +283,8 @@ SINGLE_VARIABLE: IDENTIFIER COLON DATATYPE SEMICOLON {
     symbol_table_index++;
     $<t.nd>$ = initNode("SingleVariable");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("COLON");
     addNodetoTree($<t.nd>$,$<t.nd>2);
@@ -293,6 +301,8 @@ MULTIPLE_VARIABLE: IDENTIFIER MORE_IDENTIFIERS COLON DATATYPE SEMICOLON {
     enterDataTypeIntoSymbolTable(symbol_table, $<t.data_type>4, symbol_table_index); 
     $<t.nd>$ = initNode("MultipleVariable");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("COLON");
@@ -311,6 +321,8 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {
     $<t.nd>1 = initNode("COMMA");
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>2);
+    addNodetoTree($<t.nd>2,node);
     addNodetoTree($<t.nd>$,$<t.nd>2);
     addNodetoTree($<t.nd>$,$<t.nd>3);
 }
@@ -322,6 +334,8 @@ MORE_IDENTIFIERS: COMMA IDENTIFIER MORE_IDENTIFIERS {
     $<t.nd>1 = initNode("COMMA");
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>2);
+    addNodetoTree($<t.nd>2,node);
     addNodetoTree($<t.nd>$,$<t.nd>2);
 }
 ;
@@ -340,6 +354,8 @@ ARRAY_DECLARATION: IDENTIFIER COLON ARRAY LBRACKET INT_NUMBER ARRAY_DOT INT_NUMB
 
     $<t.nd>$ = initNode("ArrayDeclaration");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("COLON");
     addNodetoTree($<t.nd>$,$<t.nd>2);
@@ -432,6 +448,8 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     $<t.nd>2 = initNode("LPAREN");
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>3);
+    addNodetoTree($<t.nd>3,node);
     addNodetoTree($<t.nd>$,$<t.nd>3);
     $<t.nd>4 = initNode("RPAREN");
     addNodetoTree($<t.nd>$,$<t.nd>4);
@@ -467,6 +485,8 @@ READ_STATEMENT: READ LPAREN IDENTIFIER RPAREN SEMICOLON {
     $<t.nd>2 = initNode("LPAREN");
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>3);
+    addNodetoTree($<t.nd>3,node);
     addNodetoTree($<t.nd>$,$<t.nd>3);
     addNodetoTree($<t.nd>$,$<t.nd>4);
     $<t.nd>5 = initNode("RPAREN");
@@ -539,6 +559,8 @@ WRITE_IDENTIFIER: IDENTIFIER {
     }
     $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 | IDENTIFIER ARRAY_ADD_ON_ID { 
@@ -572,6 +594,8 @@ WRITE_IDENTIFIER: IDENTIFIER {
     }
     $<t.nd>$ = initNode("WriteIdentifier");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     addNodetoTree($<t.nd>$,$<t.nd>2);
 }
@@ -636,6 +660,8 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     }
     $<t.nd>$ = initNode("AssignmentStatement");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("COLON");
     addNodetoTree($<t.nd>$,$<t.nd>2);
@@ -682,6 +708,8 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     }
     $<t.nd>$ = initNode("AssignmentStatement");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("COLON");
@@ -714,6 +742,8 @@ ASSIGNMENT_STATEMENT: IDENTIFIER COLON EQUAL ANY_EXPRESSION SEMICOLON {
     }
     $<t.nd>$ = initNode("AssignmentStatement");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("COLON");
     addNodetoTree($<t.nd>$,$<t.nd>2);
@@ -1097,6 +1127,8 @@ TERM: IDENTIFIER {
     }
     $<t.nd>$ = initNode("Term");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
 }
 
@@ -1136,6 +1168,8 @@ TERM: IDENTIFIER {
     }
     $<t.nd>$ = initNode("Term");
     $<t.nd>1 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>1);
+    addNodetoTree($<t.nd>1,node);
     addNodetoTree($<t.nd>$,$<t.nd>1);
     addNodetoTree($<t.nd>$,$<t.nd>2);
 }
@@ -1222,6 +1256,8 @@ FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
     $<t.nd>1 = initNode("FOR");
     addNodetoTree($<t.nd>$,$<t.nd>1);
     $<t.nd>2 = initNode("IDENTIFIER");
+    struct Treenode* node = initNode($<t.id_name>2);
+    addNodetoTree($<t.nd>2,node);
     addNodetoTree($<t.nd>$,$<t.nd>2);
     $<t.nd>3 = initNode("COLON");
     addNodetoTree($<t.nd>$,$<t.nd>3);
