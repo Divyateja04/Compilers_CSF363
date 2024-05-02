@@ -1202,7 +1202,6 @@ WHILE_LOOP: WHILE ANY_EXPRESSION DO BODY_OF_LOOP SEMICOLON {
 ;
 
 FOR_LOOP: FOR IDENTIFIER COLON EQUAL EXPRESSION_SEQUENCE {
-    printSymbolTable();
     Symbol* symbol = findSymbol(symbol_table, $<t.id_name>2, symbol_table_index);
     $<t.lineNumber>$ = $<t.lineNumber>2;
     if(symbol != NULL){
