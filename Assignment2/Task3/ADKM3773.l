@@ -3,9 +3,18 @@
 #include <stdlib.h>
 #include <math.h>  
 #include <string.h>
+#include <ctype.h>
 #include "y.tab.h"
 int lineNumber = 1;
 int printToken = 0;
+
+
+char* toLowerCase(char *str) {
+    for(int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+    return str;
+}
 %}
 
 %x READ_DQ_STRING_INPUT
@@ -78,7 +87,7 @@ int printToken = 0;
 [0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.val, "%s", yytext); yylval.t.lineNumber = lineNumber; sprintf(yylval.t.data_type, "%s", "int"); return INT_NUMBER; }
 [0-9]+[.][0-9]+ { if(printToken) printf("\n::> | %s |", yytext); sprintf(yylval.t.data_type, "%s", "real"); yylval.t.lineNumber = lineNumber; return DECIMAL_NUMBER; }
 
-[a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext);  sprintf(yylval.t.id_name, "%s", yytext); yylval.t.lineNumber = lineNumber; return IDENTIFIER; }
+[a-zA-Z][a-zA-Z0-9_]* {  if(printToken) printf("\n::> | %s |", yytext);  sprintf(yylval.t.id_name, "%s", toLowerCase(yytext)); yylval.t.lineNumber = lineNumber; return IDENTIFIER; }
 
 [\n] { lineNumber++; }
 [\t] { }
