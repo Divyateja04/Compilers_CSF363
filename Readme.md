@@ -1,4 +1,4 @@
-# Pascal Compiler 
+# Pascal Compiler + Regex to NDFA Converter
 
 ## Contributors
 | Name                 |       ID      |
